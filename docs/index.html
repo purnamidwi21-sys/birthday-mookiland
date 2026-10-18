@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Birthday Party Package – Mookiland Bali</title>
+  <meta name="description" content="Plan your child's birthday party at Mookiland Bali. Rencanakan pesta ulang tahun anak di Mookiland Bali.">
+  <link rel="icon" href="img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="img/logo.png" alt="Mookiland Bali"></a>
+    <nav>
+      <a href="#package" data-i18n="nav_package">Package</a>
+      <a href="#spots" data-i18n="nav_spots">Party Spots</a>
+      <a href="#addons" data-i18n="nav_addons">Add-ons</a>
+      <a href="#book" data-i18n="nav_book">Plan &amp; Book</a>
+      <a href="#rules" data-i18n="nav_rules">Rules</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-switch" role="group" aria-label="Language / Bahasa">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="id">ID</button>
+      </div>
+      <a class="btn sm" href="#book" data-i18n="book_now">Book now</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 1. PACKAGE INFO ============ -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid" id="package">
+    <div>
+      <span class="sign orange" data-i18n="hero_sign">Birthday Party Package</span>
+      <h1 data-i18n-html="hero_h1">A <em>wild jungle</em> birthday adventure</h1>
+      <p class="lead" data-i18n="hero_lead"></p>
+      <div class="cta">
+        <a class="btn" href="#book" data-i18n="cta_plan">Plan my party</a>
+        <a class="btn wa" id="heroWa" href="#" target="_blank" rel="noopener" data-i18n="cta_wa">WhatsApp us</a>
+      </div>
+    </div>
+    <div>
+      <div class="price-row">
+        <div class="price-tile"><h3 data-i18n="weekday">Weekday</h3><div class="amt" id="pWeekday">275K</div><span class="per" data-i18n="per_child">PER CHILD</span><div class="days" data-i18n="days_wd">Monday – Friday</div></div>
+        <div class="price-tile"><h3 data-i18n="weekend">Weekend</h3><div class="amt" id="pWeekend">325K</div><span class="per" data-i18n="per_child">PER CHILD</span><div class="days" data-i18n-html="days_we">Saturday – Sunday<br>&amp; Public Holiday</div></div>
+      </div>
+      <div class="incl">
+        <span class="tagline" data-i18n="incl">Package inclusions</span>
+        <ul id="inclList"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PARTY SPOTS ============ -->
+<section class="block" id="spots">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sign" data-i18n="spots_sign">First, pick your party spot!</span>
+      <p data-i18n="spots_p"></p>
+    </div>
+    <div class="spot-grid">
+      <div class="map-card"><img src="img/map.jpg" alt="Mookiland map" loading="lazy"></div>
+      <div class="spot-list" id="spotList"><div class="skeleton" style="min-height:130px"></div><div class="skeleton" style="min-height:130px"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ADD-ONS ============ -->
+<section class="block alt" id="addons">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sign" data-i18n="addons_sign">Add more fun to the party!</span>
+      <p data-i18n-html="addons_p"></p>
+    </div>
+    <div class="cat-tabs" id="catTabs"></div>
+    <div class="addon-grid" id="addonGrid"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+  </div>
+</section>
+
+<!-- ============ 2 & 3. ESTIMATE + BOOKING ============ -->
+<section class="block" id="book">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sign orange" data-i18n="book_sign">Plan &amp; book your party</span>
+      <p data-i18n="book_p"></p>
+    </div>
+
+    <form id="bookingForm" class="booking-grid" autocomplete="on" novalidate>
+      <div>
+        <div class="card">
+          <div class="step-title"><span class="n">1</span><h3 data-i18n="s1">When &amp; where</h3></div>
+          <div class="form-grid">
+            <label class="f"><span data-i18n="f_date">Party date *</span><input type="date" name="tglAcara" id="tglAcara" required></label>
+            <label class="f"><span data-i18n="f_time">Start time *</span><input type="time" name="jam" id="jam" required value="10:00" step="900"></label>
+            <div class="full" id="dayBadge"></div>
+            <div class="full">
+              <label class="f"><span data-i18n-html="f_spot">Party spot *</span></label>
+              <div class="spot-pick" id="spotPick"></div>
+              <div id="clashBox"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="step-title"><span class="n">2</span><h3 data-i18n="s2">Guests</h3></div>
+          <div class="form-grid">
+            <label class="f"><span data-i18n="f_kids">Children *</span><input type="number" name="jumlahAnak" id="jumlahAnak" min="1" max="300" value="10" required>
+              <div class="hint" id="anakHint"></div></label>
+            <label class="f"><span data-i18n="f_adults">Adults</span><input type="number" name="jumlahDewasa" id="jumlahDewasa" min="0" max="600" value="10">
+              <div class="hint" id="dewasaHint"></div></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="step-title"><span class="n">3</span><h3 data-i18n="s3">Children's buffet menu</h3><span class="counter" id="menuCounter">0 / 4</span></div>
+          <p class="small muted" style="margin:-6px 0 12px" id="menuIntro"></p>
+          <div id="menuBox"></div>
+        </div>
+
+        <div class="card">
+          <div class="step-title"><span class="n">4</span><h3 data-i18n="s4">Your add-ons</h3></div>
+          <div class="sel-list" id="selList"></div>
+          <a href="#addons" class="small" style="display:inline-block;margin-top:10px;font-weight:800" data-i18n="browse">＋ Browse all add-ons</a>
+        </div>
+
+        <div class="card">
+          <div class="step-title"><span class="n">5</span><h3 data-i18n="s5">Your details</h3></div>
+          <div class="form-grid">
+            <label class="f"><span data-i18n="f_nama">Parent / contact name *</span><input name="nama" required maxlength="100" autocomplete="name"></label>
+            <label class="f"><span data-i18n="f_hp">WhatsApp number *</span><input name="hp" type="tel" required maxlength="25" placeholder="+62 812 …" autocomplete="tel"></label>
+            <label class="f full"><span>Email *</span><input name="email" type="email" required maxlength="120" placeholder="name@email.com" autocomplete="email"></label>
+            <label class="f"><span data-i18n="f_child">Birthday child's name *</span><input name="namaAnak" required maxlength="100"></label>
+            <label class="f"><span data-i18n="f_age">Turning (age)</span><input name="usia" type="number" min="0" max="120"></label>
+            <label class="f"><span data-i18n="f_theme">Party theme</span><input name="tema" maxlength="150" data-i18n-ph="ph_theme"></label>
+            <label class="f"><span data-i18n="f_entlang">Entertainment language</span>
+              <select name="bahasa">
+                <option value="English" data-i18n="opt_en">English</option>
+                <option value="Russian" data-i18n="opt_ru">Russian</option>
+                <option value="Indonesian" data-i18n="opt_id">Indonesian</option>
+              </select></label>
+            <label class="f full"><span data-i18n="f_notes">Notes</span><textarea name="catatan" maxlength="1000"></textarea></label>
+            <label class="check full"><input type="checkbox" name="setuju" id="setuju" required>
+              <div><b data-i18n="agree_b">I have read the park rules</b><small data-i18n-html="agree_small"></small></div></label>
+            <input class="honey" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          </div>
+        </div>
+      </div>
+
+      <aside class="card summary" id="summary">
+        <h3 data-i18n="sum_title">Your party estimate</h3>
+        <div id="summaryBody"></div>
+        <button class="btn block" type="submit" id="submitBtn" data-i18n="submit">Send booking</button>
+        <p class="small muted" style="margin:12px 0 0" data-i18n="sum_note"></p>
+      </aside>
+    </form>
+  </div>
+</section>
+
+<!-- ============ RULES ============ -->
+<section class="block alt" id="rules">
+  <div class="wrap">
+    <div class="sec-head"><span class="sign" data-i18n="rules_sign">Important reminders</span><p data-i18n="rules_p"></p></div>
+    <ul class="rules" id="rulesList"></ul>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div>
+      <img src="img/logo.png" alt="Mookiland Bali" style="height:54px;border-radius:8px;margin-bottom:10px">
+      <div id="footInfo"></div>
+    </div>
+    <div>
+      <a class="btn wa" id="footWa" href="#" target="_blank" rel="noopener" data-i18n="foot_wa">WhatsApp Bu Dwi</a>
+      <div class="small" style="margin-top:12px"><a href="admin.html" style="color:#8fae86" data-i18n="admin_login">Admin login</a></div>
+    </div>
+  </div>
+</footer>
+
+<a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">💬 <span data-i18n="wa_float">Chat with Bu Dwi</span></a>
+
+<dialog id="successModal">
+  <div class="modal-body">
+    <div class="success-icon">🎉🐒</div>
+    <h2 style="text-align:center" data-i18n="m_title">Booking sent!</h2>
+    <p style="text-align:center" class="muted" data-i18n="m_keep">Please keep your booking number:</p>
+    <div class="big-id" id="sBookingId">-</div>
+    <div id="sDetail"></div>
+    <div style="display:grid;gap:10px;margin-top:16px">
+      <a class="btn wa block" id="sWa" target="_blank" rel="noopener" data-i18n="m_wa">Send my booking no. to Bu Dwi</a>
+      <button class="btn ghost block" id="sClose" type="button" data-i18n="m_done">Done</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="assets/config.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/i18n.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
