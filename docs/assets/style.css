@@ -325,3 +325,50 @@ table.data .r, .mini-table .r { text-align: right; white-space: nowrap; }
 .cake-panel { margin-top: 14px; background: var(--lime-soft); border-radius: 14px; padding: 14px; }
 .design-prev { margin-top: 10px; max-height: 180px; width: auto; border-radius: 10px; border: 2px solid var(--line); }
 .menu-ket { display: block; font-size: 12px; color: var(--muted); font-weight: 600; }
+
+/* ---------- Kalender & slot ---------- */
+.cal { background: #fff; border: 2px solid var(--line); border-radius: 16px; padding: 12px; max-width: 520px; }
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-family: var(--head); font-size: 18px; }
+.cal-nav { border: 0; background: var(--lime-soft); color: var(--jungle); width: 36px; height: 36px; border-radius: 50%; font-size: 22px; cursor: pointer; line-height: 1; }
+.cal-nav:disabled { opacity: .3; cursor: default; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-dow { text-align: center; font-size: 11.5px; font-weight: 800; color: var(--muted); padding: 4px 0; text-transform: uppercase; }
+.cal-cell { border: 0; border-radius: 10px; min-height: 48px; padding: 4px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; font: 700 14px var(--body); cursor: pointer; background: #f3f3ee; color: var(--muted); }
+.cal-cell.empty { background: transparent; cursor: default; }
+.cal-cell:disabled { cursor: default; }
+.cal-cell .cal-n { font-size: 9.5px; font-weight: 800; line-height: 1.1; }
+.cal-cell.st-open { background: #dff0cc; color: var(--jungle); }
+.cal-cell.st-few { background: #ffe3c8; color: #9a420c; }
+.cal-cell.st-full { background: #ece9e3; color: #a39e94; text-decoration: line-through; }
+.cal-cell.st-closed { background: #f6dcd9; color: #a7473d; }
+.cal-cell.st-past, .cal-cell.st-loading { background: #f6f5f1; color: #c5c2ba; }
+.cal-cell.st-loading { animation: sk 1.2s infinite; background: linear-gradient(90deg, #f1efe8 25%, #faf9f5 50%, #f1efe8 75%); background-size: 200% 100%; }
+.cal-cell.wknd .cal-d { text-decoration: underline; text-decoration-color: var(--orange); text-underline-offset: 3px; }
+.cal-cell.selected { outline: 3px solid var(--jungle); outline-offset: 1px; }
+.cal-cell:not(:disabled):hover { filter: brightness(.96); }
+.cal-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: 12px; font-weight: 700; color: var(--ink-2); }
+.cal-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 4px; margin-right: 5px; vertical-align: -1px; }
+.cal-legend i.st-open { background: #b9dd92; } .cal-legend i.st-few { background: #ffc994; } .cal-legend i.st-full { background: #d8d4cc; } .cal-legend i.st-closed { background: #eeb5ae; }
+.slot-scroll { overflow-x: auto; }
+.slot-grid { border-collapse: separate; border-spacing: 4px; min-width: 100%; }
+.slot-grid th { font-size: 12px; font-weight: 800; color: var(--ink-2); text-align: left; padding: 2px 6px; white-space: nowrap; }
+.slot-grid thead th { text-align: center; }
+.slot { width: 100%; min-width: 74px; border: 0; border-radius: 9px; padding: 9px 6px; font: 800 12px var(--body); cursor: pointer; }
+.slot.st-free { background: #dff0cc; color: var(--jungle); }
+.slot.st-free:hover { background: #c9e6a8; }
+.slot.st-booked, .slot.st-blocked { background: #ece9e3; color: #a39e94; cursor: not-allowed; }
+.slot.st-closed { background: #f6dcd9; color: #a7473d; cursor: not-allowed; }
+.slot.st-past { background: #f6f5f1; color: #c5c2ba; cursor: not-allowed; }
+.slot.selected { background: var(--jungle); color: #fff; }
+.slot-grid.admin .slot { min-width: 96px; min-height: 52px; line-height: 1.25; }
+.slot-grid.admin .slot small { display: block; font-weight: 700; font-size: 10.5px; opacity: .85; }
+.slot-grid.admin .slot.st-booked { background: #dceefe; color: #1d4f91; cursor: pointer; }
+.slot-grid.admin .slot.st-blocked { background: #fff1d6; color: #8a5a00; cursor: pointer; }
+.slot-grid.admin .slot.st-free:hover { background: #c9e6a8; }
+
+/* ---------- Mode admin (booking manual) ---------- */
+.admin-bar { background: #2b1d0e; color: #ffe9c9; font-size: 13.5px; position: sticky; top: 0; z-index: 40; }
+.admin-bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 8px; padding-bottom: 8px; flex-wrap: wrap; }
+.is-admin .nav { top: 46px; }
+.is-admin .wa-float { display: none; }
+.admin-opts { background: #fff6e6; border: 2px dashed #f0c27a; border-radius: 14px; padding: 12px 14px; margin-bottom: 16px; }

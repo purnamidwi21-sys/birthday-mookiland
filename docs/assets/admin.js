@@ -25,7 +25,9 @@
     $('#loginView').classList.add('hidden');
     $('#appView').classList.remove('hidden');
     $('#whoami').textContent = session.nama || session.username;
-    switchTab('dashboard');
+    const hb = /#booking=([^&]+)/.exec(location.hash);
+    switchTab(hb ? 'bookings' : 'dashboard');
+    if (hb) { history.replaceState(null, '', location.pathname); openDetail(decodeURIComponent(hb[1])); }
   }
 
   // ---------- Login / logout ----------
@@ -53,8 +55,9 @@
   // ---------- Tab ----------
   function switchTab(name) {
     document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
-    ['dashboard', 'bookings', 'akun'].forEach(t => $('#tab-' + t).classList.toggle('hidden', t !== name));
+    ['dashboard', 'bookings', 'slot', 'akun'].forEach(t => $('#tab-' + t).classList.toggle('hidden', t !== name));
     if (name === 'dashboard') loadDashboard();
+    if (name === 'slot') loadSlotTab();
     if (name === 'bookings') loadBookings();
   }
   $('#tabs').addEventListener('click', (e) => { if (e.target.dataset.tab) switchTab(e.target.dataset.tab); });
@@ -183,7 +186,7 @@
       if (!rows.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-row">Belum ada booking.</td></tr>'; return; }
       tbody.innerHTML = rows.map(b => `
         <tr class="click" data-id="${escapeHtml(b.id)}">
-          <td><b>${escapeHtml(b.id)}</b><br><span class="muted small">${escapeHtml(b.tglBooking)}</span></td>
+          <td><b>${escapeHtml(b.id)}</b><br><span class="muted small">${escapeHtml(b.tglBooking)}</span>${b.sumber && b.sumber !== 'Website' ? ` <span class="badge b-wknd">${escapeHtml(b.sumber)}</span>` : ''}</td>
           <td>${tglIndo(b.tglAcara)}<br><span class="muted small">${escapeHtml(b.jam)}–${escapeHtml(b.jamSelesai)}</span> ${/weekend/i.test(b.tipeHari) ? '<span class="badge b-wknd">WE</span>' : ''}</td>
           <td>${escapeHtml(b.namaAnak)}<br><span class="muted small">${escapeHtml(b.nama)}</span></td>
           <td>${escapeHtml(b.lokasiNama)}</td>
@@ -229,6 +232,7 @@
         ${info('Anak / dewasa', b.jumlahAnak + ' / ' + b.jumlahDewasa)}
         ${info('Menu buffet', escapeHtml(b.menu || '— belum dipilih —'))}
         ${info('Tema · bahasa hiburan', escapeHtml(b.tema || '-') + ' · ' + escapeHtml(b.bahasa || '-'))}
+        ${info('Sumber booking', escapeHtml(b.sumber || 'Website') + (b.dibuatOleh ? ' · dibuat oleh ' + escapeHtml(b.dibuatOleh) : ''))}
         ${info('Bahasa email pelanggan', b.lang === 'id' ? '🇮🇩 Indonesia' : '🇬🇧 English')}
         ${info('Tanggal lahir', b.tglLahir ? tglIndo(b.tglLahir) : '-')}
         ${info('Kue', escapeHtml(({ none: 'Tanpa kue', standard: 'Kue favorit', custom: 'Kue custom', own: 'Bawa kue sendiri' })[b.jenisKue] || '-') + (b.detailKue ? '<br><span class="small">' + escapeHtml(b.detailKue) + '</span>' : ''))}
@@ -377,6 +381,144 @@
       toast(d.emailPembayaran ? 'Email konfirmasi pembayaran terkirim.' : 'Email pembayaran gagal dikirim, cek log.', d.emailPembayaran ? 'success' : 'error');
       if (d.booking.sisa <= 0) toast(d.emailInvoice ? 'Invoice lunas terkirim.' : 'Invoice lunas gagal dikirim.', d.emailInvoice ? 'success' : 'error');
     }
+  });
+
+
+  // ============================================================
+  //  KETERSEDIAAN (kalender + blokir slot)
+  // ============================================================
+  const A = { month: null, days: {}, date: null, grid: null, lokasi: null };
+
+  async function loadSlotTab() {
+    if (!A.month) A.month = ymd(new Date()).slice(0, 7);
+    if (!A.lokasi) {
+      try { A.lokasi = (await api('getPackages')).lokasi; } catch (e) { A.lokasi = []; }
+    }
+    loadAdminMonth(A.month);
+    if (A.date) loadAdminDay(A.date);
+  }
+
+  async function loadAdminMonth(m) {
+    A.month = m;
+    renderAdminCal();
+    try {
+      A.days[m] = (await call('adminMonth', { bulan: m })).days;
+      if (A.month === m) renderAdminCal();
+    } catch (e) { toast(e.message, 'error'); }
+  }
+
+  function renderAdminCal() {
+    renderCalendar($('#aCal'), {
+      month: A.month, days: A.days[A.month] || null, selected: A.date, lang: 'id', allowAll: true,
+      legend: [['open', 'Banyak kosong'], ['few', 'Hampir penuh'], ['full', 'Penuh'], ['closed', 'Tutup'], ['past', 'Lewat']],
+      cellExtra: (d, i) => `<span class="cal-n">${i.events ? i.events + ' acara' : ''}${i.blocked ? ' 🔒' : ''}</span>`,
+      onNav: (m) => loadAdminMonth(m),
+      onPick: (d) => { A.date = d; renderAdminCal(); loadAdminDay(d); },
+    });
+  }
+
+  async function loadAdminDay(d) {
+    $('#aDayTitle').textContent = tglIndo(d, true);
+    $('#aGrid').innerHTML = '<tr><td class="muted">Memuat…</td></tr>';
+    try { renderAdminDay(await call('adminDay', { tanggal: d })); } catch (e) { toast(e.message, 'error'); }
+  }
+
+  const ST_LABEL = { free: 'Kosong', booked: 'Terisi', blocked: '🔒 Diblokir', closed: 'Tutup', past: 'Lewat' };
+
+  function renderAdminDay(g) {
+    A.grid = g;
+    $('#aDayBadge').innerHTML = `<div class="day-badge ${g.tipe === 'weekend' ? 'weekend' : ''} ${g.tutup ? 'closed' : ''}" style="margin:0 0 10px">${escapeHtml(g.label)} · ${g.free} dari ${g.total} slot kosong</div>`;
+    $('#aGrid').innerHTML =
+      `<thead><tr><th>Lokasi</th>${g.slotTimes.map(x => `<th>${escapeHtml(x)}</th>`).join('')}</tr></thead><tbody>` +
+      g.rows.map(r => `<tr><th>${escapeHtml(r.nama)}</th>${r.slots.map(c => {
+        let sub = '';
+        if (c.st === 'booked') sub = `<small>${escapeHtml(c.bookingId)}<br>${escapeHtml(c.anak)}</small>`;
+        if (c.st === 'blocked') sub = `<small>${escapeHtml(c.ket)}</small>`;
+        const data = c.st === 'booked' ? `data-bk="${escapeHtml(c.bookingId)}"` : c.st === 'blocked' ? `data-bl="${escapeHtml(c.blockId)}"` : c.st === 'free' ? `data-free="${escapeHtml(r.lokasiId)}|${escapeHtml(c.jam)}"` : '';
+        return `<td><button type="button" class="slot st-${c.st}" ${data} ${data ? '' : 'disabled'} title="${c.dari ? escapeHtml(c.dari + '–' + c.sampai) : ''}">${ST_LABEL[c.st]}${sub}</button></td>`;
+      }).join('')}</tr>`).join('') + '</tbody>';
+    $('#aGridHint').textContent = 'Klik slot Kosong untuk memblokir · klik Terisi untuk membuka detail booking · klik 🔒 untuk membuka blokir.';
+
+    $('#blockForm').classList.toggle('hidden', g.tutup);
+    const nb = $('#aNewBooking');
+    nb.classList.toggle('hidden', g.tutup || g.rows.every(r => r.slots.every(x => x.st === 'past')));
+    nb.href = 'index.html?admin=1&date=' + g.tanggal;
+    $('#bfLokasi').innerHTML = '<option value="">Semua lokasi</option>' + (A.lokasi || []).map(l => `<option value="${escapeHtml(l.id)}">${escapeHtml(l.nama)}</option>`).join('');
+    $('#bfJam').innerHTML = g.slotTimes.map(x => `<option>${x}</option>`).join('');
+    syncBlockMode();
+
+    $('#aBlocks').innerHTML = g.blocks.length ? `<table class="mini-table">${g.blocks.map(b => `
+      <tr><td>${escapeHtml(b.lokasiId ? ((A.lokasi || []).find(l => l.id === b.lokasiId) || {}).nama || b.lokasiId : 'Semua lokasi')}</td>
+      <td>${b.jamMulai ? escapeHtml(b.jamMulai + '–' + b.jamSelesai) : 'Seharian'}</td><td>${escapeHtml(b.ket)}<br><span class="muted small">oleh ${escapeHtml(b.oleh)}</span></td>
+      <td class="r"><button class="btn sm danger" data-unblock="${escapeHtml(b.id)}">Buka</button></td></tr>`).join('')}</table>`
+      : '<p class="muted small">Tidak ada blokir.</p>';
+  }
+
+  function syncBlockMode() {
+    const day = $('#bfMode').value === 'day';
+    $('#bfJamWrap').classList.toggle('hidden', day);
+    $('#bfSelesaiWrap').classList.toggle('hidden', day);
+    if (!day && A.grid) {
+      const s = $('#bfJam').value.split(':').map(Number);
+      const e = s[0] * 60 + s[1] + (A.grid.durasiMenit || 180);
+      $('#bfSelesai').value = String(Math.floor(e / 60) % 24).padStart(2, '0') + ':' + String(e % 60).padStart(2, '0');
+    }
+  }
+  $('#bfMode').addEventListener('change', syncBlockMode);
+  $('#bfJam').addEventListener('change', syncBlockMode);
+
+  $('#aGrid').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.bk) return openDetail(b.dataset.bk);
+    if (b.dataset.bl) {
+      const bl = (A.grid.blocks || []).find(x => x.id === b.dataset.bl) || {};
+      const tr = b.closest('tr');
+      const lok = A.grid.rows[[...tr.parentNode.children].indexOf(tr)].lokasiId;
+      const jam = bl.jamMulai || A.grid.slotTimes[[...tr.children].indexOf(b.closest('td')) - 1];
+      if (confirm('Slot ini diblokir: "' + (bl.ket || '') + '".\n\nOK = jadikan BOOKING (pre-booking dikonfirmasi)\nCancel = buka blokir saja')) {
+        location.href = 'index.html?admin=1&date=' + A.grid.tanggal + '&lok=' + encodeURIComponent(lok) + '&jam=' + encodeURIComponent(jam);
+        return;
+      }
+      return unblock(b.dataset.bl, b);
+    }
+    if (b.dataset.free) {
+      const [lok, jam] = b.dataset.free.split('|');
+      $('#bfLokasi').value = lok; $('#bfMode').value = 'slot'; $('#bfJam').value = jam; syncBlockMode();
+      $('#aNewBooking').href = 'index.html?admin=1&date=' + A.grid.tanggal + '&lok=' + encodeURIComponent(lok) + '&jam=' + encodeURIComponent(jam);
+      $('#aNewBooking').textContent = '＋ Booking manual di slot ini (' + jam + ')';
+      $('#blockForm [name=ket]').focus();
+      $('#blockForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+  $('#aBlocks').addEventListener('click', (e) => { const b = e.target.closest('[data-unblock]'); if (b) unblock(b.dataset.unblock, b); });
+
+  async function unblock(id, btn) {
+    const bl = (A.grid.blocks || []).find(x => x.id === id);
+    if (!confirm('Buka blokir' + (bl ? ' "' + bl.ket + '"' : '') + '?')) return;
+    setLoading(btn, true, '…');
+    try {
+      renderAdminDay(await call('removeBlock', { id: id }));
+      toast('Blokir dibuka.', 'success');
+      loadAdminMonth(A.month);
+    } catch (err) { toast(err.message, 'error'); setLoading(btn, false); }
+  }
+
+  $('#blockForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const btn = $('#bfSave');
+    setLoading(btn, true, 'Menyimpan…');
+    try {
+      renderAdminDay(await call('addBlock', {
+        tanggal: A.date, lokasiId: fd.get('lokasiId'), seharian: fd.get('mode') === 'day',
+        jamMulai: fd.get('jamMulai'), jamSelesai: fd.get('jamSelesai'), ket: fd.get('ket'),
+      }));
+      e.target.querySelector('[name=ket]').value = '';
+      toast('Slot diblokir.', 'success');
+      loadAdminMonth(A.month);
+    } catch (err) { toast(err.message, 'error'); }
+    finally { setLoading(btn, false); }
   });
 
   // ============================================================

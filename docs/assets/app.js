@@ -3,7 +3,7 @@
   const $ = (s) => document.querySelector(s);
   const form = $('#bookingForm');
   const S = { data: null, addons: new Map(), menu: new Set(), avail: null, cat: null, clash: false, closed: false,
-    cake: { jenis: 'none', size: '', flavour: '', qty: 1 }, design: null };
+    cake: { jenis: 'none', size: '', flavour: '', qty: 1 }, design: null, month: null, months: {} };
 
   const EMOJI = { E01: '🎁', E02: '🎁', E03: '💌', E07: '🫧', E09: '🍬', E10: '🎩', E12: '🎤', E13: '🎤', C04: '🎂', C05: '🍰', F01: '🧊', F02: '🧃', F03: '🥤', F04: '🍭', F05: '🍪', F06: '🍹', F07: '🍺' };
   const CAT_EMOJI = { 'Entertainment': '🎈', 'Science Show': '🔬', 'Creative Workshop': '🎨', 'Decoration': '🎉', 'Cake': '🎂', 'Food & Drinks': '🥤' };
@@ -11,6 +11,15 @@
   const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   const isId = () => window.LANG === 'id';
+
+  // ---- Mode admin (booking manual): index.html?admin=1, hanya jika admin sudah login di tab ini ----
+  const QS = new URLSearchParams(location.search);
+  let ADMIN = null;
+  if (QS.get('admin') === '1') {
+    try { ADMIN = JSON.parse(sessionStorage.getItem('eo_admin_session') || 'null'); } catch (e) { ADMIN = null; }
+    if (!ADMIN || !ADMIN.token) { location.href = 'admin.html'; return; }
+  }
+  const adminApi = (action, payload) => api(action, payload, ADMIN && ADMIN.token);
   const WA = (window.APP_CONFIG || {}).WHATSAPP || '';
   const waUrl = (txt) => 'https://wa.me/' + WA + (txt ? '?text=' + encodeURIComponent(txt) : '');
   const K = (n) => (n >= 1000 && n % 1000 === 0) ? (n / 1000).toLocaleString('id-ID') + 'K' : rupiah(n);
@@ -32,6 +41,29 @@
 
   function paket() { return S.data.paket[0]; }
 
+  function setupAdminMode() {
+    document.body.classList.add('is-admin');
+    $('#adminBar').classList.remove('hidden');
+    $('#adminWho').textContent = 'login sebagai ' + (ADMIN.nama || ADMIN.username);
+    $('#adminOpts').classList.remove('hidden');
+    ['#email', '#tglLahir', '#usia', '#setuju'].forEach(s => $(s).removeAttribute('required'));
+    ['#email', '#tglLahir', '#usia'].forEach(s => { const sp = $(s).closest('label').querySelector('span'); sp.removeAttribute('data-i18n'); sp.textContent = sp.textContent.replace(/\s*\*$/, '') + ' (opsional)'; });
+    $('#aLepasBlokir').addEventListener('change', recalc);
+    document.title = 'Booking manual – Admin';
+    // preset dari tab Ketersediaan: ?admin=1&date=yyyy-mm-dd&lok=L01&jam=15:00
+    const d = QS.get('date'), lok = QS.get('lok'), jam = QS.get('jam');
+    if (d) {
+      setTimeout(() => {
+        renderSlots();
+        if (jam) $('#jam').value = jam;
+        if (lok) { const r = form.querySelector(`input[name="lokasiId"][value="${CSS.escape(lok)}"]`); if (r) r.checked = true; }
+        $('#tglAcara').value = d;
+        $('#tglAcara').dispatchEvent(new Event('change', { bubbles: true }));
+        $('#book').scrollIntoView();
+      }, 0);
+    } else setTimeout(() => $('#book').scrollIntoView(), 0);
+  }
+
   // ---------------- Init ----------------
   async function init() {
     applyI18n();
@@ -46,13 +78,17 @@
       $('#spotList').innerHTML = msg; $('#addonGrid').innerHTML = msg;
       return;
     }
-    const min = new Date(); min.setDate(min.getDate() + (Number(S.data.info.minHariBooking) || 0));
+    const min = new Date(); min.setDate(min.getDate() + (ADMIN ? 0 : (Number(S.data.info.minHariBooking) || 0)));
     $('#tglAcara').min = ymd(min);
+    S.minMonth = ymd(min).slice(0, 7);
+    S.month = S.minMonth;
+    loadMonth(S.month);
     $('#jumlahAnak').value = paket() ? paket().minAnak : 10;
     const firstNonCake = S.data.addon.find(a => a.kategori !== 'Cake');
     S.cat = firstNonCake ? firstNonCake.kategori : null;
     const std = standardCakes();
     if (std.length) { S.cake.size = std[0].id; S.cake.flavour = std[0].pilihan[0] || ''; }
+    if (ADMIN) setupAdminMode();
     renderAll();
   }
 
@@ -71,6 +107,7 @@
       (info.website ? ' · <a href="https://' + escapeHtml(info.website) + '" target="_blank" rel="noopener">' + escapeHtml(info.website) + '</a>' : '');
     $('#menuIntro').innerHTML = t('menu_intro', { n: info.maxMenu });
     renderSlots();
+    renderCal();
     renderCake();
     renderHero();
     renderSpots();
@@ -105,7 +142,8 @@
   function renderSlots() {
     const sel = $('#jam');
     const cur = sel.value;
-    const slots = (S.data.info.jamSlot && S.data.info.jamSlot.length) ? S.data.info.jamSlot : ['09:00', '10:00', '15:00', '16:00', '17:00', '18:00'];
+    let slots = (S.data.info.jamSlot && S.data.info.jamSlot.length) ? S.data.info.jamSlot.slice() : ['09:00', '10:00', '15:00', '16:00', '17:00', '18:00'];
+    if (ADMIN) { for (let m = 8 * 60; m <= 20 * 60; m += 30) { const v = fromMin(m); if (slots.indexOf(v) < 0) slots.push(v); } slots.sort(); }
     sel.innerHTML = slots.map(v => `<option value="${v}">${slotLabel(v)}</option>`).join('');
     sel.value = slots.indexOf(cur) >= 0 ? cur : (slots.indexOf('10:00') >= 0 ? '10:00' : slots[0]);
   }
@@ -382,18 +420,86 @@
     return { tipe: 'weekday', label: t('d_weekday') };
   }
 
+  // ---------------- Kalender & ketersediaan ----------------
+  async function loadMonth(month) {
+    if (S.months[month]) return renderCal();
+    renderCal();
+    try {
+      const r = ADMIN ? await adminApi('adminMonth', { bulan: month }) : await api('getMonth', { bulan: month });
+      S.months[month] = r.days;
+      if (S.month === month) renderCal();
+    } catch (e) { /* kalender opsional – booking tetap dicek server */ }
+  }
+
+  function renderCal() {
+    if (!S.data || !S.month) return;
+    renderCalendar($('#calBox'), {
+      month: S.month, days: S.months[S.month] || null, selected: $('#tglAcara').value, minMonth: S.minMonth, lang: window.LANG, allowAll: !!ADMIN,
+      legend: [['open', t('lg_open')], ['few', t('lg_few')], ['full', t('lg_full')], ['closed', t('lg_closed')]],
+      cellExtra: (d, info) => (info.st === 'open' || info.st === 'few') ? `<span class="cal-n">${escapeHtml(t('slots_left', { n: info.free }))}</span>` : '',
+      onNav: (m) => { S.month = m; loadMonth(m); },
+      onPick: (d) => { $('#tglAcara').value = d; $('#tglAcara').dispatchEvent(new Event('change', { bubbles: true })); },
+    });
+  }
+
   let availTimer = null;
   $('#tglAcara').addEventListener('change', () => {
     S.avail = null;
     clearTimeout(availTimer);
     const tgl = $('#tglAcara').value;
+    if (tgl && tgl.slice(0, 7) !== S.month) { S.month = tgl.slice(0, 7); loadMonth(S.month); } else renderCal();
     if (!tgl) return recalc();
     availTimer = setTimeout(async () => {
       try {
-        const a = await api('getAvailability', { tglAcara: tgl, lang: window.LANG });
+        const a = ADMIN ? await adminApi('adminDay', { tanggal: tgl }) : await api('getAvailability', { tglAcara: tgl, lang: window.LANG });
         if ($('#tglAcara').value === tgl) { S.avail = a; recalc(); }
       } catch (e) { /* ketersediaan tetap dicek server saat booking */ }
-    }, 250);
+    }, 150);
+  });
+
+  function cellOf(lokasiId, jam) {
+    if (!S.avail || S.avail.tanggal !== $('#tglAcara').value || !S.avail.rows) return null;
+    const r = S.avail.rows.find(x => x.lokasiId === lokasiId);
+    return r ? r.slots.find(x => x.jam === jam) : null;
+  }
+
+  /** Mode admin dengan jam bebas: cari slot grid yang bertumpuk dengan rentang jam. */
+  function overlapCell(lokasiId, start, end) {
+    const r = S.avail.rows.find(x => x.lokasiId === lokasiId);
+    if (!r) return null;
+    const dur = S.avail.durasiMenit || 180;
+    return r.slots.find(x => {
+      const s = toMin(x.dari || x.jam), e = x.sampai ? toMin(x.sampai === '24:00' ? '23:59' : x.sampai) : s + dur;
+      return (x.st === 'booked' || x.st === 'blocked') && start < e && s < end;
+    }) || null;
+  }
+
+  function renderSlotGrid() {
+    const wrap = $('#slotWrap');
+    const tgl = $('#tglAcara').value;
+    if (!S.avail || S.avail.tanggal !== tgl || !S.avail.rows) { wrap.classList.add('hidden'); return; }
+    wrap.classList.remove('hidden');
+    const lok = (form.querySelector('input[name="lokasiId"]:checked') || {}).value;
+    const jam = $('#jam').value;
+    const times = S.avail.slotTimes || [];
+    $('#slotGrid').innerHTML =
+      `<thead><tr><th>${escapeHtml(t('spot_th'))}</th>${times.map(x => `<th>${escapeHtml(slotLabel(x))}</th>`).join('')}</tr></thead><tbody>` +
+      S.avail.rows.map(r => `<tr><th>${escapeHtml(r.nama)}</th>${r.slots.map(c => {
+        const sel = r.lokasiId === lok && c.jam === jam;
+        const lbl = sel && c.st === 'free' ? t('slot_selected') : t('slot_' + c.st);
+        const pickable = c.st === 'free' || (ADMIN && c.st === 'blocked');
+        const title = ADMIN && c.ket ? ` title="${escapeHtml(c.ket)}"` : ADMIN && c.bookingId ? ` title="${escapeHtml(c.bookingId + ' ' + (c.anak || ''))}"` : '';
+        return `<td><button type="button" class="slot st-${c.st}${sel ? ' selected' : ''}" data-lok="${escapeHtml(r.lokasiId)}" data-jam="${escapeHtml(c.jam)}"${title} ${pickable ? '' : 'disabled'}>${escapeHtml(sel && c.st === 'blocked' ? '🔓 ' + t('slot_selected') : lbl)}</button></td>`;
+      }).join('')}</tr>`).join('') + '</tbody>';
+  }
+
+  $('#slotGrid').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-lok]');
+    if (!b || b.disabled) return;
+    const r = form.querySelector(`input[name="lokasiId"][value="${CSS.escape(b.dataset.lok)}"]`);
+    if (r) r.checked = true;
+    $('#jam').value = b.dataset.jam;
+    recalc();
   });
 
   function renderAvailability() {
@@ -409,11 +515,13 @@
     }
     $('#dayBadge').innerHTML = badge;
 
-    const slots = (S.avail && S.avail.tanggal === tgl) ? S.avail.slots : [];
+    const ready = S.avail && S.avail.tanggal === tgl && S.avail.rows;
     document.querySelectorAll('[data-busy]').forEach(el => {
-      const mine = slots.filter(s => s.lokasiId === el.dataset.busy);
-      el.textContent = mine.length ? t('busy', { x: mine.map(s => s.jam + '–' + s.jamSelesai).join(', ') }) : (S.avail && tgl ? t('free') : '');
-      el.style.color = mine.length ? '' : 'var(--leaf)';
+      if (!ready) { el.textContent = ''; return; }
+      const row = S.avail.rows.find(r => r.lokasiId === el.dataset.busy);
+      const taken = row ? row.slots.filter(c => c.st === 'booked' || c.st === 'blocked').map(c => slotLabel(c.jam)) : [];
+      el.textContent = taken.length ? t('busy', { x: taken.join(', ') }) : t('free');
+      el.style.color = taken.length ? '' : 'var(--leaf)';
     });
 
     const lok = form.querySelector('input[name="lokasiId"]:checked');
@@ -421,15 +529,20 @@
     S.clash = false;
     if (lok && !isNaN(start)) {
       const end = start + Math.round((p.durasiJam || 3) * 60);
-      const c = slots.find(s => s.lokasiId === lok.value && start < toMin(s.jamSelesai) && toMin(s.jam) < end);
-      if (c) S.clash = true;
-      $('#clashBox').innerHTML = c
-        ? `<div class="warn-box">${escapeHtml(t('clash', { a: c.jam, b: c.jamSelesai }))}</div>`
+      let c = cellOf(lok.value, $('#jam').value);
+      if (ADMIN && S.avail && S.avail.rows && !c) c = overlapCell(lok.value, start, end);
+      if (c && c.st !== 'free') S.clash = true;
+      if (ADMIN && c && c.st === 'blocked' && $('#aLepasBlokir').checked) {
+        S.clash = false;
+        $('#clashBox').innerHTML = `<div class="warn-box" style="background:#fff1d6;color:#8a5a00">🔒 Slot diblokir: "${escapeHtml(c.ket || '')}" – blokir akan dilepas saat booking disimpan.</div>`;
+      } else $('#clashBox').innerHTML = S.clash
+        ? `<div class="warn-box">${escapeHtml(t('slot_taken'))}</div>`
         : `<div class="hint" style="margin-top:8px">${escapeHtml(t('reserved', { a: fromMin(start), b: fromMin(end) }))}</div>`;
     } else {
       $('#clashBox').innerHTML = '';
     }
     document.querySelectorAll('.spot').forEach(el => el.classList.toggle('selected', !!lok && el.dataset.id === lok.value));
+    renderSlotGrid();
   }
 
   // ---------------- Estimate (mirrors calcEstimate_ in Apps Script) ----------------
@@ -515,6 +628,7 @@
     ev.preventDefault();
     if (!form.querySelector('input[name="lokasiId"]:checked')) { toast(t('err_spot'), 'error'); $('#spotPick').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     if (!form.reportValidity()) return;
+    if (ADMIN && !$('#email').value.trim() && $('#aKirimEmail').checked) toast('Email kosong – konfirmasi tidak dikirim lewat email. Kirim lewat WhatsApp dari layar berikutnya.');
     if (S.clash || S.closed) { toast(t('err_avail'), 'error'); return; }
     if (S.cake.jenis === 'standard' && (!S.cake.size || !S.cake.flavour)) { toast(t('err_cake'), 'error'); return; }
     if (S.cake.jenis === 'custom' && !$('#cakeLayered').value && !$('#cakeNonLayered').value) { toast(t('err_cake_flavour'), 'error'); $('#cakeCus').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
@@ -536,11 +650,12 @@
       layered: $('#cakeLayered').value, nonlayered: $('#cakeNonLayered').value, filling: $('#cakeFilling').value, finishing: $('#cakeFinishing').value,
     };
     if (S.cake.jenis === 'custom' && S.design) payload.desainKue = S.design;
+    if (ADMIN) { payload.kirimEmail = $('#aKirimEmail').checked; payload.lepasBlokir = $('#aLepasBlokir').checked; delete payload.website; }
 
     const btn = $('#submitBtn');
     setLoading(btn, true, t('sending'));
     try {
-      const r = await api('createBooking', payload);
+      const r = ADMIN ? await adminApi('adminCreateBooking', payload) : await api('createBooking', payload);
       $('#sBookingId').textContent = r.bookingId;
       $('#sDetail').innerHTML = `
         <p>${t('m_thanks', { n: escapeHtml(r.nama), d: escapeHtml(dateL(r.tglAcara)), t: escapeHtml(r.jam), s: escapeHtml(r.lokasi) })}</p>
@@ -548,13 +663,20 @@
           <div class="line"><span>${escapeHtml(t('m_total'))}</span><span>${rupiah(r.total)}</span></div>
           <div class="line"><span>${escapeHtml(t('m_dp'))}</span><span>${rupiah(r.dp)}</span></div>
         </div>
-        <p class="small muted" style="margin-top:14px">${r.emailKonfirmasi ? t(r.proforma ? 'm_sent2' : 'm_sent1', { e: escapeHtml(r.email) }) : escapeHtml(t('m_fail'))}</p>`;
+        <p class="small muted" style="margin-top:14px">${r.emailKonfirmasi ? t(r.proforma ? 'm_sent2' : 'm_sent1', { e: escapeHtml(r.email) }) : ADMIN ? 'Tidak ada email terkirim ke pelanggan. Kirim ringkasan lewat WhatsApp; proforma bisa dikirim dari admin setelah email diisi.' : escapeHtml(t('m_fail'))}</p>`;
       const sWa = $('#sWa');
-      if (WA) sWa.href = waUrl(t('wa_booked', { id: r.bookingId, d: dateL(r.tglAcara), t: r.jam }));
+      if (ADMIN) {
+        const no = String(r.hp || '').replace(/\D/g, '').replace(/^0/, '62');
+        sWa.textContent = 'Kirim ringkasan ke pelanggan via WhatsApp';
+        sWa.href = 'https://wa.me/' + no + '?text=' + encodeURIComponent(t('wa_summary', { n: r.nama, id: r.bookingId, d: dateL(r.tglAcara), t: r.jam, s: r.lokasi, tot: rupiah(r.total), dp: rupiah(r.dp) }));
+        $('#sAdmin').href = 'admin.html#booking=' + encodeURIComponent(r.bookingId);
+        $('#sAdmin').classList.remove('hidden');
+        $('#sClose').textContent = 'Buat booking lain';
+      } else if (WA) sWa.href = waUrl(t('wa_booked', { id: r.bookingId, d: dateL(r.tglAcara), t: r.jam }));
       else sWa.classList.add('hidden');
       $('#successModal').showModal();
       form.reset();
-      S.addons.clear(); S.menu.clear(); S.avail = null; S.design = null;
+      S.addons.clear(); S.menu.clear(); S.avail = null; S.design = null; S.months = {}; loadMonth(S.month);
       S.cake = { jenis: 'none', size: S.cake.size, flavour: S.cake.flavour, qty: 1 };
       $('#cakeDesignPrev').classList.add('hidden');
       $('#jumlahAnak').value = paket().minAnak;
