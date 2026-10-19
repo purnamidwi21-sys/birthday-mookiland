@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <!-- Versi 1-file: CSS, JS & gambar sudah di dalam file ini; video latar di folder docs/video (build 2026-10-19f) -->
+  <!-- Versi 1-file: CSS, JS & gambar sudah di dalam file ini; video latar di folder docs/video (build 2026-10-19e) -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
@@ -768,32 +768,6 @@ body:not(.is-admin) #jamWrap { display: none; }
 .cake-pick .spot-opt.cp { grid-template-columns: 1fr; row-gap: 2px; }
 .cake-pick .spot-opt.cp .cp-ph { grid-row: auto; width: 100%; height: 78px; margin-bottom: 6px; font-size: 30px; }
 .cake-pick .spot-opt.cp b, .cake-pick .spot-opt.cp .s { grid-column: 1; }
-
-/* ===== Ukuran kartu seragam ===== */
-/* buffet anak: semua kartu sama tinggi */
-.menu-grid { grid-auto-rows: 128px; }
-.menu-card { height: 128px; overflow: hidden; }
-.mc-bd { gap: 3px; }
-.mc-bd b { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 13.5px; line-height: 1.2; }
-.mc-bd .por { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-width: 100%; border-radius: 8px; font-size: 11.5px; line-height: 1.25; padding: 2px 8px; }
-.mc-bd small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-/* add-on: semua kartu sama tinggi, kecuali kartu 2-in-1 (gift bag, MC) */
-@media (min-width: 561px) {
-  .folder-body .addon-grid { align-items: start; }
-  .folder-body .addon-grid > .addon { height: 412px; }
-  .folder-body .addon-grid > .addon.var-card { height: auto; min-height: 412px; }
-  .addon h4 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .addon p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; flex: 0 1 auto; }
-  .addon .bd { min-height: 0; }
-  .addon .bd > .row { margin-top: auto; }
-  /* setelah dipilih dan ada tambahan (bubble/pinata): foto & deskripsi diringkas agar muat */
-  .addon.added:has(.extras.on) .ph { height: 90px; }
-  .addon.added:has(.extras.on) p { -webkit-line-clamp: 1; }
-  .addon .extras.on { overflow: auto; }
-}
-@media (max-width: 560px) {
-  .folder-body .addon-grid > .addon:not(.var-card) { min-height: 150px; }
-}
 
 </style>
 </head>
