@@ -86,8 +86,9 @@
       <span class="sign" data-i18n="addons_sign">Add more fun to the party!</span>
       <p data-i18n-html="addons_p"></p>
     </div>
-    <div class="cat-tabs" id="catTabs"></div>
-    <div class="addon-grid" id="addonGrid"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+    <p class="cat-intro" id="catIntro"></p>
+    <div class="cat-bar"><div class="cat-tabs" id="catTabs"></div></div>
+    <div class="addon-cats" id="addonGrid"><div class="addon-grid"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div></div>
   </div>
 </section>
 
@@ -182,7 +183,7 @@
         <div class="card">
           <div class="step-title"><span class="n">5</span><h3 data-i18n="s4">Your add-ons</h3></div>
           <div class="sel-list" id="selList"></div>
-          <a href="#addons" class="small" style="display:inline-block;margin-top:10px;font-weight:800" data-i18n="browse">＋ Browse all add-ons</a>
+          <div class="cat-check" id="catCheck"></div>
         </div>
 
         <div class="card">
@@ -193,6 +194,7 @@
                 <select name="sumber"><option>WhatsApp</option><option>Telepon</option><option>Walk-in</option><option>Instagram</option><option>Email</option><option>Lainnya</option></select></label>
               <div class="f" style="display:grid;gap:8px">
                 <label class="check" style="padding:8px 10px"><input type="checkbox" id="aKirimEmail" checked><div><b>Kirim email konfirmasi + proforma</b><small>Hanya jika email pelanggan diisi</small></div></label>
+                <label class="check" style="padding:8px 10px"><input type="checkbox" id="aKirimWa" checked><div><b>Kirim WhatsApp konfirmasi</b><small>Otomatis ke nomor HP pelanggan (jika WA_TOKEN aktif)</small></div></label>
                 <label class="check" style="padding:8px 10px"><input type="checkbox" id="aLepasBlokir" checked><div><b>Lepas blokir slot</b><small>Pakai slot yang diblokir untuk pre-booking</small></div></label>
               </div>
             </div>
@@ -213,8 +215,14 @@
                 <option value="Indonesian" data-i18n="opt_id">Indonesian</option>
               </select></label>
             <label class="f full"><span data-i18n="f_notes">Notes</span><textarea name="catatan" maxlength="1000"></textarea></label>
-            <label class="check full"><input type="checkbox" name="setuju" id="setuju" required>
-              <div><b data-i18n="agree_b">I have read the park rules</b><small data-i18n-html="agree_small"></small></div></label>
+            <div class="consent full">
+              <div class="consent-t" data-i18n="consent_t">Before sending, please confirm:</div>
+              <label class="check"><input type="checkbox" name="setuju" id="setuju" required>
+                <div><b data-i18n="agree_tc">I agree to the birthday Terms &amp; Conditions</b>
+                <small><button type="button" class="linkbtn" id="openTerms" data-i18n="read_tc">Read the Terms &amp; Conditions</button></small></div></label>
+              <label class="check"><input type="checkbox" name="setujuPark" id="setujuPark" required>
+                <div><b data-i18n="agree_park">I have checked the Mookiland park rules</b><small data-i18n-html="agree_park_small"></small></div></label>
+            </div>
             <input class="honey" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
           </div>
         </div>
@@ -252,6 +260,20 @@
 </footer>
 
 <a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">💬 <span data-i18n="wa_float">Chat with Bu Dwi</span></a>
+
+<dialog id="termsModal">
+  <div class="modal-body">
+    <h2 data-i18n="tc_title">Terms &amp; Conditions</h2>
+    <div class="terms-text" id="termsText"></div>
+    <h3 data-i18n="tc_rules">Birthday party rules</h3>
+    <ul class="rules" id="termsRules"></ul>
+    <p class="small"><a id="parkRulesLink" target="_blank" rel="noopener" data-i18n="tc_park">Mookiland park rules (balimookilandpark.com) ↗</a></p>
+    <div style="display:grid;gap:10px;margin-top:16px">
+      <button class="btn block" id="termsAgree" type="button" data-i18n="tc_agree">I agree</button>
+      <button class="btn ghost block" id="termsClose" type="button" data-i18n="tc_close">Close</button>
+    </div>
+  </div>
+</dialog>
 
 <dialog id="successModal">
   <div class="modal-body">
