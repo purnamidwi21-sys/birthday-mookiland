@@ -2,7 +2,8 @@
 (function () {
   const $ = (s) => document.querySelector(s);
   const form = $('#bookingForm');
-  const S = { data: null, addons: new Map(), menu: new Set(), avail: null, cat: null, clash: false, closed: false };
+  const S = { data: null, addons: new Map(), menu: new Set(), avail: null, cat: null, clash: false, closed: false,
+    cake: { jenis: 'none', size: '', flavour: '', qty: 1 }, design: null };
 
   const EMOJI = { E01: '🎁', E02: '🎁', E03: '💌', E07: '🫧', E09: '🍬', E10: '🎩', E12: '🎤', E13: '🎤', C04: '🎂', C05: '🍰', F01: '🧊', F02: '🧃', F03: '🥤', F04: '🍭', F05: '🍪', F06: '🍹', F07: '🍺' };
   const CAT_EMOJI = { 'Entertainment': '🎈', 'Science Show': '🔬', 'Creative Workshop': '🎨', 'Decoration': '🎉', 'Cake': '🎂', 'Food & Drinks': '🥤' };
@@ -48,7 +49,10 @@
     const min = new Date(); min.setDate(min.getDate() + (Number(S.data.info.minHariBooking) || 0));
     $('#tglAcara').min = ymd(min);
     $('#jumlahAnak').value = paket() ? paket().minAnak : 10;
-    S.cat = S.data.addon.length ? S.data.addon[0].kategori : null;
+    const firstNonCake = S.data.addon.find(a => a.kategori !== 'Cake');
+    S.cat = firstNonCake ? firstNonCake.kategori : null;
+    const std = standardCakes();
+    if (std.length) { S.cake.size = std[0].id; S.cake.flavour = std[0].pilihan[0] || ''; }
     renderAll();
   }
 
@@ -66,6 +70,8 @@
     $('#footInfo').innerHTML = t('foot_info', { k: escapeHtml(info.kontak), t: escapeHtml(info.telp) }) + '<br>' + escapeHtml(info.alamat) +
       (info.website ? ' · <a href="https://' + escapeHtml(info.website) + '" target="_blank" rel="noopener">' + escapeHtml(info.website) + '</a>' : '');
     $('#menuIntro').innerHTML = t('menu_intro', { n: info.maxMenu });
+    renderSlots();
+    renderCake();
     renderHero();
     renderSpots();
     renderTabs();
@@ -88,6 +94,118 @@
     $('#inclList').innerHTML = fas.map(f => `<li>${escapeHtml(f)}</li>`).join('');
     $('#anakHint').textContent = t('hint_kids', { n: p.minAnak });
     $('#dewasaHint').textContent = t('hint_adults', { n: p.dewasaPerAnak });
+  }
+
+  // ---------------- Slot jam ----------------
+  function slotLabel(v) {
+    if (isId()) return v.replace(':', '.');
+    const [h, m] = v.split(':').map(Number);
+    return ((h % 12) || 12) + ':' + String(m).padStart(2, '0') + (h < 12 ? ' am' : ' pm');
+  }
+  function renderSlots() {
+    const sel = $('#jam');
+    const cur = sel.value;
+    const slots = (S.data.info.jamSlot && S.data.info.jamSlot.length) ? S.data.info.jamSlot : ['09:00', '10:00', '15:00', '16:00', '17:00', '18:00'];
+    sel.innerHTML = slots.map(v => `<option value="${v}">${slotLabel(v)}</option>`).join('');
+    sel.value = slots.indexOf(cur) >= 0 ? cur : (slots.indexOf('10:00') >= 0 ? '10:00' : slots[0]);
+  }
+
+  // ---------------- Kue ulang tahun ----------------
+  const standardCakes = () => S.data.addon.filter(a => a.kategori === 'Cake' && a.pilihan.length);
+  const cakeById = (id) => S.data.addon.find(a => a.id === id);
+  const CUSTOM_ID = 'C04', OWN_ID = 'C05';
+
+  function fillSelect(el, list, cur, withBlank) {
+    el.innerHTML = (withBlank ? `<option value="">${escapeHtml(t('opt_choose'))}</option>` : '') +
+      list.map(o => `<option value="${escapeHtml(o.v)}" ${o.v === cur ? 'selected' : ''}>${escapeHtml(o.l)}</option>`).join('');
+  }
+
+  function renderCake() {
+    const std = standardCakes();
+    const cus = cakeById(CUSTOM_ID), own = cakeById(OWN_ID);
+    const minStd = std.length ? Math.min.apply(null, std.map(a => a.harga)) : 0;
+    $('#cakeStdSub').textContent = std.length ? t('cake_std_s', { p: rupiah(minStd) }) : '';
+    $('#cakeCusSub').textContent = cus ? t('cake_cus_s', { p: rupiah(cus.harga) }) : '';
+    $('#cakeOwnSub').textContent = own ? t('cake_own_s', { p: rupiah(own.harga) }) : '';
+    if (!cus) form.querySelector('input[name="kueJenis"][value="custom"]').closest('label').classList.add('hidden');
+    if (!own) form.querySelector('input[name="kueJenis"][value="own"]').closest('label').classList.add('hidden');
+    if (!std.length) form.querySelector('input[name="kueJenis"][value="standard"]').closest('label').classList.add('hidden');
+
+    fillSelect($('#cakeSize'), std.map(a => {
+      const m = /(\d+)\s*[–-]\s*(\d+)/.exec(a.deskripsi) || /(\d+)/.exec(a.deskripsi);
+      return { v: a.id, l: t('size_opt', { n: aName(a).replace(/^(Favorite Cake|Kue Favorit)\s*/i, ''), sl: m ? m[0].replace(/\s/g, '') : '-', p: rupiah(a.harga) }) };
+    }), S.cake.size);
+    const size = cakeById(S.cake.size) || std[0];
+    if (size && size.pilihan.indexOf(S.cake.flavour) < 0) S.cake.flavour = size.pilihan[0];
+    fillSelect($('#cakeFlavour'), size ? size.pilihan.map(o => ({ v: o, l: optLabel(size, o) })) : [], S.cake.flavour);
+    $('#cakeQty').value = S.cake.qty || 1;
+
+    const info = S.data.info;
+    const toOpts = (arr) => (arr || []).map(x => ({ v: x, l: x }));
+    fillSelect($('#cakeLayered'), toOpts(info.cakeLayered), $('#cakeLayered').value, true);
+    fillSelect($('#cakeNonLayered'), toOpts(info.cakeNonLayered), $('#cakeNonLayered').value, true);
+    fillSelect($('#cakeFilling'), toOpts(info.cakeFilling), $('#cakeFilling').value, true);
+    fillSelect($('#cakeFinishing'), toOpts(info.cakeFinishing), $('#cakeFinishing').value, true);
+    $('#cakeCusInfo').innerHTML = cus ? t('cus_info', { p: rupiah(cus.harga) }) : '';
+    $('#cakeOwnInfo').innerHTML = own ? t('own_info', { p: rupiah(own.harga) }) : '';
+    syncCakePanels();
+  }
+
+  function syncCakePanels() {
+    const j = S.cake.jenis;
+    $('#cakeStd').classList.toggle('hidden', j !== 'standard');
+    $('#cakeCus').classList.toggle('hidden', j !== 'custom');
+    $('#cakeOwn').classList.toggle('hidden', j !== 'own');
+    $('#cakeCommon').classList.toggle('hidden', j === 'none' || j === 'own');
+  }
+
+  /** Add-on kue yang ikut dihitung, sesuai pilihan di langkah kue. */
+  function cakeItems() {
+    const j = S.cake.jenis;
+    if (j === 'standard' && cakeById(S.cake.size)) return [{ a: cakeById(S.cake.size), st: { qty: Math.max(1, S.cake.qty || 1), pilihan: S.cake.flavour } }];
+    if (j === 'custom' && cakeById(CUSTOM_ID)) return [{ a: cakeById(CUSTOM_ID), st: { qty: 1, pilihan: '' } }];
+    if (j === 'own' && cakeById(OWN_ID)) return [{ a: cakeById(OWN_ID), st: { qty: 1, pilihan: '' } }];
+    return [];
+  }
+
+  $('#cakePick').addEventListener('change', (e) => {
+    if (e.target.name !== 'kueJenis') return;
+    S.cake.jenis = e.target.value;
+    syncCakePanels();
+    recalc();
+  });
+  $('#cakeSize').addEventListener('change', (e) => { S.cake.size = e.target.value; renderCake(); recalc(); });
+  $('#cakeFlavour').addEventListener('change', (e) => { S.cake.flavour = e.target.value; recalc(); });
+  $('#cakeQty').addEventListener('input', (e) => { S.cake.qty = Math.max(1, Math.floor(+e.target.value || 1)); recalc(); });
+
+  // Foto desain: diperkecil di browser (maks. 1600 px, JPEG) supaya cepat terkirim
+  $('#cakeDesign').addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    const prev = $('#cakeDesignPrev');
+    S.design = null; prev.classList.add('hidden');
+    if (!file) return;
+    if (file.size > 15 * 1024 * 1024) { toast(t('err_photo_big'), 'error'); e.target.value = ''; return; }
+    try {
+      S.design = await shrinkImage(file);
+      prev.src = S.design.data; prev.classList.remove('hidden');
+    } catch (err) {
+      if (file.size <= 8 * 1024 * 1024 && /^image\//.test(file.type)) {
+        S.design = { name: file.name, type: file.type, data: await readAsDataURL(file) };
+      } else { toast(t('err_photo'), 'error'); e.target.value = ''; }
+    }
+  });
+
+  function readAsDataURL(file) {
+    return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); });
+  }
+  async function shrinkImage(file) {
+    const url = await readAsDataURL(file);
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const max = 1600, k = Math.min(1, max / Math.max(img.width, img.height));
+    const c = document.createElement('canvas');
+    c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    return { name: file.name.replace(/\.[^.]+$/, '') + '.jpg', type: 'image/jpeg', data: c.toDataURL('image/jpeg', 0.85) };
   }
 
   // ---------------- Party spots ----------------
@@ -125,7 +243,7 @@
   // ---------------- Add-ons browse ----------------
   function renderTabs() {
     const cats = [];
-    S.data.addon.forEach(a => { if (cats.indexOf(a.kategori) < 0) cats.push(a.kategori); });
+    S.data.addon.forEach(a => { if (a.kategori !== 'Cake' && cats.indexOf(a.kategori) < 0) cats.push(a.kategori); });
     $('#catTabs').innerHTML = cats.map(c => `<button type="button" data-cat="${escapeHtml(c)}" class="${c === S.cat ? 'active' : ''}">${CAT_EMOJI[c] || '✨'} ${escapeHtml(catName(c))}</button>`).join('');
   }
 
@@ -239,7 +357,7 @@
     });
     $('#menuBox').innerHTML = order.map(g => `
       <div class="menu-group"><h4>${escapeHtml(g)}</h4><div class="check-list" style="margin-bottom:12px">
-        ${groups[g].map(m => `<label class="check"><input type="checkbox" data-menu value="${escapeHtml(m.nama)}" ${S.menu.has(m.nama) ? 'checked' : ''}><div><b>${escapeHtml(pick(m.nama, m.namaId))}</b></div></label>`).join('')}
+        ${groups[g].map(m => `<label class="check"><input type="checkbox" data-menu value="${escapeHtml(m.nama)}" ${S.menu.has(m.nama) ? 'checked' : ''}><div><b>${escapeHtml(pick(m.nama, m.namaId))}</b>${(m.ket || m.ketId) ? `<span class="menu-ket">${escapeHtml(pick(m.ket, m.ketId))}</span>` : ''}</div></label>`).join('')}
       </div></div>`).join('');
     syncMenu();
   }
@@ -348,8 +466,7 @@
     }
 
     const start = toMin($('#jam').value);
-    d.addon.filter(a => S.addons.has(a.id)).forEach(a => {
-      const st = S.addons.get(a.id);
+    d.addon.filter(a => S.addons.has(a.id) && a.kategori !== 'Cake').map(a => ({ a, st: S.addons.get(a.id) })).concat(cakeItems()).forEach(({ a, st }) => {
       const nm = aName(a) + (st.pilihan ? ' – ' + optLabel(a, st.pilihan) : '');
       let l;
       if (a.satuan === 'per_anak') l = { desc: nm + ' × ' + anak, total: anak * a.harga };
@@ -399,16 +516,26 @@
     if (!form.querySelector('input[name="lokasiId"]:checked')) { toast(t('err_spot'), 'error'); $('#spotPick').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     if (!form.reportValidity()) return;
     if (S.clash || S.closed) { toast(t('err_avail'), 'error'); return; }
+    if (S.cake.jenis === 'standard' && (!S.cake.size || !S.cake.flavour)) { toast(t('err_cake'), 'error'); return; }
+    if (S.cake.jenis === 'custom' && !$('#cakeLayered').value && !$('#cakeNonLayered').value) { toast(t('err_cake_flavour'), 'error'); $('#cakeCus').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
 
     const fd = new FormData(form);
     const payload = {};
-    fd.forEach((v, k) => { payload[k] = String(v).trim(); });
+    fd.forEach((v, k) => { if (!(v instanceof File)) payload[k] = String(v).trim(); });
+    delete payload.kueJenis;
     payload.lang = window.LANG;
     payload.jumlahAnak = Number(payload.jumlahAnak);
     payload.jumlahDewasa = Number(payload.jumlahDewasa || 0);
     payload.setuju = $('#setuju').checked;
     payload.menu = Array.from(S.menu);
-    payload.addOns = Array.from(S.addons.entries()).map(([id, st]) => ({ id: id, qty: st.qty || '', pilihan: st.pilihan || '' }));
+    payload.addOns = Array.from(S.addons.entries()).filter(([id]) => (cakeById(id) || {}).kategori !== 'Cake')
+      .map(([id, st]) => ({ id: id, qty: st.qty || '', pilihan: st.pilihan || '' }))
+      .concat(cakeItems().map(({ a, st }) => ({ id: a.id, qty: st.qty || '', pilihan: st.pilihan || '' })));
+    payload.kue = {
+      jenis: S.cake.jenis, tulisan: $('#cakeWriting').value.trim(), lain: $('#cakeOther').value.trim(),
+      layered: $('#cakeLayered').value, nonlayered: $('#cakeNonLayered').value, filling: $('#cakeFilling').value, finishing: $('#cakeFinishing').value,
+    };
+    if (S.cake.jenis === 'custom' && S.design) payload.desainKue = S.design;
 
     const btn = $('#submitBtn');
     setLoading(btn, true, t('sending'));
@@ -427,7 +554,9 @@
       else sWa.classList.add('hidden');
       $('#successModal').showModal();
       form.reset();
-      S.addons.clear(); S.menu.clear(); S.avail = null;
+      S.addons.clear(); S.menu.clear(); S.avail = null; S.design = null;
+      S.cake = { jenis: 'none', size: S.cake.size, flavour: S.cake.flavour, qty: 1 };
+      $('#cakeDesignPrev').classList.add('hidden');
       $('#jumlahAnak').value = paket().minAnak;
       renderAll();
     } catch (e) {

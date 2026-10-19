@@ -318,3 +318,10 @@ table.data .r, .mini-table .r { text-align: right; white-space: nowrap; }
 .lang-switch button { border: 0; background: transparent; color: #d8ead0; font: 800 13px var(--body); padding: 6px 11px; border-radius: 999px; cursor: pointer; }
 .lang-switch button.active { background: #fff; color: var(--jungle); }
 @media (max-width: 420px) { .nav-right .btn { display: none; } }
+
+/* ---------- Langkah kue ---------- */
+.cake-pick { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+@media (max-width: 760px) { .cake-pick { grid-template-columns: 1fr 1fr; } }
+.cake-panel { margin-top: 14px; background: var(--lime-soft); border-radius: 14px; padding: 14px; }
+.design-prev { margin-top: 10px; max-height: 180px; width: auto; border-radius: 10px; border: 2px solid var(--line); }
+.menu-ket { display: block; font-size: 12px; color: var(--muted); font-weight: 600; }

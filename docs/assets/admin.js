@@ -230,6 +230,10 @@
         ${info('Menu buffet', escapeHtml(b.menu || '— belum dipilih —'))}
         ${info('Tema · bahasa hiburan', escapeHtml(b.tema || '-') + ' · ' + escapeHtml(b.bahasa || '-'))}
         ${info('Bahasa email pelanggan', b.lang === 'id' ? '🇮🇩 Indonesia' : '🇬🇧 English')}
+        ${info('Tanggal lahir', b.tglLahir ? tglIndo(b.tglLahir) : '-')}
+        ${info('Kue', escapeHtml(({ none: 'Tanpa kue', standard: 'Kue favorit', custom: 'Kue custom', own: 'Bawa kue sendiri' })[b.jenisKue] || '-') + (b.detailKue ? '<br><span class="small">' + escapeHtml(b.detailKue) + '</span>' : ''))}
+        ${info('Tulisan di kue', b.tulisanKue ? '“' + escapeHtml(b.tulisanKue) + '”' : '-')}
+        ${info('Foto desain kue', b.desainKue ? `<a href="${escapeHtml(b.desainKue)}" target="_blank" rel="noopener">🎂 Lihat foto</a>` : '-')}
         ${b.catatan ? '<div style="grid-column:1/-1"><span>Catatan pelanggan</span>' + escapeHtml(b.catatan) + '</div>' : ''}
       </div>
 
