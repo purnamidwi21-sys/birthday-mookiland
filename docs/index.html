@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <!-- Versi 1-file: CSS & JS sudah di dalam file ini (build 2026-10-19) -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Birthday Party Package – Mookiland Bali</title>
@@ -9,7 +10,452 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css">
+  <style>
+/* ============================================================
+   Mookiland Bali – Birthday booking
+   Palet diambil dari brosur: hijau jungle, lime bambu, oranye, krem papan
+   ============================================================ */
+:root {
+  --jungle: #17502a;
+  --jungle-2: #0f3d1f;
+  --leaf: #2f7d32;
+  --lime: #8dc63f;
+  --lime-soft: #eaf4da;
+  --orange: #f37021;
+  --orange-2: #d95e12;
+  --orange-soft: #fff1e6;
+  --cream: #f4f0e3;
+  --paper: #fffdf7;
+  --ink: #15301b;
+  --ink-2: #44594a;
+  --muted: #7b8a7d;
+  --line: #e1e6d6;
+  --red: #d93025;
+  --radius: 18px;
+  --shadow: 0 12px 30px -14px rgba(15, 61, 31, .35);
+  --head: 'Fredoka', 'Nunito', system-ui, sans-serif;
+  --body: 'Nunito', system-ui, -apple-system, Segoe UI, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; font-family: var(--body); color: var(--ink); background: var(--cream); font-size: 15.5px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; display: block; }
+a { color: var(--leaf); }
+h1, h2, h3, h4 { font-family: var(--head); font-weight: 600; line-height: 1.12; margin: 0 0 .5em; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.hidden { display: none !important; }
+
+/* ---------- Papan judul ala brosur ---------- */
+.sign {
+  display: inline-block; background: var(--jungle); color: #fff; font-family: var(--head); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .02em; font-size: clamp(22px, 3.6vw, 34px); padding: 8px 22px 10px;
+  border-radius: 6px 14px 8px 12px; transform: rotate(-1.2deg); box-shadow: 0 6px 0 rgba(15, 61, 31, .18);
+}
+.sign.orange { background: var(--orange); }
+.tagline { display: inline-block; background: var(--orange); color: #fff; font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; padding: 3px 10px; border-radius: 4px; }
+.sec-head { margin-bottom: 26px; }
+.sec-head p { color: var(--ink-2); margin: 14px 0 0; max-width: 640px; }
+
+/* ---------- Tombol ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px;
+  padding: 12px 22px; font: 800 15px var(--body); background: var(--orange); color: #fff; cursor: pointer; text-decoration: none;
+  transition: transform .15s, background .15s; box-shadow: 0 5px 0 var(--orange-2);
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(2px); box-shadow: 0 3px 0 var(--orange-2); }
+.btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+.btn.green { background: var(--leaf); box-shadow: 0 5px 0 var(--jungle-2); }
+.btn.ghost { background: transparent; color: var(--jungle); box-shadow: inset 0 0 0 2px var(--jungle); }
+.btn.ghost:hover { background: var(--lime-soft); }
+.btn.light { background: #fff; color: var(--jungle); box-shadow: 0 5px 0 rgba(0, 0, 0, .15); }
+.btn.wa { background: #25d366; box-shadow: 0 5px 0 #179c4a; }
+.btn.danger { background: #fff; color: var(--red); box-shadow: inset 0 0 0 2px #f5c2bd; }
+.btn.mint { background: var(--leaf); box-shadow: 0 4px 0 var(--jungle-2); }
+.btn.sun { background: var(--orange); }
+.btn.sm { padding: 8px 14px; font-size: 13px; box-shadow: 0 3px 0 var(--orange-2); }
+.btn.sm.green, .btn.sm.mint { box-shadow: 0 3px 0 var(--jungle-2); }
+.btn.sm.ghost, .btn.sm.danger { box-shadow: inset 0 0 0 2px var(--jungle); }
+.btn.sm.danger { box-shadow: inset 0 0 0 2px #f5c2bd; }
+.btn.block { width: 100%; }
+.spin { width: 15px; height: 15px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; display: inline-block; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Navigasi ---------- */
+.nav { position: sticky; top: 0; z-index: 30; background: var(--jungle); box-shadow: 0 2px 0 rgba(0, 0, 0, .1); }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 66px; gap: 14px; }
+.nav .brand img { height: 46px; width: auto; border-radius: 8px; }
+.nav nav { display: flex; gap: 22px; }
+.nav nav a { color: #d8ead0; text-decoration: none; font-weight: 800; font-size: 14px; }
+.nav nav a:hover { color: #fff; }
+@media (max-width: 860px) { .nav nav { display: none; } }
+
+/* ---------- Hero ---------- */
+.hero {
+  background:
+    radial-gradient(ellipse 380px 260px at 6% 12%, rgba(141, 198, 63, .35), transparent 70%),
+    radial-gradient(ellipse 420px 300px at 96% 90%, rgba(141, 198, 63, .28), transparent 70%),
+    linear-gradient(160deg, #1f6a34, var(--jungle) 55%, var(--jungle-2));
+  color: #fff; padding: 54px 0 70px; position: relative; overflow: hidden;
+}
+.hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 34px; align-items: center; }
+@media (max-width: 920px) { .hero-grid { grid-template-columns: 1fr; } }
+.hero h1 { font-size: clamp(36px, 6vw, 60px); font-weight: 700; margin: 18px 0 14px; }
+.hero h1 em { font-style: normal; color: var(--lime); }
+.hero p.lead { color: #d8ead0; font-size: 17px; max-width: 520px; margin: 0 0 24px; }
+.hero .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.price-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.price-tile { background: rgba(255, 255, 255, .08); border: 2px solid rgba(255, 255, 255, .18); border-radius: 18px; padding: 18px; text-align: center; }
+.price-tile h3 { font-size: 20px; text-transform: uppercase; letter-spacing: .04em; margin: 0 0 10px; }
+.price-tile .amt { background: #fff; color: var(--jungle); font-family: var(--head); font-weight: 700; font-size: clamp(34px, 5vw, 46px); border-radius: 8px; padding: 2px 10px; line-height: 1.2; }
+.price-tile .per { display: inline-block; margin: -8px 0 10px; background: var(--orange); font-weight: 800; font-size: 12px; padding: 2px 10px; border-radius: 4px; position: relative; }
+.price-tile .days { font-weight: 800; font-size: 13px; text-transform: uppercase; color: #d8ead0; }
+.incl { background: var(--paper); color: var(--ink); border-radius: 16px; padding: 18px 20px; margin-top: 16px; box-shadow: var(--shadow); }
+.incl .tagline { margin-bottom: 10px; }
+.incl ul { margin: 0; padding: 0; list-style: none; }
+.incl li { padding: 5px 0 5px 28px; position: relative; font-weight: 700; font-size: 14px; }
+.incl li::before { content: '🐒'; position: absolute; left: 0; top: 4px; font-size: 15px; }
+
+/* ---------- Section ---------- */
+section.block { padding: 56px 0; }
+section.alt { background: var(--paper); }
+
+/* ---------- Lokasi ---------- */
+.spot-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; align-items: start; }
+@media (max-width: 920px) { .spot-grid { grid-template-columns: 1fr; } }
+.map-card { background: #fff; border-radius: var(--radius); padding: 10px; box-shadow: var(--shadow); }
+.map-card img { border-radius: 12px; width: 100%; }
+.spot-list { display: grid; gap: 14px; }
+.spot {
+  display: grid; grid-template-columns: 150px 1fr; gap: 14px; background: #fff; border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow); border: 3px solid transparent; transition: border-color .15s;
+}
+.spot.selected { border-color: var(--lime); }
+.spot .ph { background: var(--lime-soft) center/cover; min-height: 120px; position: relative; }
+.spot .num { position: absolute; top: 8px; left: 8px; width: 30px; height: 30px; border-radius: 50%; background: var(--jungle); color: #fff; font: 700 15px var(--head); display: grid; place-items: center; }
+.spot .bd { padding: 14px 14px 14px 0; }
+.spot h3 { font-size: 20px; margin: 0 0 4px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.spot p { margin: 0 0 8px; font-size: 14px; color: var(--ink-2); }
+.spot .price { font-weight: 800; font-size: 14px; color: var(--jungle); }
+.badge-new { background: var(--orange); color: #fff; font: 800 11px var(--body); padding: 2px 8px; border-radius: 4px; letter-spacing: .05em; }
+@media (max-width: 520px) { .spot { grid-template-columns: 1fr; } .spot .bd { padding: 0 14px 14px; } }
+
+/* ---------- Add-on ---------- */
+.cat-intro { margin: -4px 0 10px; font-weight: 800; color: var(--jungle); font-size: 14.5px; }
+.cat-bar { position: sticky; top: 66px; z-index: 20; background: var(--paper); margin: 0 -12px 8px; padding: 10px 12px 8px; box-shadow: 0 6px 10px -10px rgba(0, 0, 0, .35); }
+.is-admin .cat-bar { top: 112px; }
+.cat-tabs { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: thin; }
+.cat-tabs button { flex: none; display: inline-flex; align-items: center; gap: 6px; border: 2px solid var(--jungle); background: #fff; color: var(--jungle); font: 800 14px var(--body); padding: 7px 8px 7px 14px; border-radius: 999px; cursor: pointer; }
+.cat-tabs button .cnt { background: var(--lime-soft); color: var(--jungle); font-size: 12px; padding: 1px 8px; border-radius: 999px; }
+.cat-tabs button.has .cnt { background: var(--leaf); color: #fff; }
+.cat-tabs button.active { background: var(--jungle); color: #fff; }
+.cat-tabs button.active .cnt { background: rgba(255, 255, 255, .22); color: #fff; }
+.addon-cat { scroll-margin-top: 140px; padding-top: 18px; }
+.addon-cat + .addon-cat { margin-top: 18px; border-top: 2px dashed rgba(0, 0, 0, .1); padding-top: 26px; }
+.is-admin .addon-cat { scroll-margin-top: 186px; }
+.addon-cat-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.addon-cat-head .ic { width: 44px; height: 44px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 24px; box-shadow: var(--shadow); }
+.addon-cat-head h3 { margin: 0; font-size: 24px; color: var(--jungle); }
+.addon-cat-head .meta { font-size: 13px; font-weight: 800; color: var(--muted); }
+.addon-cat-head .got { font-size: 12.5px; font-weight: 800; background: var(--leaf); color: #fff; padding: 3px 10px; border-radius: 999px; }
+.addon .ph { position: relative; }
+.addon .ph .tick { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; border-radius: 50%; background: var(--leaf); color: #fff; font-size: 16px; font-weight: 800; display: grid; place-items: center; }
+.cat-check { margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgba(0, 0, 0, .12); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.cat-check > div { width: 100%; }
+.cat-check .cc { text-decoration: none; font-size: 13px; font-weight: 700; color: var(--jungle); background: #fff; border: 1.5px solid var(--jungle); padding: 4px 10px; border-radius: 999px; }
+.cat-check .cc b { font-weight: 800; color: var(--muted); margin-left: 2px; }
+.cat-check .cc.has { background: var(--lime-soft); border-color: var(--leaf); }
+.cat-check .cc.has b { color: var(--leaf); }
+@media (max-width: 860px) { .addon-cat-head h3 { font-size: 21px; } .addon .ph { height: 120px; } }
+.addon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.addon {
+  background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column;
+  border: 3px solid transparent; transition: border-color .15s, transform .15s;
+}
+.addon:hover { transform: translateY(-2px); }
+.addon.added { border-color: var(--lime); }
+.addon .ph { height: 140px; background: var(--lime-soft) center/cover; display: grid; place-items: center; font-size: 54px; }
+.addon .bd { padding: 14px 16px 16px; display: flex; flex-direction: column; flex: 1; }
+.addon h4 { font-size: 18px; margin: 0 0 6px; }
+.addon p { font-size: 13.5px; color: var(--ink-2); margin: 0 0 10px; flex: 1; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.chip { font-size: 11.5px; font-weight: 800; background: var(--lime-soft); color: var(--jungle); padding: 2px 8px; border-radius: 999px; }
+.chip.warn { background: #fde7d6; color: #a2440b; }
+.addon .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.addon .price { font-family: var(--head); font-size: 19px; font-weight: 600; color: var(--jungle); line-height: 1.1; }
+.addon .price small { display: block; font-family: var(--body); font-size: 11.5px; color: var(--muted); font-weight: 700; }
+.addon .btn { box-shadow: none; padding: 8px 14px; font-size: 13px; }
+.addon.added .btn { background: var(--leaf); }
+
+/* ---------- Builder ---------- */
+.booking-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start; }
+@media (max-width: 960px) { .booking-grid { grid-template-columns: 1fr; } }
+.card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; }
+.card + .card { margin-top: 18px; }
+.step-title { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.step-title .n { width: 32px; height: 32px; border-radius: 50%; background: var(--jungle); color: #fff; font: 700 16px var(--head); display: grid; place-items: center; flex: none; }
+.step-title h3 { font-size: 21px; margin: 0; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; }
+.form-grid .full { grid-column: 1 / -1; }
+@media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+label.f { display: block; font-size: 13px; font-weight: 800; color: var(--ink-2); }
+label.f > span { display: block; margin-bottom: 6px; }
+.hint { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 4px; }
+input, select, textarea {
+  width: 100%; font: 15px var(--body); color: var(--ink); background: #fff; border: 2px solid var(--line); border-radius: 12px;
+  padding: 10px 12px; outline: none; transition: border-color .15s, box-shadow .15s;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--leaf); box-shadow: 0 0 0 4px rgba(141, 198, 63, .25); }
+textarea { min-height: 84px; resize: vertical; }
+.day-badge { margin-top: 10px; padding: 10px 12px; border-radius: 12px; font-weight: 800; font-size: 14px; background: var(--lime-soft); color: var(--jungle); }
+.day-badge.weekend { background: var(--orange-soft); color: #a2440b; }
+.day-badge.closed, .warn-box { background: #fde8e6; color: #9b1c13; }
+.warn-box { padding: 10px 12px; border-radius: 12px; font-weight: 700; font-size: 13.5px; margin-top: 10px; }
+.spot-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 640px) { .spot-pick { grid-template-columns: 1fr; } }
+.spot-opt { border: 2px solid var(--line); border-radius: 14px; padding: 10px 12px; cursor: pointer; display: block; background: #fff; }
+.spot-opt input { display: none; }
+.spot-opt b { display: block; font-size: 14.5px; }
+.spot-opt .s { font-size: 12px; color: var(--muted); font-weight: 700; }
+.spot-opt .busy { font-size: 11.5px; color: #a2440b; font-weight: 800; margin-top: 4px; }
+.spot-opt:has(input:checked) { border-color: var(--leaf); background: var(--lime-soft); }
+.check-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (max-width: 560px) { .check-list { grid-template-columns: 1fr; } }
+.check { display: flex; gap: 10px; align-items: flex-start; border: 2px solid var(--line); border-radius: 12px; padding: 9px 11px; cursor: pointer; background: #fff; }
+.check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--leaf); flex: none; }
+.check:has(input:checked) { border-color: var(--leaf); background: var(--lime-soft); }
+.check:has(input:disabled) { opacity: .5; cursor: not-allowed; }
+.check b { display: block; font-size: 14px; }
+.check small { color: var(--muted); }
+.menu-group h4 { font-size: 15px; margin: 6px 0 8px; color: var(--jungle); }
+.counter { font-weight: 800; font-size: 13px; color: var(--jungle); background: var(--lime-soft); padding: 2px 10px; border-radius: 999px; margin-left: auto; }
+.sel-list { display: grid; gap: 10px; }
+.sel-item { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: center; border: 2px solid var(--line); border-radius: 14px; padding: 10px 12px; }
+.sel-item b { font-size: 14.5px; }
+.sel-item .ctl { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; grid-column: 1 / -1; }
+.sel-item .ctl input { width: 90px; padding: 7px 10px; }
+.sel-item .ctl select { width: auto; padding: 7px 10px; }
+.sel-item .x { width: 30px; height: 30px; font-size: 18px; }
+.empty-sel { text-align: center; padding: 18px; border: 2px dashed var(--line); border-radius: 14px; color: var(--muted); font-weight: 700; }
+.honey { position: absolute; left: -5000px; }
+
+.summary { position: sticky; top: 84px; }
+.summary h3 { font-size: 22px; }
+.summary .meta { font-size: 13px; color: var(--ink-2); font-weight: 700; margin-bottom: 10px; }
+.summary .line { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; font-size: 13.5px; border-bottom: 1px dashed var(--line); }
+.summary .line span:first-child { color: var(--ink-2); }
+.summary .line > :last-child { white-space: nowrap; font-weight: 700; }
+.summary .total { display: flex; justify-content: space-between; align-items: baseline; padding-top: 14px; font-family: var(--head); font-size: 26px; font-weight: 600; }
+.summary .dp { background: var(--orange-soft); border-radius: 12px; padding: 11px 14px; margin: 12px 0 14px; font-size: 14px; display: flex; justify-content: space-between; font-weight: 700; }
+.summary .notes { font-size: 12px; color: #8a4b14; margin: 10px 0 0; padding-left: 16px; }
+.summary .empty { text-align: center; padding: 24px 8px; color: var(--muted); }
+
+/* ---------- Aturan ---------- */
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; padding: 0; list-style: none; margin: 0; }
+.rules li { background: #fff; border-radius: 14px; padding: 14px 16px 14px 50px; position: relative; font-weight: 700; font-size: 14px; box-shadow: var(--shadow); }
+.rules li::before { content: '🐾'; position: absolute; left: 16px; top: 13px; font-size: 18px; }
+
+/* ---------- Footer ---------- */
+.footer { background: var(--jungle-2); color: #cfe2c6; padding: 40px 0 70px; font-size: 14px; }
+.footer .wrap { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center; }
+.footer a { color: #fff; }
+.wa-float { position: fixed; right: 18px; bottom: 18px; z-index: 40; display: flex; align-items: center; gap: 8px; background: #25d366; color: #fff; padding: 12px 16px; border-radius: 999px; box-shadow: var(--shadow); text-decoration: none; font-weight: 800; font-size: 14px; }
+@media (max-width: 960px) { .wa-float span { display: none; } }
+
+/* ---------- Modal ---------- */
+dialog { border: 0; border-radius: 22px; padding: 0; max-width: min(660px, calc(100vw - 24px)); width: 100%; box-shadow: 0 30px 80px -20px rgba(15, 61, 31, .55); color: var(--ink); }
+dialog::backdrop { background: rgba(15, 40, 20, .5); backdrop-filter: blur(3px); }
+.modal-body { padding: 24px; max-height: 84vh; overflow: auto; }
+.modal-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+.x { background: var(--lime-soft); border: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 20px; cursor: pointer; color: var(--ink); flex: none; }
+.success-icon { font-size: 56px; text-align: center; }
+.big-id { font-family: var(--head); font-size: 28px; text-align: center; color: var(--jungle); background: var(--lime-soft); border-radius: 14px; padding: 10px; margin: 10px 0 16px; letter-spacing: .03em; }
+
+/* ---------- Toast ---------- */
+#toast-box { position: fixed; z-index: 100; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 8px; width: min(440px, calc(100vw - 32px)); }
+.toast { background: var(--ink); color: #fff; padding: 12px 16px; border-radius: 12px; font-size: 14px; font-weight: 700; box-shadow: var(--shadow); transition: opacity .5s, transform .5s; }
+.toast.error { background: #b3261e; }
+.toast.success { background: var(--leaf); }
+.toast.hide { opacity: 0; transform: translateY(8px); }
+.skeleton { background: linear-gradient(90deg, #ebe7d8 25%, #f6f3e8 50%, #ebe7d8 75%); background-size: 200% 100%; animation: sk 1.2s infinite; border-radius: var(--radius); min-height: 260px; }
+@keyframes sk { to { background-position: -200% 0; } }
+
+/* ============================================================
+   ADMIN
+   ============================================================ */
+.admin-body { background: #f1f4ec; }
+.login-wrap { min-height: 100vh; display: grid; place-items: center; padding: 16px; background: linear-gradient(160deg, #1f6a34, var(--jungle-2)); }
+.login-card { width: min(400px, 100%); }
+.login-card .logo-img { height: 64px; margin: 0 auto 6px; border-radius: 10px; }
+.topbar { background: var(--jungle); color: #fff; position: sticky; top: 0; z-index: 20; }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; gap: 10px; max-width: 1320px; }
+.topbar .logo { display: flex; align-items: center; gap: 10px; font: 600 18px var(--head); }
+.topbar .logo img { height: 40px; border-radius: 6px; }
+.tabs { display: flex; gap: 4px; overflow-x: auto; }
+.tabs button { background: transparent; border: 0; color: #bfd6b6; font: 800 14px var(--body); padding: 8px 14px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.tabs button.active { background: rgba(255, 255, 255, .15); color: #fff; }
+.user-menu { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #bfd6b6; }
+@media (max-width: 760px) {
+  .topbar .wrap { flex-wrap: wrap; height: auto; padding-top: 10px; padding-bottom: 10px; }
+  .tabs { order: 3; width: 100%; }
+  .user-menu span { display: none; }
+}
+.admin-main { max-width: 1320px; margin: 0 auto; padding: 24px 16px 60px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-bottom: 18px; }
+.toolbar label.f { min-width: 140px; }
+.toolbar .grow { flex: 1; min-width: 200px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.kpi { background: #fff; border-radius: 16px; padding: 16px 18px; border: 1px solid var(--line); }
+.kpi .lbl { font-size: 12px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+.kpi .val { font-family: var(--head); font-size: 25px; font-weight: 600; margin-top: 4px; }
+.kpi .sub { font-size: 12px; color: var(--ink-2); font-weight: 600; }
+.kpi.accent { background: var(--jungle); color: #fff; border-color: var(--jungle); }
+.kpi.accent .lbl, .kpi.accent .sub { color: #bfd6b6; }
+.dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
+.dash-grid.even { grid-template-columns: 1fr 1fr; }
+.dash-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 960px) { .dash-grid, .dash-grid.even, .dash-grid.three { grid-template-columns: 1fr; } }
+.panel { background: #fff; border-radius: 16px; padding: 18px; border: 1px solid var(--line); min-width: 0; }
+.panel h3 { font-size: 17px; margin-bottom: 12px; }
+.chart-box { position: relative; height: 280px; }
+.table-wrap { overflow-x: auto; background: #fff; border-radius: 16px; border: 1px solid var(--line); }
+table.data { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table.data th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); padding: 12px 14px; background: #f7f9f3; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.data td { padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.data tr:last-child td { border-bottom: 0; }
+table.data tr.click { cursor: pointer; }
+table.data tr.click:hover td { background: #f6faef; }
+table.data .r, .mini-table .r { text-align: right; white-space: nowrap; }
+.empty-row { text-align: center; color: var(--muted); padding: 30px !important; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; white-space: nowrap; }
+.b-menunggu { background: #fff1d6; color: #8a5a00; }
+.b-dp { background: #dceefe; color: #1d4f91; }
+.b-lunas { background: #dcf3dc; color: #1d6b28; }
+.b-selesai { background: #e6e9f5; color: #3a4380; }
+.b-batal { background: #fde2df; color: #9b1c13; }
+.b-wknd { background: var(--orange-soft); color: #a2440b; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; font-size: 14px; margin: 8px 0 14px; }
+.detail-grid div span { display: block; font-size: 12px; color: var(--muted); font-weight: 700; }
+@media (max-width: 560px) { .detail-grid { grid-template-columns: 1fr; } }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+.subhead { font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 18px 0 8px; font-family: var(--body); font-weight: 800; }
+.mini-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.mini-table td, .mini-table th { padding: 7px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.pay-form { background: var(--lime-soft); border-radius: 14px; padding: 14px; margin-top: 10px; }
+.pay-form .form-grid { gap: 10px; }
+.note-list { font-size: 12.5px; color: #8a4b14; margin: 6px 0 0; padding-left: 18px; }
+
+/* ---------- Pengalih bahasa EN / ID ---------- */
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.lang-switch { display: inline-flex; background: rgba(255, 255, 255, .12); border-radius: 999px; padding: 3px; }
+.lang-switch button { border: 0; background: transparent; color: #d8ead0; font: 800 13px var(--body); padding: 6px 11px; border-radius: 999px; cursor: pointer; }
+.lang-switch button.active { background: #fff; color: var(--jungle); }
+@media (max-width: 420px) { .nav-right .btn { display: none; } }
+
+/* ---------- Langkah kue ---------- */
+.cake-pick { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+@media (max-width: 760px) { .cake-pick { grid-template-columns: 1fr 1fr; } }
+.cake-panel { margin-top: 14px; background: var(--lime-soft); border-radius: 14px; padding: 14px; }
+.design-prev { margin-top: 10px; max-height: 180px; width: auto; border-radius: 10px; border: 2px solid var(--line); }
+.menu-ket { display: block; font-size: 12px; color: var(--muted); font-weight: 600; }
+
+/* ---------- Kalender & slot ---------- */
+.cal { background: #fff; border: 2px solid var(--line); border-radius: 16px; padding: 12px; max-width: 520px; }
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-family: var(--head); font-size: 18px; }
+.cal-nav { border: 0; background: var(--lime-soft); color: var(--jungle); width: 36px; height: 36px; border-radius: 50%; font-size: 22px; cursor: pointer; line-height: 1; }
+.cal-nav:disabled { opacity: .3; cursor: default; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-dow { text-align: center; font-size: 11.5px; font-weight: 800; color: var(--muted); padding: 4px 0; text-transform: uppercase; }
+.cal-cell { border: 0; border-radius: 10px; min-height: 48px; padding: 4px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; font: 700 14px var(--body); cursor: pointer; background: #f3f3ee; color: var(--muted); }
+.cal-cell.empty { background: transparent; cursor: default; }
+.cal-cell:disabled { cursor: default; }
+.cal-cell .cal-n { font-size: 9.5px; font-weight: 800; line-height: 1.1; }
+.cal-cell.st-open { background: #dff0cc; color: var(--jungle); }
+.cal-cell.st-few { background: #ffe3c8; color: #9a420c; }
+.cal-cell.st-full { background: #ece9e3; color: #a39e94; text-decoration: line-through; }
+.cal-cell.st-closed { background: #f6dcd9; color: #a7473d; }
+.cal-cell.st-past, .cal-cell.st-loading { background: #f6f5f1; color: #c5c2ba; }
+.cal-cell.st-loading { animation: sk 1.2s infinite; background: linear-gradient(90deg, #f1efe8 25%, #faf9f5 50%, #f1efe8 75%); background-size: 200% 100%; }
+.cal-cell.wknd .cal-d { text-decoration: underline; text-decoration-color: var(--orange); text-underline-offset: 3px; }
+.cal-cell.selected { outline: 3px solid var(--jungle); outline-offset: 1px; }
+.cal-cell:not(:disabled):hover { filter: brightness(.96); }
+.cal-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: 12px; font-weight: 700; color: var(--ink-2); }
+.cal-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 4px; margin-right: 5px; vertical-align: -1px; }
+.cal-legend i.st-open { background: #b9dd92; } .cal-legend i.st-few { background: #ffc994; } .cal-legend i.st-full { background: #d8d4cc; } .cal-legend i.st-closed { background: #eeb5ae; }
+.slot-scroll { overflow-x: auto; }
+.slot-grid { border-collapse: separate; border-spacing: 4px; min-width: 100%; }
+.slot-grid th { font-size: 12px; font-weight: 800; color: var(--ink-2); text-align: left; padding: 2px 6px; white-space: nowrap; }
+.slot-grid thead th { text-align: center; }
+.slot { width: 100%; min-width: 74px; border: 0; border-radius: 9px; padding: 9px 6px; font: 800 12px var(--body); cursor: pointer; }
+.slot.st-free { background: #dff0cc; color: var(--jungle); }
+.slot.st-free:hover { background: #c9e6a8; }
+.slot.st-booked, .slot.st-blocked { background: #ece9e3; color: #a39e94; cursor: not-allowed; }
+.slot.st-closed { background: #f6dcd9; color: #a7473d; cursor: not-allowed; }
+.slot.st-past { background: #f6f5f1; color: #c5c2ba; cursor: not-allowed; }
+.slot.selected, .slot.selected:hover { background: var(--jungle); color: #fff; }
+.slot-grid.admin .slot { min-width: 96px; min-height: 52px; line-height: 1.25; }
+.slot-grid.admin .slot small { display: block; font-weight: 700; font-size: 10.5px; opacity: .85; }
+.slot-grid.admin .slot.st-booked { background: #dceefe; color: #1d4f91; cursor: pointer; }
+.slot-grid.admin .slot.st-blocked { background: #fff1d6; color: #8a5a00; cursor: pointer; }
+.slot-grid.admin .slot.st-free:hover { background: #c9e6a8; }
+
+/* ---------- Mode admin (booking manual) ---------- */
+.admin-bar { background: #2b1d0e; color: #ffe9c9; font-size: 13.5px; position: sticky; top: 0; z-index: 40; }
+.admin-bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 8px; padding-bottom: 8px; flex-wrap: wrap; }
+.is-admin .nav { top: 46px; }
+.is-admin .wa-float { display: none; }
+.admin-opts { background: #fff6e6; border: 2px dashed #f0c27a; border-radius: 14px; padding: 12px 14px; margin-bottom: 16px; }
+
+/* Add-on: compact horizontal cards on phones so every category is quick to scan */
+@media (max-width: 560px) {
+  .addon-grid { grid-template-columns: 1fr; gap: 10px; }
+  .addon { flex-direction: row; }
+  .addon .ph { width: 104px; height: auto; min-height: 120px; flex: none; font-size: 38px; }
+  .addon .bd { padding: 10px 12px 12px; }
+  .addon h4 { font-size: 16px; margin-bottom: 4px; }
+  .addon p { font-size: 12.5px; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .addon .chips { margin-bottom: 6px; }
+  .addon .price { font-size: 16px; }
+  .addon .btn { padding: 7px 12px; }
+  .cat-bar { top: 66px; }
+  .addon-cat-head .ic { width: 38px; height: 38px; font-size: 20px; }
+}
+
+/* Consent */
+.consent { background: var(--lime-soft); border-radius: 14px; padding: 12px; display: grid; gap: 8px; border: 2px solid transparent; transition: border-color .2s; }
+.consent .check { background: #fff; }
+.consent.flash { border-color: var(--orange); animation: shake .4s; }
+.consent-t { font-weight: 800; color: var(--jungle); font-size: 14px; }
+.linkbtn { background: none; border: 0; padding: 0; font: inherit; font-weight: 800; color: var(--orange); text-decoration: underline; cursor: pointer; }
+.terms-text p { margin: 0 0 8px; }
+@keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+/* Slot grid: spot info right in the row */
+.slot-grid th.sp-h { position: sticky; left: 0; z-index: 2; background: #fff; min-width: 210px; padding: 4px 8px 4px 0; text-align: left; }
+.slot-grid thead th.sp-h { z-index: 3; }
+.sp-cell { display: flex; gap: 10px; align-items: center; }
+.sp-ph { width: 52px; height: 52px; flex: none; border-radius: 10px; background: var(--lime-soft) center/cover; display: grid; place-items: center; font-size: 22px; }
+.sp-h.on .sp-ph { box-shadow: 0 0 0 3px var(--leaf); }
+.sp-tx { display: flex; flex-direction: column; line-height: 1.25; white-space: normal; }
+.sp-tx b { font-size: 13.5px; color: var(--jungle); }
+.sp-tx small { font-size: 11.5px; color: var(--muted); font-weight: 700; }
+.sp-more { align-self: flex-start; background: none; border: 0; padding: 2px 0 0; font: 800 11.5px var(--body); color: var(--orange); cursor: pointer; text-decoration: underline; }
+.sp-info td { padding: 0 0 6px; }
+.sp-info-box { position: sticky; left: 0; display: grid; grid-template-columns: 180px 1fr; gap: 14px; background: var(--lime-soft); border-radius: 12px; padding: 10px; max-width: min(640px, calc(100vw - 80px)); }
+.sp-info-box p { margin: 4px 0 6px; font-size: 13px; color: var(--ink-2); }
+.sp-big { border-radius: 10px; background: #dfe9cf center/cover; min-height: 110px; }
+@media (max-width: 560px) {
+  .slot-grid th.sp-h { min-width: 150px; }
+  .sp-ph { width: 40px; height: 40px; }
+  .sp-info-box { grid-template-columns: 1fr; }
+  .sp-big { min-height: 140px; }
+}
+@media (max-width: 560px) { .slot { min-width: 62px; padding: 9px 4px; } }
+
+</style>
 </head>
 <body>
 
@@ -290,10 +736,1233 @@
   </div>
 </dialog>
 
-<script src="assets/config.js"></script>
-<script src="assets/api.js"></script>
-<script src="assets/i18n.js"></script>
-<script src="assets/calendar.js"></script>
-<script src="assets/app.js"></script>
+<script>
+/* ---- config.js ---- */
+// ============================================================
+//  KONFIGURASI – ganti API_URL dengan URL Web App Apps Script
+//  (Deploy > Manage deployments > Web app URL, berakhiran /exec)
+// ============================================================
+window.APP_CONFIG = {
+  API_URL: 'https://script.google.com/macros/s/AKfycbxItL28rhxZgUwTtTINlF9QHyis0dt8nOKKCDb5CLhK0lvWU6lTlwtWIIbzXiOpb4Vq/exec',
+
+  // WhatsApp Bu Dwi (format internasional tanpa + dan spasi). Kosongkan untuk menyembunyikan tombol.
+  WHATSAPP: '6281236843020',
+};
+
+</script>
+<script>
+/* ---- api.js ---- */
+// Pemanggil API Apps Script + utilitas kecil yang dipakai halaman publik & admin.
+
+function apiMsg_(en, id) {
+  const l = (window.LANG || document.documentElement.lang || '').slice(0, 2);
+  return l === 'id' ? id : en;
+}
+
+async function api(action, payload, token) {
+  const url = (window.APP_CONFIG || {}).API_URL || '';
+  if (!url || url.indexOf('GANTI_DENGAN') >= 0) {
+    throw new Error(apiMsg_('API_URL is not set in assets/config.js', 'API_URL belum diatur di assets/config.js'));
+  }
+  let res;
+  try {
+    res = await fetch(url, {
+      method: 'POST',
+      // text/plain = "simple request" → tanpa CORS preflight (wajib untuk Apps Script)
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: action, payload: payload || {}, token: token || null }),
+      redirect: 'follow',
+    });
+  } catch (e) {
+    throw new Error(apiMsg_('Cannot connect to the server. Please check your internet connection.', 'Tidak bisa terhubung ke server. Periksa koneksi internet Anda.'));
+  }
+  let json;
+  try { json = await res.json(); } catch (e) { throw new Error(apiMsg_('Invalid server response. Please try again later.', 'Respons server tidak valid. Pastikan Web App sudah di-deploy dengan akses "Anyone".')); }
+  if (!json.ok) {
+    const err = new Error(json.error || 'Terjadi kesalahan.');
+    err.code = json.code;
+    throw err;
+  }
+  return json.data;
+}
+
+function rupiah(n) {
+  return 'Rp ' + Math.round(Number(n) || 0).toLocaleString('id-ID');
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+const BULAN_ID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+const HARI_ID = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+function parseYmd(s) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s || ''));
+  return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+}
+
+function tglIndo(s, withDay) {
+  const d = parseYmd(s);
+  if (!d) return s || '-';
+  return (withDay ? HARI_ID[d.getDay()] + ', ' : '') + d.getDate() + ' ' + BULAN_ID[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function ymd(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function toast(msg, type) {
+  let box = document.getElementById('toast-box');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'toast-box';
+    document.body.appendChild(box);
+  }
+  const t = document.createElement('div');
+  t.className = 'toast ' + (type || 'info');
+  t.textContent = msg;
+  box.appendChild(t);
+  setTimeout(() => t.classList.add('hide'), 4200);
+  setTimeout(() => t.remove(), 4800);
+}
+
+function setLoading(btn, on, text) {
+  if (!btn) return;
+  if (on) {
+    btn.dataset.label = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span>' + (text || apiMsg_('Processing…', 'Memproses…'));
+  } else {
+    btn.disabled = false;
+    if (btn.dataset.label) btn.innerHTML = btn.dataset.label;
+  }
+}
+
+</script>
+<script>
+/* ---- i18n.js ---- */
+// Kamus teks website pelanggan: English (en) & Bahasa Indonesia (id).
+// Ubah teks di sini. Variabel ditulis {nama}. Konten paket/add-on/menu/aturan diambil dari Google Sheet.
+window.I18N = {
+  en: {
+    nav_package: 'Package', nav_spots: 'Party Spots', nav_addons: 'Add-ons', nav_book: 'Plan & Book', nav_rules: 'Rules', book_now: 'Book now',
+    hero_sign: 'Birthday Party Package',
+    hero_h1: 'A <em>wild jungle</em> birthday adventure',
+    hero_lead: 'All-day playtime, a reserved party spot, a children\'s buffet and endless fun with Mooki. Build your party, see the price instantly and book online.',
+    cta_plan: 'Plan my party', cta_wa: 'WhatsApp us',
+    weekday: 'Weekday', weekend: 'Weekend', per_child: 'PER CHILD', days_wd: 'Monday – Friday', days_we: 'Saturday – Sunday<br>&amp; Public Holiday',
+    incl: 'Package inclusions',
+    spots_sign: 'First, pick your party spot!',
+    spots_p: 'Choose where your celebration will take place. Every spot is reserved for your party for 3 hours.',
+    addons_sign: 'Add more fun to the party!',
+    addons_p: 'Tap <b>Add</b> on anything you like – it goes straight into your party plan below. Availability is subject to confirmation, so early booking is recommended.',
+    book_sign: 'Plan & book your party',
+    book_p: 'Your estimate updates as you go. When it looks right, send your booking – we\'ll email your confirmation and proforma invoice straight away.',
+    s1: 'When & where', f_date: 'Party date *', f_time: 'Start time *',
+    f_spot: 'Party spot * <span class="muted" style="display:inline;font-weight:600">· reserved for 3 hours</span>',
+    s2: 'Guests', f_kids: 'Children *', f_adults: 'Adults',
+    hint_kids: 'Minimum charge of {n} children. A 50% charge applies for registered children who do not attend.', hint_adults: 'Up to {n} adults per child are included in the package.',
+    s3: 'Children\'s buffet menu',
+    menu_intro: 'Included with the package – choose up to <b>{n}</b> items. The children\'s buffet is for kids only; adult meals can be ordered separately.',
+    s4: 'Your add-ons', browse: '＋ Browse all add-ons',
+    cat_intro: '{c} categories · {n} options – scroll down to see them all, or jump to a category:', cat_count: 'Category {i} of {c} · {n} options', cat_added: '{n} added', cat_check: 'Have you seen every category? Tap to browse:', cat_opts_short: 'options', m_wa_sent: 'WhatsApp confirmation sent to {h}.',
+    s5: 'Your details', f_nama: 'Parent / contact name *', f_hp: 'WhatsApp number *', f_child: 'Birthday child\'s name *', f_age: 'Birthday age (turning) *',
+    f_theme: 'Theme for decoration and/or piñata', ph_theme: 'e.g. Jungle, Dinosaurs, Princess', f_entlang: 'Entertainment language',
+    opt_en: 'English', opt_ru: 'Russian', opt_id: 'Indonesian',
+    f_notes: 'Additional requests or information that can help us make your child\'s special day even better (allergies, special needs, etc.)',
+    consent_t: 'Before sending, please confirm:',
+    agree_tc: 'I agree to the birthday Terms & Conditions', read_tc: 'Read the Terms & Conditions',
+    agree_park: 'I have checked the Mookiland park rules',
+    agree_park_small: 'Outside food, decorations and entertainers are not permitted. <a href="https://balimookilandpark.com/rules-and-useful-information/" target="_blank" rel="noopener">Read the park rules on balimookilandpark.com ↗</a>',
+    park_url: 'https://balimookilandpark.com/rules-and-useful-information/',
+    tc_title: 'Terms & Conditions', tc_rules: 'Birthday party rules', tc_park: 'Mookiland park rules (balimookilandpark.com) ↗', tc_agree: 'I agree', tc_close: 'Close',
+    err_consent: 'Please tick both boxes: Terms & Conditions and park rules.',
+    sum_title: 'Your party estimate', sum_empty: 'Enter the number of children to see your estimate.', submit: 'Send booking',
+    sum_note: 'Your date is secured once the deposit is received. Final prices for items marked "starting price" are confirmed by our team.',
+    rules_sign: 'Important reminders', rules_p: 'For all visitors – thank you for helping us keep Mookiland fun and safe!',
+    foot_info: 'More info &amp; pre-booking with <b>{k}</b> · {t}', foot_wa: 'WhatsApp Bu Dwi', admin_login: 'Admin login', wa_float: 'Chat with Bu Dwi',
+    wa_msg: 'Hi Bu Dwi, I would like to ask about a birthday party at Mookiland.',
+    wa_booked: 'Hi Bu Dwi, I just booked a birthday party at Mookiland. Booking no. {id} ({d}, {t}).',
+    m_title: 'Booking sent!', m_keep: 'Please keep your booking number:', m_wa: 'Send my booking no. to Bu Dwi', m_done: 'Done',
+    m_thanks: 'Thank you, <b>{n}</b>! We\'ve received your booking for <b>{d}</b>, {t} at <b>{s}</b>.',
+    m_total: 'Estimated total', m_dp: 'Deposit to secure your date',
+    m_sent2: 'Your confirmation and proforma invoice have been sent to <b>{e}</b>. Please also check your spam/promotions folder.',
+    m_sent1: 'Your confirmation has been sent to <b>{e}</b>. Please also check your spam/promotions folder.',
+    m_fail: 'We could not send the confirmation email – our team will contact you on WhatsApp.',
+    load_err: 'Sorry, we could not load the party information ({e}). Please WhatsApp us.',
+    spot_included: 'Included in the package', spot_price: '+{wd} weekday · +{we} weekend & holiday', choose_spot: 'Choose this spot',
+    included: 'Included', up_to_seats: ' · up to {n} seats', spot_details: 'ⓘ Photo & details', spot_hide: '✕ Hide details',
+    unit_child: 'per child', unit_pax: 'for {n} pax · +{e}/pax', unit_each: 'each', unit_start_each: 'starting price, each',
+    unit_start: 'starting price', unit_party: 'per party', on_request: 'On request', see_menu: 'see our menu',
+    chip_eve: '🌙 Evening only (from {t})', chip_opts: '{n} options', add: '＋ Add', added: '✓ Added',
+    toast_added: '✓ {x} added to your party plan', toast_replaced: 'Replaced {a} with {b}',
+    sel_empty: 'No add-ons yet – browse entertainment, decorations, cakes and drinks above.',
+    lbl_pax: 'Pax', lbl_qty: 'Qty', x_children: '× number of children', remove: 'Remove',
+    day_closed: '⛔ {d} – the park is closed ({x}). Please choose another date.',
+    too_soon: 'Online bookings need at least {n} days\' notice. For earlier dates please WhatsApp us.',
+    rate_badge: '{d} · {l} rate: <b>{p}</b> per child',
+    busy: 'Taken: {x}', free: '✓ Free all day',
+    clash: 'This spot is already booked {a}–{b} on that day. Please choose another start time or spot.',
+    reserved: 'Your spot is reserved {a} – {b}.',
+    d_weekday: 'Weekday', d_weekend: 'Weekend', d_holiday: 'Public holiday ({x})', d_closed: 'Closed – {x}',
+    r_we: 'Weekend/Holiday', r_wd: 'Weekday',
+    line_pkg: '{r} package × {n} children', n_min: 'Minimum charge of {n} children applies.',
+    line_adults: 'Additional adults × {n}', n_adults: '{x} adult(s) beyond the included {n} per child pay the regular entrance fee on the day.',
+    line_spot: '{s} upgrade', n_cap: '{s} seats up to {n} guests – our team will help arrange extra space.',
+    n_req: '{x}: price on request – our team will send the menu.',
+    n_eve: '⚠️ {x} is for evening events only – please start at {t} or later.',
+    n_start: '* Starting price – the final amount is confirmed by our team.',
+    choose_date: 'Choose a date', choose_spot2: 'Choose a spot', sum_wait: 'Choose a date and spot to see the price.', meta_guests: '{a} kids · {d} adults',
+    line_tax: 'Tax & service {n}%', total: 'Total', deposit: 'Deposit to secure your date',
+    err_spot: 'Please choose a party spot.', err_avail: 'Please choose an available date, time and spot.', sending: 'Sending your booking…',
+    s_cake: 'Birthday cake', cake_none: 'No cake', cake_none_s: 'Skip for now',
+    cake_standard: 'Favourite cake', cake_std_s: 'Ready-to-go · from {p}',
+    cake_custom: 'Custom cake', cake_cus_s: 'Made to order · from {p}',
+    cake_own: 'We bring our own cake', cake_own_s: '+{p} outside cake charge',
+    f_size: 'Size *', f_flavour: 'Flavour *', f_qty: 'Quantity', size_opt: '{n} · up to {sl} slices · {p}',
+    cus_info: '1 tier · round · 16 cm diameter · up to 15 slices · starting from <b>{p}</b>. Please book early – our team will confirm the final price.',
+    f_layered: 'Cake flavour – layered', f_nonlayered: 'Cake flavour – non-layered', f_filling: 'Filling (between the layers)',
+    f_finishing: 'Finishing (follows the design if chosen)', opt_choose: '— Choose —',
+    f_design: 'Cake design – reference photo (optional)', design_hint: 'JPG / PNG, max. 8 MB. It helps us understand your vision for the perfect cake.',
+    own_info: 'Outside cakes are subject to an extra charge of <b>{p}</b>.',
+    f_writing: 'Writing on the cake', ph_writing: 'e.g. Happy Birthday Lea',
+    f_othercake: 'More than 1 cake? Tell us the size and flavour of the other cake(s)', ph_othercake: 'e.g. 20 cm Apple Crumble',
+    f_dob: 'Child\'s date of birth *', err_cake: 'Please choose the cake size and flavour.', err_cake_flavour: 'Please choose a flavour for the custom cake.',
+    err_photo: 'The photo could not be read – please choose a JPG or PNG image.', err_photo_big: 'The photo is too large (max. 8 MB).',
+    wa_summary: 'Hi {n}, thank you for booking a birthday party at Mookiland Bali! 🎉\nBooking no.: {id}\nDate: {d}, {t}\nParty spot: {s}\nTotal: {tot}\nDeposit to secure your date: {dp}',
+    cal_title: 'Check availability – choose a date', slot_title: 'Available slots', slot_hint: 'Tap a free slot to choose the party spot and start time.',
+    lg_open: 'Available', lg_few: 'Few slots left', lg_full: 'Fully booked', lg_closed: 'Closed', lg_past: 'Not bookable online',
+    slot_free: 'Free', slot_booked: 'Booked', slot_blocked: 'Unavailable', slot_closed: 'Closed', slot_past: '–', slot_selected: 'Selected',
+    slots_left: '{n} free', spot_th: 'Party spot', slot_taken: 'This spot is not available at this time. Please choose a free slot in the table above.',
+    cat: { 'Entertainment': 'Entertainment', 'Science Show': 'Science Show', 'Creative Workshop': 'Creative Workshop', 'Decoration': 'Decoration', 'Cake': 'Cake', 'Food & Drinks': 'Food & Drinks' },
+  },
+
+  id: {
+    nav_package: 'Paket', nav_spots: 'Lokasi Pesta', nav_addons: 'Add-on', nav_book: 'Rencana & Booking', nav_rules: 'Aturan', book_now: 'Booking sekarang',
+    hero_sign: 'Paket Pesta Ulang Tahun',
+    hero_h1: 'Petualangan ulang tahun <em>ala hutan</em> yang seru',
+    hero_lead: 'Bermain sepanjang hari, area pesta khusus, buffet anak, dan keseruan tanpa henti bersama Mooki. Rancang pesta Anda, lihat harganya langsung, dan booking online.',
+    cta_plan: 'Rancang pesta saya', cta_wa: 'WhatsApp kami',
+    weekday: 'Hari Kerja', weekend: 'Akhir Pekan', per_child: 'PER ANAK', days_wd: 'Senin – Jumat', days_we: 'Sabtu – Minggu<br>&amp; Hari Libur',
+    incl: 'Termasuk dalam paket',
+    spots_sign: 'Pertama, pilih lokasi pesta!',
+    spots_p: 'Pilih tempat perayaan Anda. Setiap lokasi dipesan khusus untuk pesta Anda selama 3 jam.',
+    addons_sign: 'Tambah keseruan pesta!',
+    addons_p: 'Klik <b>Tambah</b> pada pilihan yang Anda suka – langsung masuk ke rencana pesta di bawah. Ketersediaan perlu dikonfirmasi, jadi sebaiknya pesan lebih awal.',
+    book_sign: 'Rancang & booking pesta Anda',
+    book_p: 'Estimasi diperbarui otomatis. Jika sudah sesuai, kirim booking – email konfirmasi dan proforma invoice langsung kami kirimkan.',
+    s1: 'Kapan & di mana', f_date: 'Tanggal acara *', f_time: 'Jam mulai *',
+    f_spot: 'Lokasi pesta * <span class="muted" style="display:inline;font-weight:600">· dipesan selama 3 jam</span>',
+    s2: 'Tamu', f_kids: 'Jumlah anak *', f_adults: 'Jumlah dewasa',
+    hint_kids: 'Minimum pembayaran {n} anak. Dikenakan 50% untuk anak terdaftar yang tidak hadir.', hint_adults: 'Paket sudah termasuk maksimal {n} dewasa per anak.',
+    s3: 'Menu buffet anak',
+    menu_intro: 'Termasuk dalam paket – pilih hingga <b>{n}</b> menu. Buffet khusus untuk anak-anak; makanan dewasa dapat dipesan terpisah.',
+    s4: 'Add-on pilihan Anda', browse: '＋ Lihat semua add-on',
+    cat_intro: '{c} kategori · {n} pilihan – gulir ke bawah untuk melihat semuanya, atau langsung ke kategori:', cat_count: 'Kategori {i} dari {c} · {n} pilihan', cat_added: '{n} dipilih', cat_check: 'Sudah lihat semua kategori? Klik untuk melihat:', cat_opts_short: 'pilihan', m_wa_sent: 'Konfirmasi WhatsApp sudah dikirim ke {h}.',
+    s5: 'Data Anda', f_nama: 'Nama orang tua / kontak *', f_hp: 'Nomor WhatsApp *', f_child: 'Nama anak yang berulang tahun *', f_age: 'Ulang tahun yang ke- *',
+    f_theme: 'Tema dekorasi dan/atau piñata', ph_theme: 'mis. Hutan, Dinosaurus, Putri', f_entlang: 'Bahasa hiburan',
+    opt_en: 'Inggris', opt_ru: 'Rusia', opt_id: 'Indonesia',
+    f_notes: 'Permintaan tambahan atau informasi yang dapat membantu kami membuat hari istimewa anak Anda lebih baik (alergi, kebutuhan khusus, dll.)',
+    consent_t: 'Sebelum mengirim, mohon konfirmasi:',
+    agree_tc: 'Saya setuju dengan Syarat & Ketentuan paket ulang tahun', read_tc: 'Baca Syarat & Ketentuan',
+    agree_park: 'Saya sudah membaca peraturan park Mookiland',
+    agree_park_small: 'Makanan, dekorasi, dan pengisi acara dari luar tidak diperbolehkan. <a href="https://balimookilandpark.com/id/peraturan-info/" target="_blank" rel="noopener">Baca peraturan park di balimookilandpark.com ↗</a>',
+    park_url: 'https://balimookilandpark.com/id/peraturan-info/',
+    tc_title: 'Syarat & Ketentuan', tc_rules: 'Aturan pesta ulang tahun', tc_park: 'Peraturan park Mookiland (balimookilandpark.com) ↗', tc_agree: 'Saya setuju', tc_close: 'Tutup',
+    err_consent: 'Mohon centang kedua kotak: Syarat & Ketentuan dan peraturan park.',
+    sum_title: 'Estimasi pesta Anda', sum_empty: 'Masukkan jumlah anak untuk melihat estimasi.', submit: 'Kirim booking',
+    sum_note: 'Tanggal Anda terkunci setelah DP diterima. Harga final untuk item bertanda "harga mulai" dikonfirmasi oleh tim kami.',
+    rules_sign: 'Hal penting', rules_p: 'Untuk semua pengunjung – terima kasih telah membantu menjaga Mookiland tetap seru dan aman!',
+    foot_info: 'Info &amp; pre-booking dengan <b>{k}</b> · {t}', foot_wa: 'WhatsApp Bu Dwi', admin_login: 'Login admin', wa_float: 'Chat dengan Bu Dwi',
+    wa_msg: 'Halo Bu Dwi, saya ingin bertanya tentang pesta ulang tahun di Mookiland.',
+    wa_booked: 'Halo Bu Dwi, saya baru booking pesta ulang tahun di Mookiland. No. booking {id} ({d}, {t}).',
+    m_title: 'Booking terkirim!', m_keep: 'Simpan nomor booking Anda:', m_wa: 'Kirim no. booking ke Bu Dwi', m_done: 'Selesai',
+    m_thanks: 'Terima kasih, <b>{n}</b>! Booking Anda untuk <b>{d}</b>, pukul {t} di <b>{s}</b> sudah kami terima.',
+    m_total: 'Estimasi total', m_dp: 'DP untuk mengunci tanggal',
+    m_sent2: 'Email konfirmasi dan proforma invoice sudah dikirim ke <b>{e}</b>. Cek juga folder spam/promosi.',
+    m_sent1: 'Email konfirmasi sudah dikirim ke <b>{e}</b>. Cek juga folder spam/promosi.',
+    m_fail: 'Email konfirmasi gagal dikirim – tim kami akan menghubungi Anda via WhatsApp.',
+    load_err: 'Maaf, informasi pesta gagal dimuat ({e}). Silakan hubungi kami via WhatsApp.',
+    spot_included: 'Termasuk dalam paket', spot_price: '+{wd} hari kerja · +{we} akhir pekan & libur', choose_spot: 'Pilih lokasi ini',
+    included: 'Termasuk', up_to_seats: ' · hingga {n} kursi', spot_details: 'ⓘ Foto & detail', spot_hide: '✕ Tutup detail',
+    unit_child: 'per anak', unit_pax: 'untuk {n} pax · +{e}/pax', unit_each: 'per item', unit_start_each: 'harga mulai, per item',
+    unit_start: 'harga mulai', unit_party: 'per acara', on_request: 'Atas permintaan', see_menu: 'lihat menu kami',
+    chip_eve: '🌙 Khusus malam (mulai {t})', chip_opts: '{n} pilihan', add: '＋ Tambah', added: '✓ Ditambahkan',
+    toast_added: '✓ {x} ditambahkan ke rencana pesta', toast_replaced: '{a} diganti dengan {b}',
+    sel_empty: 'Belum ada add-on – lihat pilihan hiburan, dekorasi, kue, dan minuman di atas.',
+    lbl_pax: 'Pax', lbl_qty: 'Jumlah', x_children: '× jumlah anak', remove: 'Hapus',
+    day_closed: '⛔ {d} – taman tutup ({x}). Silakan pilih tanggal lain.',
+    too_soon: 'Booking online minimal {n} hari sebelum acara. Untuk tanggal yang lebih dekat silakan WhatsApp kami.',
+    rate_badge: '{d} · tarif {l}: <b>{p}</b> per anak',
+    busy: 'Terisi: {x}', free: '✓ Kosong seharian',
+    clash: 'Lokasi ini sudah terisi pukul {a}–{b} di hari tersebut. Silakan pilih jam mulai atau lokasi lain.',
+    reserved: 'Lokasi Anda dipesan pukul {a} – {b}.',
+    d_weekday: 'Hari kerja', d_weekend: 'Akhir pekan', d_holiday: 'Hari libur ({x})', d_closed: 'Tutup – {x}',
+    r_we: 'Akhir pekan/Libur', r_wd: 'Hari kerja',
+    line_pkg: 'Paket {r} × {n} anak', n_min: 'Berlaku minimum pembayaran {n} anak.',
+    line_adults: 'Dewasa tambahan × {n}', n_adults: '{x} dewasa melebihi {n} per anak membayar tiket masuk reguler di lokasi.',
+    line_spot: 'Upgrade {s}', n_cap: '{s} memuat hingga {n} tamu – tim kami akan membantu mengatur ruang tambahan.',
+    n_req: '{x}: harga atas permintaan – tim kami akan mengirimkan menu.',
+    n_eve: '⚠️ {x} khusus acara malam – silakan mulai pukul {t} atau lebih.',
+    n_start: '* Harga mulai – jumlah final dikonfirmasi oleh tim kami.',
+    choose_date: 'Pilih tanggal', choose_spot2: 'Pilih lokasi', sum_wait: 'Pilih tanggal dan lokasi untuk melihat harga.', meta_guests: '{a} anak · {d} dewasa',
+    line_tax: 'Pajak & service {n}%', total: 'Total', deposit: 'DP untuk mengunci tanggal',
+    err_spot: 'Silakan pilih lokasi pesta.', err_avail: 'Silakan pilih tanggal, jam, dan lokasi yang tersedia.', sending: 'Mengirim booking…',
+    s_cake: 'Kue ulang tahun', cake_none: 'Tanpa kue', cake_none_s: 'Lewati dulu',
+    cake_standard: 'Kue favorit', cake_std_s: 'Siap pesan · mulai {p}',
+    cake_custom: 'Kue custom', cake_cus_s: 'Dibuat khusus · mulai {p}',
+    cake_own: 'Bawa kue sendiri', cake_own_s: '+{p} biaya kue dari luar',
+    f_size: 'Ukuran *', f_flavour: 'Rasa *', f_qty: 'Jumlah', size_opt: '{n} · hingga {sl} potong · {p}',
+    cus_info: '1 tingkat · bulat · diameter 16 cm · hingga 15 potong · mulai <b>{p}</b>. Mohon pesan lebih awal – tim kami akan mengonfirmasi harga final.',
+    f_layered: 'Rasa kue – berlapis', f_nonlayered: 'Rasa kue – tanpa lapisan', f_filling: 'Isian (di antara lapisan)',
+    f_finishing: 'Tampilan / finishing (mengikuti desain jika ada)', opt_choose: '— Pilih —',
+    f_design: 'Desain kue – foto referensi (opsional)', design_hint: 'JPG / PNG, maks. 8 MB. Membantu kami memahami kue impian Anda.',
+    own_info: 'Kue dari luar dikenakan biaya tambahan <b>{p}</b>.',
+    f_writing: 'Tulisan di kue', ph_writing: 'contoh: Selamat Ulang Tahun Lea',
+    f_othercake: 'Lebih dari 1 kue? Tuliskan ukuran dan rasa kue lainnya', ph_othercake: 'contoh: 20 cm Apple Crumble',
+    f_dob: 'Tanggal lahir anak *', err_cake: 'Silakan pilih ukuran dan rasa kue.', err_cake_flavour: 'Silakan pilih rasa untuk kue custom.',
+    err_photo: 'Foto tidak bisa dibaca – silakan pilih gambar JPG atau PNG.', err_photo_big: 'Foto terlalu besar (maks. 8 MB).',
+    wa_summary: 'Halo {n}, terima kasih sudah booking pesta ulang tahun di Mookiland Bali! 🎉\nNo. booking: {id}\nTanggal: {d}, pukul {t}\nLokasi: {s}\nTotal: {tot}\nDP untuk mengunci tanggal: {dp}',
+    cal_title: 'Cek ketersediaan – pilih tanggal', slot_title: 'Slot tersedia', slot_hint: 'Klik slot yang kosong untuk memilih lokasi dan jam mulai.',
+    lg_open: 'Tersedia', lg_few: 'Hampir penuh', lg_full: 'Penuh', lg_closed: 'Tutup', lg_past: 'Tidak bisa booking online',
+    slot_free: 'Kosong', slot_booked: 'Terisi', slot_blocked: 'Tidak tersedia', slot_closed: 'Tutup', slot_past: '–', slot_selected: 'Dipilih',
+    slots_left: '{n} kosong', spot_th: 'Lokasi', slot_taken: 'Lokasi ini tidak tersedia pada jam tersebut. Silakan pilih slot kosong di tabel atas.',
+    cat: { 'Entertainment': 'Hiburan', 'Science Show': 'Pertunjukan Sains', 'Creative Workshop': 'Workshop Kreatif', 'Decoration': 'Dekorasi', 'Cake': 'Kue', 'Food & Drinks': 'Makanan & Minuman' },
+  },
+};
+
+(function () {
+  const KEY = 'mookiland_lang';
+  function detect() {
+    const q = new URLSearchParams(location.search).get('lang');
+    if (q === 'id' || q === 'en') return q;
+    try { const s = localStorage.getItem(KEY); if (s === 'id' || s === 'en') return s; } catch (e) { /* abaikan */ }
+    return /^id\b|^in\b/i.test(navigator.language || '') ? 'id' : 'en';
+  }
+  window.LANG = detect();
+
+  /** t('key', {vars}) – teks sesuai bahasa aktif */
+  window.t = function (key, vars) {
+    const d = window.I18N[window.LANG] || window.I18N.en;
+    let s = d[key] !== undefined ? d[key] : (window.I18N.en[key] !== undefined ? window.I18N.en[key] : key);
+    if (vars && typeof s === 'string') Object.keys(vars).forEach(k => { s = s.split('{' + k + '}').join(String(vars[k])); });
+    return s;
+  };
+
+  /** Terapkan teks ke elemen ber-atribut data-i18n / data-i18n-html / data-i18n-ph */
+  window.applyI18n = function () {
+    document.documentElement.lang = window.LANG;
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = window.t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = window.t(el.dataset.i18nHtml); });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = window.t(el.dataset.i18nPh); });
+    document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('active', b.dataset.lang === window.LANG));
+  };
+
+  window.setLang = function (l) {
+    window.LANG = l === 'id' ? 'id' : 'en';
+    try { localStorage.setItem(KEY, window.LANG); } catch (e) { /* abaikan */ }
+    window.applyI18n();
+    document.dispatchEvent(new CustomEvent('langchange'));
+  };
+})();
+
+</script>
+<script>
+/* ---- calendar.js ---- */
+// Kalender bulanan sederhana – dipakai di website (EN/ID) dan admin.
+// renderCalendar(el, {
+//   month: 'yyyy-mm', days: { 'yyyy-mm-dd': { st, free, total, ... } } | null (memuat),
+//   selected: 'yyyy-mm-dd', minMonth: 'yyyy-mm', lang: 'en'|'id',
+//   onPick(date), onNav(month), cellExtra(date, info) -> html, legend: [[st, label], ...]
+// })
+(function () {
+  const NAMES = {
+    en: { d: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], m: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] },
+    id: { d: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'], m: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] },
+  };
+
+  function shiftMonth(ym, n) {
+    const y = +ym.slice(0, 4), m = +ym.slice(5, 7) - 1 + n;
+    const d = new Date(y, m, 1);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  }
+
+  window.shiftMonth = shiftMonth;
+
+  window.renderCalendar = function (el, o) {
+    const N = NAMES[o.lang === 'id' ? 'id' : 'en'];
+    const y = +o.month.slice(0, 4), m = +o.month.slice(5, 7) - 1;
+    const first = new Date(y, m, 1).getDay();
+    const last = new Date(y, m + 1, 0).getDate();
+    const canPrev = !o.minMonth || o.month > o.minMonth;
+    let cells = '';
+    for (let i = 0; i < first; i++) cells += '<div class="cal-cell empty"></div>';
+    for (let d = 1; d <= last; d++) {
+      const date = o.month + '-' + String(d).padStart(2, '0');
+      const info = o.days ? o.days[date] : null;
+      const st = info ? info.st : 'loading';
+      const clickable = info && (o.allowAll || st === 'open' || st === 'few');
+      const sel = date === o.selected ? ' selected' : '';
+      const wk = info && info.weekend ? ' wknd' : '';
+      cells += `<button type="button" class="cal-cell st-${st}${sel}${wk}" data-date="${date}" ${clickable ? '' : 'disabled'}>
+        <span class="cal-d">${d}</span>${o.cellExtra && info ? o.cellExtra(date, info) : ''}</button>`;
+    }
+    el.innerHTML = `
+      <div class="cal-head">
+        <button type="button" class="cal-nav" data-nav="-1" ${canPrev ? '' : 'disabled'} aria-label="prev">‹</button>
+        <b>${N.m[m]} ${y}</b>
+        <button type="button" class="cal-nav" data-nav="1" aria-label="next">›</button>
+      </div>
+      <div class="cal-grid">${N.d.map(x => `<div class="cal-dow">${x}</div>`).join('')}${cells}</div>
+      ${o.legend ? `<div class="cal-legend">${o.legend.map(([s, l]) => `<span><i class="st-${s}"></i>${l}</span>`).join('')}</div>` : ''}`;
+    el.onclick = (e) => {
+      const nav = e.target.closest('[data-nav]');
+      if (nav && !nav.disabled) return o.onNav && o.onNav(shiftMonth(o.month, +nav.dataset.nav));
+      const c = e.target.closest('[data-date]');
+      if (c && !c.disabled && o.onPick) o.onPick(c.dataset.date);
+    };
+  };
+})();
+
+</script>
+<script>
+/* ---- app.js ---- */
+// Public site (EN/ID): package info, party spots, add-ons, live estimate & booking.
+(function () {
+  const $ = (s) => document.querySelector(s);
+  const form = $('#bookingForm');
+  const S = { data: null, addons: new Map(), menu: new Set(), avail: null, cat: null, clash: false, closed: false,
+    cake: { jenis: 'none', size: '', flavour: '', qty: 1 }, design: null, month: null, months: {} };
+
+  const EMOJI = { E01: '🎁', E02: '🎁', E03: '💌', E07: '🫧', E09: '🍬', E10: '🎩', E12: '🎤', E13: '🎤', C04: '🎂', C05: '🍰', F01: '🧊', F02: '🧃', F03: '🥤', F04: '🍭', F05: '🍪', F06: '🍹', F07: '🍺' };
+  const CAT_EMOJI = { 'Entertainment': '🎈', 'Science Show': '🔬', 'Creative Workshop': '🎨', 'Decoration': '🎉', 'Cake': '🎂', 'Food & Drinks': '🥤' };
+  const DAYS_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  const isId = () => window.LANG === 'id';
+
+  // ---- Mode admin (booking manual): index.html?admin=1, hanya jika admin sudah login di tab ini ----
+  const QS = new URLSearchParams(location.search);
+  let ADMIN = null;
+  if (QS.get('admin') === '1') {
+    try { ADMIN = JSON.parse(sessionStorage.getItem('eo_admin_session') || 'null'); } catch (e) { ADMIN = null; }
+    if (!ADMIN || !ADMIN.token) { location.href = 'admin.html'; return; }
+  }
+  const adminApi = (action, payload) => api(action, payload, ADMIN && ADMIN.token);
+  const WA = (window.APP_CONFIG || {}).WHATSAPP || '';
+  const waUrl = (txt) => 'https://wa.me/' + WA + (txt ? '?text=' + encodeURIComponent(txt) : '');
+  const K = (n) => (n >= 1000 && n % 1000 === 0) ? (n / 1000).toLocaleString('id-ID') + 'K' : rupiah(n);
+  const dateL = (s) => {
+    const d = parseYmd(s);
+    if (!d) return '-';
+    return isId() ? HARI_ID[d.getDay()] + ', ' + d.getDate() + ' ' + BULAN_ID[d.getMonth()] + ' ' + d.getFullYear()
+      : DAYS_EN[d.getDay()] + ', ' + d.getDate() + ' ' + MONTHS_EN[d.getMonth()] + ' ' + d.getFullYear();
+  };
+  const toMin = (x) => { const m = /^(\d{1,2}):(\d{2})/.exec(x || ''); return m ? +m[1] * 60 + +m[2] : NaN; };
+  const fromMin = (m) => String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+
+  // ---- Konten dari Sheet sesuai bahasa (fallback ke English) ----
+  const pick = (en, idv) => (isId() && idv && String(idv).trim()) ? idv : en;
+  const aName = (a) => pick(a.nama, a.namaId);
+  const aDesc = (a) => pick(a.deskripsi, a.deskripsiId);
+  const optLabel = (a, v) => { const i = a.pilihan.indexOf(v); return i >= 0 ? pick(v, a.pilihanId[i]) : v; };
+  const catName = (c) => (t('cat') || {})[c] || c;
+
+  function paket() { return S.data.paket[0]; }
+
+  function setupAdminMode() {
+    document.body.classList.add('is-admin');
+    $('#adminBar').classList.remove('hidden');
+    $('#adminWho').textContent = 'login sebagai ' + (ADMIN.nama || ADMIN.username);
+    $('#adminOpts').classList.remove('hidden');
+    ['#email', '#tglLahir', '#usia', '#setuju', '#setujuPark'].forEach(s => $(s).removeAttribute('required'));
+    ['#email', '#tglLahir', '#usia'].forEach(s => { const sp = $(s).closest('label').querySelector('span'); sp.removeAttribute('data-i18n'); sp.textContent = sp.textContent.replace(/\s*\*$/, '') + ' (opsional)'; });
+    $('#aLepasBlokir').addEventListener('change', recalc);
+    document.title = 'Booking manual – Admin';
+    // preset dari tab Ketersediaan: ?admin=1&date=yyyy-mm-dd&lok=L01&jam=15:00
+    const d = QS.get('date'), lok = QS.get('lok'), jam = QS.get('jam');
+    if (d) {
+      setTimeout(() => {
+        renderSlots();
+        if (jam) $('#jam').value = jam;
+        if (lok) { const r = form.querySelector(`input[name="lokasiId"][value="${CSS.escape(lok)}"]`); if (r) r.checked = true; }
+        $('#tglAcara').value = d;
+        $('#tglAcara').dispatchEvent(new Event('change', { bubbles: true }));
+        $('#book').scrollIntoView();
+      }, 0);
+    } else setTimeout(() => $('#book').scrollIntoView(), 0);
+  }
+
+  // ---------------- Init ----------------
+  async function init() {
+    applyI18n();
+    document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+    setWaLinks();
+    $('#summaryBody').innerHTML = `<div class="empty">${escapeHtml(t('sum_empty'))}</div>`;
+
+    try {
+      S.data = await api('getPackages');
+    } catch (e) {
+      const msg = '<div class="card">' + escapeHtml(t('load_err', { e: e.message })) + '</div>';
+      $('#spotList').innerHTML = msg; $('#addonGrid').innerHTML = msg;
+      return;
+    }
+    const min = new Date(); min.setDate(min.getDate() + (ADMIN ? 0 : (Number(S.data.info.minHariBooking) || 0)));
+    $('#tglAcara').min = ymd(min);
+    S.minMonth = ymd(min).slice(0, 7);
+    S.month = S.minMonth;
+    loadMonth(S.month);
+    $('#jumlahAnak').value = paket() ? paket().minAnak : 10;
+    const firstNonCake = S.data.addon.find(a => a.kategori !== 'Cake');
+    S.cat = firstNonCake ? firstNonCake.kategori : null;
+    const std = standardCakes();
+    if (std.length) { S.cake.size = std[0].id; S.cake.flavour = std[0].pilihan[0] || ''; }
+    if (ADMIN) setupAdminMode();
+    renderAll();
+  }
+
+  function setWaLinks() {
+    ['#heroWa', '#footWa', '#waFloat'].forEach(id => {
+      const a = $(id);
+      if (!WA) a.classList.add('hidden');
+      else a.href = waUrl(t('wa_msg'));
+    });
+  }
+
+  function renderAll() {
+    if (!S.data) return;
+    const info = S.data.info;
+    $('#footInfo').innerHTML = t('foot_info', { k: escapeHtml(info.kontak), t: escapeHtml(info.telp) }) + '<br>' + escapeHtml(info.alamat) +
+      (info.website ? ' · <a href="https://' + escapeHtml(info.website) + '" target="_blank" rel="noopener">' + escapeHtml(info.website) + '</a>' : '');
+    $('#menuIntro').innerHTML = t('menu_intro', { n: info.maxMenu });
+    renderSlots();
+    renderCal();
+    renderCake();
+    renderHero();
+    renderSpots();
+    renderTabs();
+    renderAddons();
+    renderMenu();
+    renderSelected();
+    const rules = isId() && info.rulesId && info.rulesId.length ? info.rulesId : info.rules;
+    $('#rulesList').innerHTML = rules.map(r => `<li>${escapeHtml(r)}</li>`).join('');
+    recalc();
+  }
+
+  document.addEventListener('langchange', () => { setWaLinks(); renderAll(); if (!S.data) $('#summaryBody').innerHTML = `<div class="empty">${escapeHtml(t('sum_empty'))}</div>`; });
+
+  function renderHero() {
+    const p = paket();
+    if (!p) return;
+    $('#pWeekday').textContent = K(p.hargaWeekday);
+    $('#pWeekend').textContent = K(p.hargaWeekend);
+    const fas = isId() && p.fasilitasId && p.fasilitasId.length ? p.fasilitasId : p.fasilitas;
+    $('#inclList').innerHTML = fas.map(f => `<li>${escapeHtml(f)}</li>`).join('');
+    $('#anakHint').textContent = t('hint_kids', { n: p.minAnak });
+    $('#dewasaHint').textContent = t('hint_adults', { n: p.dewasaPerAnak });
+  }
+
+  // ---------------- Slot jam ----------------
+  function slotLabel(v) {
+    if (isId()) return v.replace(':', '.');
+    const [h, m] = v.split(':').map(Number);
+    return ((h % 12) || 12) + ':' + String(m).padStart(2, '0') + (h < 12 ? ' am' : ' pm');
+  }
+  function renderSlots() {
+    const sel = $('#jam');
+    const cur = sel.value;
+    let slots = (S.data.info.jamSlot && S.data.info.jamSlot.length) ? S.data.info.jamSlot.slice() : ['09:00', '10:00', '15:00', '16:00', '17:00', '18:00'];
+    if (ADMIN) { for (let m = 8 * 60; m <= 20 * 60; m += 30) { const v = fromMin(m); if (slots.indexOf(v) < 0) slots.push(v); } slots.sort(); }
+    sel.innerHTML = slots.map(v => `<option value="${v}">${slotLabel(v)}</option>`).join('');
+    sel.value = slots.indexOf(cur) >= 0 ? cur : (slots.indexOf('10:00') >= 0 ? '10:00' : slots[0]);
+  }
+
+  // ---------------- Kue ulang tahun ----------------
+  const standardCakes = () => S.data.addon.filter(a => a.kategori === 'Cake' && a.pilihan.length);
+  const cakeById = (id) => S.data.addon.find(a => a.id === id);
+  const CUSTOM_ID = 'C04', OWN_ID = 'C05';
+
+  function fillSelect(el, list, cur, withBlank) {
+    el.innerHTML = (withBlank ? `<option value="">${escapeHtml(t('opt_choose'))}</option>` : '') +
+      list.map(o => `<option value="${escapeHtml(o.v)}" ${o.v === cur ? 'selected' : ''}>${escapeHtml(o.l)}</option>`).join('');
+  }
+
+  function renderCake() {
+    const std = standardCakes();
+    const cus = cakeById(CUSTOM_ID), own = cakeById(OWN_ID);
+    const minStd = std.length ? Math.min.apply(null, std.map(a => a.harga)) : 0;
+    $('#cakeStdSub').textContent = std.length ? t('cake_std_s', { p: rupiah(minStd) }) : '';
+    $('#cakeCusSub').textContent = cus ? t('cake_cus_s', { p: rupiah(cus.harga) }) : '';
+    $('#cakeOwnSub').textContent = own ? t('cake_own_s', { p: rupiah(own.harga) }) : '';
+    if (!cus) form.querySelector('input[name="kueJenis"][value="custom"]').closest('label').classList.add('hidden');
+    if (!own) form.querySelector('input[name="kueJenis"][value="own"]').closest('label').classList.add('hidden');
+    if (!std.length) form.querySelector('input[name="kueJenis"][value="standard"]').closest('label').classList.add('hidden');
+
+    fillSelect($('#cakeSize'), std.map(a => {
+      const m = /(\d+)\s*[–-]\s*(\d+)/.exec(a.deskripsi) || /(\d+)/.exec(a.deskripsi);
+      return { v: a.id, l: t('size_opt', { n: aName(a).replace(/^(Favorite Cake|Kue Favorit)\s*/i, ''), sl: m ? m[0].replace(/\s/g, '') : '-', p: rupiah(a.harga) }) };
+    }), S.cake.size);
+    const size = cakeById(S.cake.size) || std[0];
+    if (size && size.pilihan.indexOf(S.cake.flavour) < 0) S.cake.flavour = size.pilihan[0];
+    fillSelect($('#cakeFlavour'), size ? size.pilihan.map(o => ({ v: o, l: optLabel(size, o) })) : [], S.cake.flavour);
+    $('#cakeQty').value = S.cake.qty || 1;
+
+    const info = S.data.info;
+    const toOpts = (arr) => (arr || []).map(x => ({ v: x, l: x }));
+    fillSelect($('#cakeLayered'), toOpts(info.cakeLayered), $('#cakeLayered').value, true);
+    fillSelect($('#cakeNonLayered'), toOpts(info.cakeNonLayered), $('#cakeNonLayered').value, true);
+    fillSelect($('#cakeFilling'), toOpts(info.cakeFilling), $('#cakeFilling').value, true);
+    fillSelect($('#cakeFinishing'), toOpts(info.cakeFinishing), $('#cakeFinishing').value, true);
+    $('#cakeCusInfo').innerHTML = cus ? t('cus_info', { p: rupiah(cus.harga) }) : '';
+    $('#cakeOwnInfo').innerHTML = own ? t('own_info', { p: rupiah(own.harga) }) : '';
+    syncCakePanels();
+  }
+
+  function syncCakePanels() {
+    const j = S.cake.jenis;
+    $('#cakeStd').classList.toggle('hidden', j !== 'standard');
+    $('#cakeCus').classList.toggle('hidden', j !== 'custom');
+    $('#cakeOwn').classList.toggle('hidden', j !== 'own');
+    $('#cakeCommon').classList.toggle('hidden', j === 'none' || j === 'own');
+  }
+
+  /** Add-on kue yang ikut dihitung, sesuai pilihan di langkah kue. */
+  function cakeItems() {
+    const j = S.cake.jenis;
+    if (j === 'standard' && cakeById(S.cake.size)) return [{ a: cakeById(S.cake.size), st: { qty: Math.max(1, S.cake.qty || 1), pilihan: S.cake.flavour } }];
+    if (j === 'custom' && cakeById(CUSTOM_ID)) return [{ a: cakeById(CUSTOM_ID), st: { qty: 1, pilihan: '' } }];
+    if (j === 'own' && cakeById(OWN_ID)) return [{ a: cakeById(OWN_ID), st: { qty: 1, pilihan: '' } }];
+    return [];
+  }
+
+  $('#cakePick').addEventListener('change', (e) => {
+    if (e.target.name !== 'kueJenis') return;
+    S.cake.jenis = e.target.value;
+    syncCakePanels();
+    recalc();
+  });
+  $('#cakeSize').addEventListener('change', (e) => { S.cake.size = e.target.value; renderCake(); recalc(); });
+  $('#cakeFlavour').addEventListener('change', (e) => { S.cake.flavour = e.target.value; recalc(); });
+  $('#cakeQty').addEventListener('input', (e) => { S.cake.qty = Math.max(1, Math.floor(+e.target.value || 1)); recalc(); });
+
+  // Foto desain: diperkecil di browser (maks. 1600 px, JPEG) supaya cepat terkirim
+  $('#cakeDesign').addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    const prev = $('#cakeDesignPrev');
+    S.design = null; prev.classList.add('hidden');
+    if (!file) return;
+    if (file.size > 15 * 1024 * 1024) { toast(t('err_photo_big'), 'error'); e.target.value = ''; return; }
+    try {
+      S.design = await shrinkImage(file);
+      prev.src = S.design.data; prev.classList.remove('hidden');
+    } catch (err) {
+      if (file.size <= 8 * 1024 * 1024 && /^image\//.test(file.type)) {
+        S.design = { name: file.name, type: file.type, data: await readAsDataURL(file) };
+      } else { toast(t('err_photo'), 'error'); e.target.value = ''; }
+    }
+  });
+
+  function readAsDataURL(file) {
+    return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); });
+  }
+  async function shrinkImage(file) {
+    const url = await readAsDataURL(file);
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const max = 1600, k = Math.min(1, max / Math.max(img.width, img.height));
+    const c = document.createElement('canvas');
+    c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    return { name: file.name.replace(/\.[^.]+$/, '') + '.jpg', type: 'image/jpeg', data: c.toDataURL('image/jpeg', 0.85) };
+  }
+
+  // ---------------- Party spots ----------------
+  function renderSpots() {
+    const list = S.data.lokasi;
+    const checked = (form.querySelector('input[name="lokasiId"]:checked') || {}).value;
+    $('#spotList').innerHTML = list.map((l, i) => {
+      const label = pick(l.label, l.labelId);
+      const price = (!l.hargaWeekday && !l.hargaWeekend) ? t('spot_included') : t('spot_price', { wd: K(l.hargaWeekday), we: K(l.hargaWeekend) });
+      return `
+      <div class="spot" data-id="${escapeHtml(l.id)}">
+        <div class="ph" style="${l.gambar ? `background-image:url('${escapeHtml(l.gambar)}')` : ''}"><span class="num">${i + 1}</span></div>
+        <div class="bd">
+          <h3>${escapeHtml(l.nama)} ${label ? `<span class="badge-new">${escapeHtml(label)}</span>` : ''}</h3>
+          <p>${escapeHtml(pick(l.deskripsi, l.deskripsiId))}</p>
+          <div class="price">${escapeHtml(price)}</div>
+          <button type="button" class="btn sm green" style="margin-top:10px" data-spot="${escapeHtml(l.id)}">${escapeHtml(t('choose_spot'))}</button>
+        </div>
+      </div>`;
+    }).join('');
+    $('#spotPick').innerHTML = list.map(l => `
+      <label class="spot-opt"><input type="radio" name="lokasiId" value="${escapeHtml(l.id)}" ${l.id === checked ? 'checked' : ''}>
+        <b>${escapeHtml(l.nama)}</b><span class="s">${(l.hargaWeekday || l.hargaWeekend) ? '+' + K(l.hargaWeekday) + ' / +' + K(l.hargaWeekend) : escapeHtml(t('included'))}${l.kapasitas ? escapeHtml(t('up_to_seats', { n: l.kapasitas })) : ''}</span>
+        <div class="busy" data-busy="${escapeHtml(l.id)}"></div></label>`).join('');
+  }
+
+  $('#spotList').addEventListener('click', (e) => {
+    const id = e.target.getAttribute('data-spot');
+    if (!id) return;
+    const r = form.querySelector(`input[name="lokasiId"][value="${CSS.escape(id)}"]`);
+    if (r) { r.checked = true; recalc(); }
+    $('#book').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // ---------------- Add-ons browse (all categories shown, stacked) ----------------
+  const catSlug = (c) => 'cat-' + String(c).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  function addonCats() {
+    const cats = [];
+    S.data.addon.forEach(a => { if (a.kategori !== 'Cake' && cats.indexOf(a.kategori) < 0) cats.push(a.kategori); });
+    return cats;
+  }
+  const catTotal = (c) => S.data.addon.filter(a => a.kategori === c).length;
+  const catAdded = (c) => S.data.addon.filter(a => a.kategori === c && S.addons.has(a.id)).length;
+
+  function renderTabs() {
+    const cats = addonCats();
+    const n = cats.reduce((s, c) => s + catTotal(c), 0);
+    $('#catIntro').innerHTML = escapeHtml(t('cat_intro', { c: cats.length, n: n }));
+    $('#catTabs').innerHTML = cats.map(c => {
+      const k = catAdded(c);
+      return `<button type="button" data-cat="${escapeHtml(c)}" class="${c === S.cat ? 'active' : ''}${k ? ' has' : ''}">${CAT_EMOJI[c] || '✨'} ${escapeHtml(catName(c))}<span class="cnt">${k ? '✓ ' + k : catTotal(c)}</span></button>`;
+    }).join('');
+    renderCatCheck();
+  }
+
+  // Step 5 reminder: one chip per category, so nobody misses a category by accident
+  function renderCatCheck() {
+    const el = $('#catCheck');
+    if (!el) return;
+    el.innerHTML = `<div class="small" style="font-weight:800;margin-bottom:6px">${escapeHtml(t('cat_check'))}</div>` +
+      addonCats().map(c => {
+        const k = catAdded(c);
+        return `<a href="#${catSlug(c)}" data-jump="${escapeHtml(c)}" class="cc ${k ? 'has' : ''}">${CAT_EMOJI[c] || '✨'} ${escapeHtml(catName(c))} <b>${k ? '✓ ' + k : catTotal(c) + ' ' + escapeHtml(t('cat_opts_short'))}</b></a>`;
+      }).join('');
+  }
+
+  function jumpToCat(c) {
+    const sec = document.getElementById(catSlug(c));
+    if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  $('#catTabs').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-cat]');
+    if (b) jumpToCat(b.dataset.cat);
+  });
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('[data-jump]');
+    if (!a) return;
+    e.preventDefault();
+    jumpToCat(a.dataset.jump);
+  });
+
+  // Highlight the category currently on screen
+  let spyTick = null;
+  function catSpy() {
+    if (spyTick) return;
+    spyTick = requestAnimationFrame(() => {
+      spyTick = null;
+      const secs = document.querySelectorAll('#addonGrid .addon-cat');
+      if (!secs.length) return;
+      const line = $('#catTabs').getBoundingClientRect().bottom + 40;
+      let cur = secs[0].dataset.cat;
+      secs.forEach(x => { if (x.getBoundingClientRect().top <= line) cur = x.dataset.cat; });
+      if (cur === S.cat) return;
+      S.cat = cur;
+      document.querySelectorAll('#catTabs button').forEach(b => {
+        const on = b.dataset.cat === cur;
+        b.classList.toggle('active', on);
+        if (on) { const bar = $('#catTabs'); bar.scrollTo({ left: b.offsetLeft - bar.clientWidth / 2 + b.clientWidth / 2, behavior: 'smooth' }); }
+      });
+    });
+  }
+  window.addEventListener('scroll', catSpy, { passive: true });
+
+  function priceLabel(a) {
+    switch (a.satuan) {
+      case 'per_anak': return [rupiah(a.harga), t('unit_child')];
+      case 'per_pax': return [rupiah(a.harga), t('unit_pax', { n: a.termasukPax, e: K(a.hargaExtraPax) })];
+      case 'per_item': return [rupiah(a.harga), t(a.hargaMulai ? 'unit_start_each' : 'unit_each')];
+      case 'on_request': return [t('on_request'), t('see_menu')];
+      default: return [rupiah(a.harga), t(a.hargaMulai ? 'unit_start' : 'unit_party')];
+    }
+  }
+
+  function addonCard(a) {
+    const added = S.addons.has(a.id);
+    const [p, unit] = priceLabel(a);
+    const chips = [];
+    if (a.durasi) chips.push(`<span class="chip">⏱ ${escapeHtml(isId() ? a.durasi.replace(/hours?/i, 'jam').replace(/min\b/i, 'menit') : a.durasi)}</span>`);
+    a.bahasa.split(',').map(x => x.trim()).filter(Boolean).forEach(l => chips.push(`<span class="chip">${escapeHtml(l)}</span>`));
+    if (a.minJam) chips.push(`<span class="chip warn">${escapeHtml(t('chip_eve', { t: a.minJam }))}</span>`);
+    if (a.pilihan.length) chips.push(`<span class="chip">${escapeHtml(t('chip_opts', { n: a.pilihan.length }))}</span>`);
+    return `
+      <article class="addon ${added ? 'added' : ''}">
+        <div class="ph" style="${a.gambar ? `background-image:url('${escapeHtml(a.gambar)}')` : ''}">${a.gambar ? '' : (EMOJI[a.id] || CAT_EMOJI[a.kategori] || '✨')}${added ? '<span class="tick">✓</span>' : ''}</div>
+        <div class="bd">
+          <h4>${escapeHtml(aName(a))}</h4>
+          ${chips.length ? `<div class="chips">${chips.join('')}</div>` : ''}
+          <p>${escapeHtml(aDesc(a))}</p>
+          <div class="row">
+            <div class="price">${escapeHtml(p)}<small>${escapeHtml(unit)}</small></div>
+            <button type="button" class="btn" data-add="${escapeHtml(a.id)}">${escapeHtml(t(added ? 'added' : 'add'))}</button>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function renderAddons() {
+    const cats = addonCats();
+    $('#addonGrid').innerHTML = cats.map((c, i) => {
+      const list = S.data.addon.filter(a => a.kategori === c);
+      const k = catAdded(c);
+      return `
+        <section class="addon-cat" id="${catSlug(c)}" data-cat="${escapeHtml(c)}">
+          <div class="addon-cat-head">
+            <span class="ic">${CAT_EMOJI[c] || '✨'}</span>
+            <h3>${escapeHtml(catName(c))}</h3>
+            <span class="meta">${escapeHtml(t('cat_count', { i: i + 1, c: cats.length, n: list.length }))}</span>
+            ${k ? `<span class="got">✓ ${escapeHtml(t('cat_added', { n: k }))}</span>` : ''}
+          </div>
+          <div class="addon-grid">${list.map(addonCard).join('')}</div>
+        </section>`;
+    }).join('');
+    renderTabs();
+    S.cat = null; catSpy();
+  }
+
+  $('#addonGrid').addEventListener('click', (e) => {
+    const id = e.target.getAttribute('data-add');
+    if (id) toggleAddon(id);
+  });
+
+  function toggleAddon(id) {
+    const a = S.data.addon.find(x => x.id === id);
+    if (!a) return;
+    if (S.addons.has(id)) {
+      S.addons.delete(id);
+    } else {
+      if (a.grup) {
+        S.data.addon.filter(x => x.grup === a.grup && S.addons.has(x.id)).forEach(x => {
+          S.addons.delete(x.id);
+          toast(t('toast_replaced', { a: aName(x), b: aName(a) }));
+        });
+      }
+      S.addons.set(id, { qty: a.satuan === 'per_item' ? 1 : null, pilihan: a.pilihan[0] || '' });
+      toast(t('toast_added', { x: aName(a) }), 'success');
+    }
+    renderAddons();
+    renderSelected();
+    recalc();
+  }
+
+  // ---------------- Selected add-ons (step 4) ----------------
+  function renderSelected() {
+    if (!S.addons.size) {
+      $('#selList').innerHTML = `<div class="empty-sel">${escapeHtml(t('sel_empty'))}</div>`;
+      return;
+    }
+    const anak = Math.max(1, Math.floor(+$('#jumlahAnak').value || 1));
+    $('#selList').innerHTML = S.data.addon.filter(a => S.addons.has(a.id)).map(a => {
+      const st = S.addons.get(a.id);
+      const [p, unit] = priceLabel(a);
+      let ctl = '';
+      if (a.pilihan.length) ctl += `<select data-pil="${escapeHtml(a.id)}">${a.pilihan.map(o => `<option value="${escapeHtml(o)}" ${o === st.pilihan ? 'selected' : ''}>${escapeHtml(optLabel(a, o))}</option>`).join('')}</select>`;
+      if (a.satuan === 'per_pax') ctl += `<label class="small" style="font-weight:800">${escapeHtml(t('lbl_pax'))} <input type="number" min="1" max="500" data-qty="${escapeHtml(a.id)}" value="${st.qty || anak}"></label>`;
+      if (a.satuan === 'per_item') ctl += `<label class="small" style="font-weight:800">${escapeHtml(t('lbl_qty'))} <input type="number" min="1" max="500" data-qty="${escapeHtml(a.id)}" value="${st.qty || 1}"></label>`;
+      if (a.satuan === 'per_anak') ctl += `<span class="small muted">${escapeHtml(t('x_children'))}</span>`;
+      return `<div class="sel-item">
+        <div><b>${escapeHtml(aName(a))}</b><div class="small muted">${escapeHtml(p)} ${escapeHtml(unit)}</div></div>
+        <button type="button" class="x" data-rm="${escapeHtml(a.id)}" aria-label="${escapeHtml(t('remove'))}">×</button>
+        ${ctl ? `<div class="ctl">${ctl}</div>` : ''}</div>`;
+    }).join('');
+  }
+
+  $('#selList').addEventListener('click', (e) => { const id = e.target.getAttribute('data-rm'); if (id) toggleAddon(id); });
+  $('#selList').addEventListener('input', (e) => {
+    const q = e.target.getAttribute('data-qty');
+    const pl = e.target.getAttribute('data-pil');
+    if (q && S.addons.has(q)) S.addons.get(q).qty = Math.max(1, Math.floor(+e.target.value || 1));
+    if (pl && S.addons.has(pl)) S.addons.get(pl).pilihan = e.target.value;
+    recalc();
+  });
+
+  // ---------------- Buffet menu ----------------
+  function renderMenu() {
+    const groups = {}, order = [];
+    S.data.menu.forEach(m => {
+      const g = pick(m.kategori, m.kategoriId);
+      if (!groups[g]) { groups[g] = []; order.push(g); }
+      groups[g].push(m);
+    });
+    $('#menuBox').innerHTML = order.map(g => `
+      <div class="menu-group"><h4>${escapeHtml(g)}</h4><div class="check-list" style="margin-bottom:12px">
+        ${groups[g].map(m => `<label class="check"><input type="checkbox" data-menu value="${escapeHtml(m.nama)}" ${S.menu.has(m.nama) ? 'checked' : ''}><div><b>${escapeHtml(pick(m.nama, m.namaId))}</b>${(m.ket || m.ketId) ? `<span class="menu-ket">${escapeHtml(pick(m.ket, m.ketId))}</span>` : ''}</div></label>`).join('')}
+      </div></div>`).join('');
+    syncMenu();
+  }
+
+  function syncMenu() {
+    const max = S.data.info.maxMenu;
+    const boxes = Array.from(document.querySelectorAll('[data-menu]'));
+    S.menu = new Set(boxes.filter(b => b.checked).map(b => b.value));
+    boxes.forEach(b => { b.disabled = !b.checked && S.menu.size >= max; });
+    $('#menuCounter').textContent = S.menu.size + ' / ' + max;
+  }
+  $('#menuBox').addEventListener('change', syncMenu);
+
+  // ---------------- Date & availability ----------------
+  function dayType(tgl) {
+    const d = parseYmd(tgl);
+    if (!d) return { tipe: 'weekday', label: t('d_weekday') };
+    const h = S.data.libur.find(x => x.tanggal === tgl);
+    if (h && h.tutup) return { tipe: 'tutup', label: t('d_closed', { x: h.ket }), ket: h.ket };
+    if (h) return { tipe: 'weekend', label: t('d_holiday', { x: h.ket }) };
+    if (d.getDay() === 0 || d.getDay() === 6) return { tipe: 'weekend', label: t('d_weekend') };
+    return { tipe: 'weekday', label: t('d_weekday') };
+  }
+
+  // ---------------- Kalender & ketersediaan ----------------
+  async function loadMonth(month) {
+    if (S.months[month]) return renderCal();
+    renderCal();
+    try {
+      const r = ADMIN ? await adminApi('adminMonth', { bulan: month }) : await api('getMonth', { bulan: month });
+      S.months[month] = r.days;
+      if (S.month === month) renderCal();
+    } catch (e) {
+      // backend lama / gagal: tetap tampilkan kalender (tanpa jumlah slot), booking tetap dicek server
+      const days = {};
+      const last = new Date(+month.slice(0, 4), +month.slice(5, 7), 0).getDate();
+      for (let d = 1; d <= last; d++) {
+        const tgl = month + '-' + String(d).padStart(2, '0');
+        const dt = dayType(tgl);
+        days[tgl] = { st: tgl < $('#tglAcara').min ? 'past' : dt.tipe === 'tutup' ? 'closed' : 'open', weekend: dt.tipe === 'weekend' };
+      }
+      S.months[month] = days;
+      if (S.month === month) renderCal();
+    }
+  }
+
+  function renderCal() {
+    if (!S.data || !S.month || typeof renderCalendar !== 'function') return;
+    renderCalendar($('#calBox'), {
+      month: S.month, days: S.months[S.month] || null, selected: $('#tglAcara').value, minMonth: S.minMonth, lang: window.LANG, allowAll: !!ADMIN,
+      legend: [['open', t('lg_open')], ['few', t('lg_few')], ['full', t('lg_full')], ['closed', t('lg_closed')]],
+      cellExtra: (d, info) => (info.free !== undefined && (info.st === 'open' || info.st === 'few')) ? `<span class="cal-n">${escapeHtml(t('slots_left', { n: info.free }))}</span>` : '',
+      onNav: (m) => { S.month = m; loadMonth(m); },
+      onPick: (d) => { $('#tglAcara').value = d; $('#tglAcara').dispatchEvent(new Event('change', { bubbles: true })); },
+    });
+  }
+
+  let availTimer = null;
+  $('#tglAcara').addEventListener('change', () => {
+    S.avail = null;
+    clearTimeout(availTimer);
+    const tgl = $('#tglAcara').value;
+    if (tgl && tgl.slice(0, 7) !== S.month) { S.month = tgl.slice(0, 7); loadMonth(S.month); } else renderCal();
+    if (!tgl) return recalc();
+    availTimer = setTimeout(async () => {
+      try {
+        const a = ADMIN ? await adminApi('adminDay', { tanggal: tgl }) : await api('getAvailability', { tglAcara: tgl, lang: window.LANG });
+        if ($('#tglAcara').value === tgl) { S.avail = a; recalc(); }
+      } catch (e) { /* ketersediaan tetap dicek server saat booking */ }
+    }, 150);
+  });
+
+  function cellOf(lokasiId, jam) {
+    if (!S.avail || S.avail.tanggal !== $('#tglAcara').value || !S.avail.rows) return null;
+    const r = S.avail.rows.find(x => x.lokasiId === lokasiId);
+    return r ? r.slots.find(x => x.jam === jam) : null;
+  }
+
+  /** Mode admin dengan jam bebas: cari slot grid yang bertumpuk dengan rentang jam. */
+  function overlapCell(lokasiId, start, end) {
+    const r = S.avail.rows.find(x => x.lokasiId === lokasiId);
+    if (!r) return null;
+    const dur = S.avail.durasiMenit || 180;
+    return r.slots.find(x => {
+      const s = toMin(x.dari || x.jam), e = x.sampai ? toMin(x.sampai === '24:00' ? '23:59' : x.sampai) : s + dur;
+      return (x.st === 'booked' || x.st === 'blocked') && start < e && s < end;
+    }) || null;
+  }
+
+  function renderSlotGrid() {
+    const wrap = $('#slotWrap');
+    const tgl = $('#tglAcara').value;
+    if (!S.avail || S.avail.tanggal !== tgl || !S.avail.rows) { wrap.classList.add('hidden'); return; }
+    wrap.classList.remove('hidden');
+    const lok = (form.querySelector('input[name="lokasiId"]:checked') || {}).value;
+    const jam = $('#jam').value;
+    const times = S.avail.slotTimes || [];
+    const wknd = dayType(tgl).tipe === 'weekend';
+    const spotHead = (r) => {
+      const l = S.data.lokasi.find(x => x.id === r.lokasiId) || {};
+      const hp = wknd ? l.hargaWeekend : l.hargaWeekday;
+      const price = hp ? '+' + K(hp) : t('included');
+      const open = S.spotInfo === r.lokasiId;
+      return `<th class="sp-h${r.lokasiId === lok ? ' on' : ''}"><div class="sp-cell">
+        <span class="sp-ph" style="${l.gambar ? `background-image:url('${escapeHtml(l.gambar)}')` : ''}">${l.gambar ? '' : '🌿'}</span>
+        <div class="sp-tx"><b>${escapeHtml(r.nama)}</b><small>${escapeHtml(price + (l.kapasitas ? t('up_to_seats', { n: l.kapasitas }) : ''))}</small>
+        <button type="button" class="sp-more" data-info="${escapeHtml(r.lokasiId)}" aria-expanded="${open}">${escapeHtml(t(open ? 'spot_hide' : 'spot_details'))}</button></div></div></th>`;
+    };
+    const spotInfo = (r) => {
+      if (S.spotInfo !== r.lokasiId) return '';
+      const l = S.data.lokasi.find(x => x.id === r.lokasiId) || {};
+      const label = pick(l.label, l.labelId);
+      const price = (!l.hargaWeekday && !l.hargaWeekend) ? t('spot_included') : t('spot_price', { wd: K(l.hargaWeekday), we: K(l.hargaWeekend) });
+      return `<tr class="sp-info"><td colspan="${times.length + 1}"><div class="sp-info-box">
+        <div class="sp-big" style="${l.gambar ? `background-image:url('${escapeHtml(l.gambar)}')` : ''}"></div>
+        <div><b>${escapeHtml(l.nama || r.nama)}</b> ${label ? `<span class="badge-new">${escapeHtml(label)}</span>` : ''}
+          <p>${escapeHtml(pick(l.deskripsi, l.deskripsiId) || '')}</p>
+          <div class="small" style="font-weight:800;color:var(--jungle)">${escapeHtml(price + (l.kapasitas ? t('up_to_seats', { n: l.kapasitas }) : ''))}</div></div></div></td></tr>`;
+    };
+    $('#slotGrid').innerHTML =
+      `<thead><tr><th class="sp-h">${escapeHtml(t('spot_th'))}</th>${times.map(x => `<th>${escapeHtml(slotLabel(x))}</th>`).join('')}</tr></thead><tbody>` +
+      S.avail.rows.map(r => `<tr>${spotHead(r)}${r.slots.map(c => {
+        const sel = r.lokasiId === lok && c.jam === jam;
+        const lbl = sel && c.st === 'free' ? t('slot_selected') : t('slot_' + c.st);
+        const pickable = c.st === 'free' || (ADMIN && c.st === 'blocked');
+        const title = ADMIN && c.ket ? ` title="${escapeHtml(c.ket)}"` : ADMIN && c.bookingId ? ` title="${escapeHtml(c.bookingId + ' ' + (c.anak || ''))}"` : '';
+        return `<td><button type="button" class="slot st-${c.st}${sel ? ' selected' : ''}" data-lok="${escapeHtml(r.lokasiId)}" data-jam="${escapeHtml(c.jam)}"${title} ${pickable ? '' : 'disabled'}>${escapeHtml(sel && c.st === 'blocked' ? '🔓 ' + t('slot_selected') : lbl)}</button></td>`;
+      }).join('')}</tr>${spotInfo(r)}`).join('') + '</tbody>';
+  }
+
+  $('#slotGrid').addEventListener('click', (e) => {
+    const info = e.target.closest('[data-info]');
+    if (info) { S.spotInfo = S.spotInfo === info.dataset.info ? null : info.dataset.info; renderSlotGrid(); return; }
+    const b = e.target.closest('[data-lok]');
+    if (!b || b.disabled) return;
+    const r = form.querySelector(`input[name="lokasiId"][value="${CSS.escape(b.dataset.lok)}"]`);
+    if (r) r.checked = true;
+    $('#jam').value = b.dataset.jam;
+    recalc();
+  });
+
+  function renderAvailability() {
+    const tgl = $('#tglAcara').value;
+    const day = dayType(tgl);
+    const p = paket();
+    S.closed = day.tipe === 'tutup';
+    let badge = '';
+    if (tgl) {
+      if (S.closed) badge = `<div class="day-badge closed">${escapeHtml(t('day_closed', { d: dateL(tgl), x: day.ket }))}</div>`;
+      else if (tgl < $('#tglAcara').min) badge = `<div class="day-badge closed">${escapeHtml(t('too_soon', { n: S.data.info.minHariBooking }))}</div>`;
+      else badge = `<div class="day-badge ${day.tipe === 'weekend' ? 'weekend' : ''}">${day.tipe === 'weekend' ? '🌴' : '☀️'} ${t('rate_badge', { d: escapeHtml(dateL(tgl)), l: escapeHtml(day.label), p: rupiah(day.tipe === 'weekend' ? p.hargaWeekend : p.hargaWeekday) })}</div>`;
+    }
+    $('#dayBadge').innerHTML = badge;
+
+    const ready = S.avail && S.avail.tanggal === tgl && S.avail.rows;
+    document.querySelectorAll('[data-busy]').forEach(el => {
+      if (!ready) { el.textContent = ''; return; }
+      const row = S.avail.rows.find(r => r.lokasiId === el.dataset.busy);
+      const taken = row ? row.slots.filter(c => c.st === 'booked' || c.st === 'blocked').map(c => slotLabel(c.jam)) : [];
+      el.textContent = taken.length ? t('busy', { x: taken.join(', ') }) : t('free');
+      el.style.color = taken.length ? '' : 'var(--leaf)';
+    });
+
+    const lok = form.querySelector('input[name="lokasiId"]:checked');
+    const start = toMin($('#jam').value);
+    S.clash = false;
+    if (lok && !isNaN(start)) {
+      const end = start + Math.round((p.durasiJam || 3) * 60);
+      let c = cellOf(lok.value, $('#jam').value);
+      if (ADMIN && S.avail && S.avail.rows && !c) c = overlapCell(lok.value, start, end);
+      if (c && c.st !== 'free') S.clash = true;
+      if (ADMIN && c && c.st === 'blocked' && $('#aLepasBlokir').checked) {
+        S.clash = false;
+        $('#clashBox').innerHTML = `<div class="warn-box" style="background:#fff1d6;color:#8a5a00">🔒 Slot diblokir: "${escapeHtml(c.ket || '')}" – blokir akan dilepas saat booking disimpan.</div>`;
+      } else $('#clashBox').innerHTML = S.clash
+        ? `<div class="warn-box">${escapeHtml(t('slot_taken'))}</div>`
+        : `<div class="hint" style="margin-top:8px">${escapeHtml(t('reserved', { a: fromMin(start), b: fromMin(end) }))}</div>`;
+    } else {
+      $('#clashBox').innerHTML = '';
+    }
+    document.querySelectorAll('.spot').forEach(el => el.classList.toggle('selected', !!lok && el.dataset.id === lok.value));
+    renderSlotGrid();
+  }
+
+  // ---------------- Estimate (mirrors calcEstimate_ in Apps Script) ----------------
+  function hitung() {
+    const d = S.data, p = paket();
+    if (!d || !p) return null;
+    const anak = Math.floor(+$('#jumlahAnak').value || 0);
+    if (anak < 1) return null;
+    const dewasa = Math.max(0, Math.floor(+$('#jumlahDewasa').value || 0));
+    const tgl = $('#tglAcara').value;
+    const day = dayType(tgl);
+    const wknd = day.tipe === 'weekend';
+    const lines = [], notes = [];
+    let mulai = false;
+
+    const tagih = Math.max(anak, p.minAnak);
+    const ha = wknd ? p.hargaWeekend : p.hargaWeekday;
+    lines.push({ desc: t('line_pkg', { r: t(wknd ? 'r_we' : 'r_wd'), n: tagih }), total: tagih * ha });
+    if (anak < p.minAnak) notes.push(t('n_min', { n: p.minAnak }));
+
+    const incl = tagih * p.dewasaPerAnak;
+    if (dewasa > incl) {
+      const ex = dewasa - incl;
+      if (d.info.hargaDewasaTambahan > 0) lines.push({ desc: t('line_adults', { n: ex }), total: ex * d.info.hargaDewasaTambahan });
+      else notes.push(t('n_adults', { x: ex, n: p.dewasaPerAnak }));
+    }
+
+    const lokEl = form.querySelector('input[name="lokasiId"]:checked');
+    const lok = lokEl ? d.lokasi.find(l => l.id === lokEl.value) : null;
+    if (lok) {
+      const hl = wknd ? lok.hargaWeekend : lok.hargaWeekday;
+      if (hl > 0) lines.push({ desc: t('line_spot', { s: lok.nama }), total: hl });
+      if (lok.kapasitas > 0 && anak + dewasa > lok.kapasitas) notes.push(t('n_cap', { s: lok.nama, n: lok.kapasitas }));
+    }
+
+    const start = toMin($('#jam').value);
+    d.addon.filter(a => S.addons.has(a.id) && a.kategori !== 'Cake').map(a => ({ a, st: S.addons.get(a.id) })).concat(cakeItems()).forEach(({ a, st }) => {
+      const nm = aName(a) + (st.pilihan ? ' – ' + optLabel(a, st.pilihan) : '');
+      let l;
+      if (a.satuan === 'per_anak') l = { desc: nm + ' × ' + anak, total: anak * a.harga };
+      else if (a.satuan === 'per_pax') { const pax = st.qty || anak; l = { desc: nm + ' (' + pax + ' pax)', total: a.harga + Math.max(0, pax - a.termasukPax) * a.hargaExtraPax }; }
+      else if (a.satuan === 'per_item') { const q = st.qty || 1; l = { desc: nm + (q > 1 ? ' × ' + q : ''), total: q * a.harga }; }
+      else if (a.satuan === 'on_request') { l = { desc: nm, total: 0, req: true }; notes.push(t('n_req', { x: aName(a) })); }
+      else l = { desc: nm, total: a.harga };
+      if (a.hargaMulai) { l.desc += ' *'; mulai = true; }
+      if (a.minJam && !isNaN(start) && start < toMin(a.minJam)) notes.push(t('n_eve', { x: aName(a), t: a.minJam }));
+      lines.push(l);
+    });
+    if (mulai) notes.push(t('n_start'));
+
+    const subtotal = lines.reduce((s, l) => s + l.total, 0);
+    const pajak = Math.round(subtotal * (d.info.pajakPersen || 0) / 100);
+    const total = subtotal + pajak;
+    const dp = Math.max(0, Math.min(total, Math.ceil(total * (d.info.persenDP || 0) / 100 / 1000) * 1000));
+    return { tgl, lok, anak, dewasa, lines, notes, pajak, total, dp };
+  }
+
+  function recalc() {
+    if (!S.data) return;
+    renderAvailability();
+    const e = hitung();
+    if (!e) { $('#summaryBody').innerHTML = `<div class="empty">${escapeHtml(t('sum_empty'))}</div>`; return; }
+    const meta = [e.tgl ? dateL(e.tgl) : t('choose_date'), e.lok ? e.lok.nama : t('choose_spot2'), t('meta_guests', { a: e.anak, d: e.dewasa })];
+    if (!e.tgl || !e.lok) {
+      $('#summaryBody').innerHTML =
+        `<div class="meta">${meta.map(escapeHtml).join('<br>')}</div>` +
+        `<p class="small muted" style="margin:12px 0 0">${escapeHtml(t('sum_wait'))}</p>` +
+        `<div class="total"><span>${escapeHtml(t('total'))}</span><span>${rupiah(0)}</span></div>` +
+        `<div class="dp"><span>${escapeHtml(t('deposit'))}</span><span>${rupiah(0)}</span></div>` +
+        `<div style="height:14px"></div>`;
+      $('#submitBtn').disabled = S.clash || S.closed;
+      return;
+    }
+    $('#summaryBody').innerHTML =
+      `<div class="meta">${meta.map(escapeHtml).join('<br>')}</div>` +
+      e.lines.map(l => `<div class="line"><span>${escapeHtml(l.desc)}</span><span>${l.req ? escapeHtml(t('on_request')) : rupiah(l.total)}</span></div>`).join('') +
+      (e.pajak ? `<div class="line"><span>${escapeHtml(t('line_tax', { n: S.data.info.pajakPersen }))}</span><span>${rupiah(e.pajak)}</span></div>` : '') +
+      `<div class="total"><span>${escapeHtml(t('total'))}</span><span>${rupiah(e.total)}</span></div>` +
+      (e.dp ? `<div class="dp"><span>${escapeHtml(t('deposit'))}</span><span>${rupiah(e.dp)}</span></div>` : '') +
+      (e.notes.length ? `<ul class="notes">${e.notes.map(n => `<li>${escapeHtml(n)}</li>`).join('')}</ul>` : '') +
+      `<div style="height:14px"></div>`;
+    $('#submitBtn').disabled = S.clash || S.closed;
+  }
+
+  form.addEventListener('input', (e) => {
+    if (e.target.id === 'jumlahAnak') renderSelected();
+    if (!e.target.closest('#selList')) recalc();
+  });
+  form.addEventListener('change', (e) => { if (!e.target.closest('#selList')) recalc(); });
+
+  // ---------------- Terms & Conditions modal ----------------
+  function openTerms() {
+    const info = S.data ? S.data.info : {};
+    const txt = (isId() && info.syaratId) ? info.syaratId : (info.syarat || '');
+    $('#termsText').innerHTML = txt ? txt.split(/\r?\n/).filter(x => x.trim()).map(x => `<p>${escapeHtml(x)}</p>`).join('') : '';
+    const rules = isId() && info.rulesId && info.rulesId.length ? info.rulesId : (info.rules || []);
+    $('#termsRules').innerHTML = rules.map(r => `<li>${escapeHtml(r)}</li>`).join('');
+    $('#parkRulesLink').href = t('park_url');
+    $('#termsModal').showModal();
+  }
+  $('#openTerms').addEventListener('click', openTerms);
+  $('#termsClose').addEventListener('click', () => $('#termsModal').close());
+  $('#termsAgree').addEventListener('click', () => { $('#setuju').checked = true; $('#termsModal').close(); });
+
+  // ---------------- Submit ----------------
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    if (!form.querySelector('input[name="lokasiId"]:checked')) { toast(t('err_spot'), 'error'); $('#spotPick').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+    if (!ADMIN && (!$('#setuju').checked || !$('#setujuPark').checked)) {
+      toast(t('err_consent'), 'error');
+      document.querySelector('.consent').classList.add('flash');
+      document.querySelector('.consent').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => document.querySelector('.consent').classList.remove('flash'), 1600);
+      return;
+    }
+    if (!form.reportValidity()) return;
+    if (ADMIN && !$('#email').value.trim() && $('#aKirimEmail').checked) toast('Email kosong – konfirmasi tidak dikirim lewat email. Kirim lewat WhatsApp dari layar berikutnya.');
+    if (S.clash || S.closed) { toast(t('err_avail'), 'error'); return; }
+    if (S.cake.jenis === 'standard' && (!S.cake.size || !S.cake.flavour)) { toast(t('err_cake'), 'error'); return; }
+    if (S.cake.jenis === 'custom' && !$('#cakeLayered').value && !$('#cakeNonLayered').value) { toast(t('err_cake_flavour'), 'error'); $('#cakeCus').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+
+    const fd = new FormData(form);
+    const payload = {};
+    fd.forEach((v, k) => { if (!(v instanceof File)) payload[k] = String(v).trim(); });
+    delete payload.kueJenis;
+    payload.lang = window.LANG;
+    payload.jumlahAnak = Number(payload.jumlahAnak);
+    payload.jumlahDewasa = Number(payload.jumlahDewasa || 0);
+    payload.setuju = $('#setuju').checked && $('#setujuPark').checked;
+    delete payload.setujuPark;
+    payload.menu = Array.from(S.menu);
+    payload.addOns = Array.from(S.addons.entries()).filter(([id]) => (cakeById(id) || {}).kategori !== 'Cake')
+      .map(([id, st]) => ({ id: id, qty: st.qty || '', pilihan: st.pilihan || '' }))
+      .concat(cakeItems().map(({ a, st }) => ({ id: a.id, qty: st.qty || '', pilihan: st.pilihan || '' })));
+    payload.kue = {
+      jenis: S.cake.jenis, tulisan: $('#cakeWriting').value.trim(), lain: $('#cakeOther').value.trim(),
+      layered: $('#cakeLayered').value, nonlayered: $('#cakeNonLayered').value, filling: $('#cakeFilling').value, finishing: $('#cakeFinishing').value,
+    };
+    if (S.cake.jenis === 'custom' && S.design) payload.desainKue = S.design;
+    if (ADMIN) { payload.kirimWa = $('#aKirimWa').checked; payload.kirimEmail = $('#aKirimEmail').checked; payload.lepasBlokir = $('#aLepasBlokir').checked; delete payload.website; }
+
+    const btn = $('#submitBtn');
+    setLoading(btn, true, t('sending'));
+    try {
+      const r = ADMIN ? await adminApi('adminCreateBooking', payload) : await api('createBooking', payload);
+      $('#sBookingId').textContent = r.bookingId;
+      $('#sDetail').innerHTML = `
+        <p>${t('m_thanks', { n: escapeHtml(r.nama), d: escapeHtml(dateL(r.tglAcara)), t: escapeHtml(r.jam), s: escapeHtml(r.lokasi) })}</p>
+        <div class="summary" style="position:static">
+          <div class="line"><span>${escapeHtml(t('m_total'))}</span><span>${rupiah(r.total)}</span></div>
+          <div class="line"><span>${escapeHtml(t('m_dp'))}</span><span>${rupiah(r.dp)}</span></div>
+        </div>
+        ${r.waKonfirmasi ? `<p class="small" style="margin-top:14px;font-weight:800;color:var(--leaf)">✓ ${escapeHtml(t('m_wa_sent', { h: r.hp }))}</p>` : ''}
+        <p class="small muted" style="margin-top:14px">${r.emailKonfirmasi ? t(r.proforma ? 'm_sent2' : 'm_sent1', { e: escapeHtml(r.email) }) : ADMIN ? 'Tidak ada email terkirim ke pelanggan. Kirim ringkasan lewat WhatsApp; proforma bisa dikirim dari admin setelah email diisi.' : escapeHtml(t('m_fail'))}</p>`;
+      const sWa = $('#sWa');
+      if (ADMIN) {
+        const no = String(r.hp || '').replace(/\D/g, '').replace(/^0/, '62');
+        sWa.textContent = 'Kirim ringkasan ke pelanggan via WhatsApp';
+        sWa.href = 'https://wa.me/' + no + '?text=' + encodeURIComponent(t('wa_summary', { n: r.nama, id: r.bookingId, d: dateL(r.tglAcara), t: r.jam, s: r.lokasi, tot: rupiah(r.total), dp: rupiah(r.dp) }));
+        $('#sAdmin').href = 'admin.html#booking=' + encodeURIComponent(r.bookingId);
+        $('#sAdmin').classList.remove('hidden');
+        $('#sClose').textContent = 'Buat booking lain';
+      } else if (WA) sWa.href = waUrl(t('wa_booked', { id: r.bookingId, d: dateL(r.tglAcara), t: r.jam }));
+      else sWa.classList.add('hidden');
+      $('#successModal').showModal();
+      form.reset();
+      S.addons.clear(); S.menu.clear(); S.avail = null; S.design = null; S.months = {}; loadMonth(S.month);
+      S.cake = { jenis: 'none', size: S.cake.size, flavour: S.cake.flavour, qty: 1 };
+      $('#cakeDesignPrev').classList.add('hidden');
+      $('#jumlahAnak').value = paket().minAnak;
+      renderAll();
+    } catch (e) {
+      toast(e.message, 'error');
+    } finally {
+      setLoading(btn, false);
+      $('#submitBtn').disabled = S.clash || S.closed;
+    }
+  });
+
+  $('#sClose').addEventListener('click', () => { $('#successModal').close(); $('#book').scrollIntoView({ behavior: 'smooth' }); });
+
+  init();
+})();
+
+</script>
 </body>
 </html>
