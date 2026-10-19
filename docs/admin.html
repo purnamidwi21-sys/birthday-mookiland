@@ -32,6 +32,7 @@
       <div class="tabs" id="tabs">
         <button data-tab="dashboard" class="active">Dashboard</button>
         <button data-tab="bookings">Booking</button>
+        <button data-tab="slot">Ketersediaan</button>
         <button data-tab="akun">Akun</button>
       </div>
       <div class="user-menu"><span id="whoami"></span><button class="btn sm ghost" id="logoutBtn" style="color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4)">Keluar</button></div>
@@ -93,6 +94,7 @@
         <label class="f"><span>Acara dari</span><input type="date" id="bFrom"></label>
         <label class="f"><span>s/d</span><input type="date" id="bTo"></label>
         <button class="btn sm" id="bLoad">Cari</button>
+        <a class="btn sm green" href="index.html?admin=1">＋ Booking manual</a>
       </div>
       <div class="table-wrap">
         <table class="data">
@@ -101,6 +103,41 @@
         </table>
       </div>
       <p class="small muted" id="bCount" style="margin-top:10px"></p>
+    </section>
+
+    <!-- ======= KETERSEDIAAN ======= -->
+    <section id="tab-slot" class="hidden">
+      <div class="dash-grid" style="grid-template-columns:minmax(300px,420px) 1fr">
+        <div class="panel">
+          <h3>Kalender</h3>
+          <p class="small muted" style="margin-top:-8px">Angka = acara terjadwal · 🔒 = slot diblokir. Klik tanggal untuk melihat slot.</p>
+          <div class="cal" id="aCal" style="max-width:none;border:0;padding:0"></div>
+        </div>
+        <div class="panel">
+          <h3 id="aDayTitle">Pilih tanggal di kalender</h3>
+          <div id="aDayBadge"></div>
+          <div class="slot-scroll"><table class="slot-grid admin" id="aGrid"></table></div>
+          <p class="small muted" id="aGridHint" style="margin:8px 0 0"></p>
+
+          <form class="pay-form hidden" id="blockForm" style="margin-top:16px">
+            <b>Blokir slot</b>
+            <p class="small muted" style="margin:4px 0 10px">Untuk pre-booking WhatsApp, maintenance, acara privat, dll. Slot yang diblokir tidak bisa dipesan di website.</p>
+            <div class="form-grid">
+              <label class="f"><span>Lokasi</span><select name="lokasiId" id="bfLokasi"></select></label>
+              <label class="f"><span>Waktu</span><select name="mode" id="bfMode"><option value="slot">Jam tertentu</option><option value="day">Seharian</option></select></label>
+              <label class="f" id="bfJamWrap"><span>Jam mulai</span><select name="jamMulai" id="bfJam"></select></label>
+              <label class="f" id="bfSelesaiWrap"><span>Jam selesai</span><input name="jamSelesai" id="bfSelesai" type="time" step="900"></label>
+              <label class="f full"><span>Keterangan *</span><input name="ket" required maxlength="200" placeholder="mis. Pre-booking WA Ibu Rina / Maintenance area"></label>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px"><button class="btn sm" id="bfSave">🔒 Blokir</button></div>
+          </form>
+
+          <div style="margin-top:12px"><a class="btn sm green hidden" id="aNewBooking" href="index.html?admin=1">＋ Booking manual di tanggal ini</a></div>
+
+          <h4 class="subhead">Blokir di tanggal ini</h4>
+          <div id="aBlocks"><p class="muted small">-</p></div>
+        </div>
+      </div>
     </section>
 
     <!-- ======= AKUN ======= -->
@@ -126,6 +163,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="assets/config.js"></script>
 <script src="assets/api.js"></script>
+<script src="assets/calendar.js"></script>
 <script src="assets/admin.js"></script>
 </body>
 </html>

@@ -13,6 +13,13 @@
 </head>
 <body>
 
+<div class="admin-bar hidden" id="adminBar">
+  <div class="wrap">
+    <span>🛠️ <b>Mode admin – booking manual</b> · <span id="adminWho"></span> · bahasa email pelanggan mengikuti tombol EN/ID</span>
+    <a class="btn sm light" href="admin.html">← Kembali ke admin</a>
+  </div>
+</div>
+
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="#top"><img src="img/logo.png" alt="Mookiland Bali"></a>
@@ -97,9 +104,18 @@
         <div class="card">
           <div class="step-title"><span class="n">1</span><h3 data-i18n="s1">When &amp; where</h3></div>
           <div class="form-grid">
+            <div class="full">
+              <label class="f"><span data-i18n="cal_title">Check availability – choose a date</span></label>
+              <div class="cal" id="calBox"></div>
+            </div>
             <label class="f"><span data-i18n="f_date">Party date *</span><input type="date" name="tglAcara" id="tglAcara" required></label>
             <label class="f"><span data-i18n="f_time">Start time *</span><select name="jam" id="jam" required></select></label>
             <div class="full" id="dayBadge"></div>
+            <div class="full hidden" id="slotWrap">
+              <label class="f"><span data-i18n="slot_title">Available slots</span></label>
+              <p class="hint" style="margin:-2px 0 8px" data-i18n="slot_hint">Tap a free slot to choose the party spot and start time.</p>
+              <div class="slot-scroll"><table class="slot-grid" id="slotGrid"></table></div>
+            </div>
             <div class="full">
               <label class="f"><span data-i18n-html="f_spot">Party spot *</span></label>
               <div class="spot-pick" id="spotPick"></div>
@@ -171,10 +187,21 @@
 
         <div class="card">
           <div class="step-title"><span class="n">6</span><h3 data-i18n="s5">Your details</h3></div>
+          <div class="admin-opts hidden" id="adminOpts">
+            <div class="form-grid">
+              <label class="f"><span>Sumber booking</span>
+                <select name="sumber"><option>WhatsApp</option><option>Telepon</option><option>Walk-in</option><option>Instagram</option><option>Email</option><option>Lainnya</option></select></label>
+              <div class="f" style="display:grid;gap:8px">
+                <label class="check" style="padding:8px 10px"><input type="checkbox" id="aKirimEmail" checked><div><b>Kirim email konfirmasi + proforma</b><small>Hanya jika email pelanggan diisi</small></div></label>
+                <label class="check" style="padding:8px 10px"><input type="checkbox" id="aLepasBlokir" checked><div><b>Lepas blokir slot</b><small>Pakai slot yang diblokir untuk pre-booking</small></div></label>
+              </div>
+            </div>
+            <p class="small muted" style="margin:8px 0 0">Mode admin: email, tanggal lahir, usia & centang aturan boleh dikosongkan; tanggal boleh mendadak; jam bebas.</p>
+          </div>
           <div class="form-grid">
             <label class="f"><span data-i18n="f_nama">Parent / contact name *</span><input name="nama" required maxlength="100" autocomplete="name"></label>
             <label class="f"><span data-i18n="f_hp">WhatsApp number *</span><input name="hp" type="tel" required maxlength="25" placeholder="+62 812 …" autocomplete="tel"></label>
-            <label class="f full"><span>Email *</span><input name="email" type="email" required maxlength="120" placeholder="name@email.com" autocomplete="email"></label>
+            <label class="f full"><span>Email *</span><input name="email" id="email" type="email" required maxlength="120" placeholder="name@email.com" autocomplete="email"></label>
             <label class="f"><span data-i18n="f_child">Birthday child's name *</span><input name="namaAnak" required maxlength="100"></label>
             <label class="f"><span data-i18n="f_dob">Child's date of birth *</span><input name="tglLahir" id="tglLahir" type="date" required></label>
             <label class="f"><span data-i18n="f_age">Birthday age *</span><input name="usia" id="usia" type="number" min="0" max="120" required></label>
@@ -235,6 +262,7 @@
     <div id="sDetail"></div>
     <div style="display:grid;gap:10px;margin-top:16px">
       <a class="btn wa block" id="sWa" target="_blank" rel="noopener" data-i18n="m_wa">Send my booking no. to Bu Dwi</a>
+      <a class="btn green block hidden" id="sAdmin" href="admin.html">Buka booking di admin</a>
       <button class="btn ghost block" id="sClose" type="button" data-i18n="m_done">Done</button>
     </div>
   </div>
@@ -243,6 +271,7 @@
 <script src="assets/config.js"></script>
 <script src="assets/api.js"></script>
 <script src="assets/i18n.js"></script>
+<script src="assets/calendar.js"></script>
 <script src="assets/app.js"></script>
 </body>
 </html>
