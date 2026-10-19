@@ -98,7 +98,7 @@
           <div class="step-title"><span class="n">1</span><h3 data-i18n="s1">When &amp; where</h3></div>
           <div class="form-grid">
             <label class="f"><span data-i18n="f_date">Party date *</span><input type="date" name="tglAcara" id="tglAcara" required></label>
-            <label class="f"><span data-i18n="f_time">Start time *</span><input type="time" name="jam" id="jam" required value="10:00" step="900"></label>
+            <label class="f"><span data-i18n="f_time">Start time *</span><select name="jam" id="jam" required></select></label>
             <div class="full" id="dayBadge"></div>
             <div class="full">
               <label class="f"><span data-i18n-html="f_spot">Party spot *</span></label>
@@ -125,19 +125,59 @@
         </div>
 
         <div class="card">
-          <div class="step-title"><span class="n">4</span><h3 data-i18n="s4">Your add-ons</h3></div>
+          <div class="step-title"><span class="n">4</span><h3 data-i18n="s_cake">Birthday cake</h3></div>
+          <div class="cake-pick" id="cakePick">
+            <label class="spot-opt"><input type="radio" name="kueJenis" value="none" checked><b data-i18n="cake_none">No cake</b><span class="s" data-i18n="cake_none_s"></span></label>
+            <label class="spot-opt"><input type="radio" name="kueJenis" value="standard"><b data-i18n="cake_standard">Favourite cake</b><span class="s" id="cakeStdSub"></span></label>
+            <label class="spot-opt"><input type="radio" name="kueJenis" value="custom"><b data-i18n="cake_custom">Custom cake</b><span class="s" id="cakeCusSub"></span></label>
+            <label class="spot-opt"><input type="radio" name="kueJenis" value="own"><b data-i18n="cake_own">We bring our own cake</b><span class="s" id="cakeOwnSub"></span></label>
+          </div>
+
+          <div class="cake-panel hidden" id="cakeStd">
+            <div class="form-grid">
+              <label class="f"><span data-i18n="f_size">Size *</span><select id="cakeSize"></select></label>
+              <label class="f"><span data-i18n="f_flavour">Flavour *</span><select id="cakeFlavour"></select></label>
+              <label class="f"><span data-i18n="f_qty">Quantity</span><input type="number" id="cakeQty" min="1" max="10" value="1"></label>
+            </div>
+          </div>
+
+          <div class="cake-panel hidden" id="cakeCus">
+            <p class="small" style="margin:0 0 12px" id="cakeCusInfo"></p>
+            <div class="form-grid">
+              <label class="f"><span data-i18n="f_layered">Cake flavour – layered</span><select id="cakeLayered"></select></label>
+              <label class="f"><span data-i18n="f_nonlayered">Cake flavour – non-layered</span><select id="cakeNonLayered"></select></label>
+              <label class="f"><span data-i18n="f_filling">Filling (between the layers)</span><select id="cakeFilling"></select></label>
+              <label class="f"><span data-i18n="f_finishing">Finishing</span><select id="cakeFinishing"></select></label>
+              <label class="f full"><span data-i18n="f_design">Cake design – reference photo (optional)</span>
+                <input type="file" id="cakeDesign" accept="image/*">
+                <div class="hint" data-i18n="design_hint">JPG / PNG, max. 8 MB</div>
+                <img id="cakeDesignPrev" class="design-prev hidden" alt=""></label>
+            </div>
+          </div>
+
+          <div class="cake-panel hidden" id="cakeOwn"><p class="small" style="margin:0" id="cakeOwnInfo"></p></div>
+
+          <div class="form-grid hidden" id="cakeCommon" style="margin-top:14px">
+            <label class="f full"><span data-i18n="f_writing">Writing on the cake</span><input id="cakeWriting" maxlength="80" data-i18n-ph="ph_writing"></label>
+            <label class="f full" id="cakeOtherWrap"><span data-i18n="f_othercake">More than 1 cake?</span><input id="cakeOther" maxlength="120" data-i18n-ph="ph_othercake"></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="step-title"><span class="n">5</span><h3 data-i18n="s4">Your add-ons</h3></div>
           <div class="sel-list" id="selList"></div>
           <a href="#addons" class="small" style="display:inline-block;margin-top:10px;font-weight:800" data-i18n="browse">＋ Browse all add-ons</a>
         </div>
 
         <div class="card">
-          <div class="step-title"><span class="n">5</span><h3 data-i18n="s5">Your details</h3></div>
+          <div class="step-title"><span class="n">6</span><h3 data-i18n="s5">Your details</h3></div>
           <div class="form-grid">
             <label class="f"><span data-i18n="f_nama">Parent / contact name *</span><input name="nama" required maxlength="100" autocomplete="name"></label>
             <label class="f"><span data-i18n="f_hp">WhatsApp number *</span><input name="hp" type="tel" required maxlength="25" placeholder="+62 812 …" autocomplete="tel"></label>
             <label class="f full"><span>Email *</span><input name="email" type="email" required maxlength="120" placeholder="name@email.com" autocomplete="email"></label>
             <label class="f"><span data-i18n="f_child">Birthday child's name *</span><input name="namaAnak" required maxlength="100"></label>
-            <label class="f"><span data-i18n="f_age">Turning (age)</span><input name="usia" type="number" min="0" max="120"></label>
+            <label class="f"><span data-i18n="f_dob">Child's date of birth *</span><input name="tglLahir" id="tglLahir" type="date" required></label>
+            <label class="f"><span data-i18n="f_age">Birthday age *</span><input name="usia" id="usia" type="number" min="0" max="120" required></label>
             <label class="f"><span data-i18n="f_theme">Party theme</span><input name="tema" maxlength="150" data-i18n-ph="ph_theme"></label>
             <label class="f"><span data-i18n="f_entlang">Entertainment language</span>
               <select name="bahasa">
