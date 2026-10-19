@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <!-- Versi 1-file: CSS & JS sudah di dalam file ini (build 2026-10-19b) -->
+  <!-- Versi 1-file: CSS, JS & gambar Mooki/undangan sudah di dalam file ini (build 2026-10-19c) -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
@@ -599,6 +599,75 @@ body:not(.is-admin) #jamWrap { display: none; }
 .pin .lbl b { font-size: 12px; }
 @media (max-width: 860px) { .pin .lbl { padding: 2px 7px; } .pin .lbl b { font-size: 10.5px; } }
 
+/* ===== Add-on: judul, kue, bahasa, MC, filter ===== */
+.addon-title { display: grid; gap: 2px; margin-bottom: 4px; }
+.addon-title .step-title { margin-bottom: 0; }
+.addon-title p { margin: 0 0 4px; }
+.cake-sec .cake-box { background: var(--paper); border-radius: 16px; padding: 14px; box-shadow: 0 0 0 1.5px var(--line); margin-bottom: 12px; }
+.extra-cakes .ec-head { display: grid; gap: 2px; margin-bottom: 10px; }
+.ec-row { display: grid; grid-template-columns: 1.2fr 1fr auto auto auto; gap: 8px; align-items: center; background: #fff; border-radius: 12px; padding: 8px 10px; box-shadow: 0 0 0 1.5px var(--line); margin-bottom: 8px; }
+.ec-row select { padding: 6px 8px; border-radius: 8px; font-size: 13px; }
+.ec-price { font-family: var(--head); color: var(--jungle); white-space: nowrap; }
+.ec-row .x, .kid-n .x, .rd-row .x { border: 0; background: var(--lime-soft); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 16px; color: var(--jungle); }
+@media (max-width: 560px) { .ec-row { grid-template-columns: 1fr 1fr; } .ec-row .ec-price { text-align: right; } }
+.lang-pick { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: -2px 0 10px; font-size: 12.5px; font-weight: 800; color: var(--ink-2); }
+.lang-pick button { border: 2px solid var(--leaf); background: #fff; color: var(--jungle); font: 800 12px var(--body); border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+.lang-pick button.on { background: var(--jungle); border-color: var(--jungle); color: #fff; }
+.mc-vars { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 2px 0 8px; }
+.mc-vars button { border: 2px solid var(--line); background: #fff; border-radius: 12px; padding: 6px 8px; cursor: pointer; display: grid; text-align: center; font-family: var(--body); color: var(--jungle); }
+.mc-vars button b { font-size: 14px; } .mc-vars button small { font-size: 12px; font-weight: 700; color: var(--muted); }
+.mc-vars button.on { border-color: var(--jungle); background: var(--lime-soft); }
+.mc-char { display: grid; gap: 4px; margin-bottom: 10px; font-size: 12.5px; font-weight: 800; color: var(--ink-2); }
+.mc-char select { padding: 7px 9px; border-radius: 10px; font-size: 13px; }
+.ent-tools { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.ent-tools .pf { display: flex; flex-wrap: wrap; gap: 6px; }
+.ent-tools .pf button { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 5px 12px; font: 800 12.5px var(--body); color: var(--ink-2); cursor: pointer; }
+.ent-tools .pf button.on { background: var(--jungle); border-color: var(--jungle); color: #fff; }
+.ent-tools label { font-size: 12.5px; font-weight: 800; color: var(--ink-2); }
+.ent-tools select { padding: 5px 8px; border-radius: 8px; font-size: 12.5px; }
+.ent-info { background: #fff8ec; border: 1.5px solid #f0dcb8; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #6a4708; margin-bottom: 14px; }
+
+/* ===== Keranjang: wajib vs add-on ===== */
+.sum-grp { margin-bottom: 6px; }
+.sum-grp .sg-h { display: flex; justify-content: space-between; align-items: baseline; font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--jungle); background: var(--lime-soft); border-radius: 8px; padding: 6px 10px; margin: 10px 0 2px; }
+.sum-grp.add .sg-h { background: var(--orange-soft); color: #9a4a10; }
+
+/* ===== Menu buffet dengan foto & porsi ===== */
+.menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.menu-card { position: relative; display: grid; grid-template-columns: 64px 1fr; gap: 10px; align-items: center; background: #fff; border-radius: 14px; padding: 8px; box-shadow: 0 0 0 1.5px var(--line); cursor: pointer; }
+.menu-card input { position: absolute; opacity: 0; pointer-events: none; }
+.menu-card.on { box-shadow: 0 0 0 2.5px var(--leaf); background: #fbfef6; }
+.menu-card.off { opacity: .5; cursor: not-allowed; }
+.mc-ph { width: 64px; height: 64px; border-radius: 12px; background: var(--lime-soft) center/cover; display: grid; place-items: center; font-size: 30px; }
+.mc-bd { display: grid; gap: 2px; line-height: 1.25; }
+.mc-bd b { font-size: 14px; }
+.mc-bd .por { font-size: 12px; font-weight: 800; color: var(--jungle); background: var(--lime-soft); border-radius: 999px; padding: 1px 8px; justify-self: start; }
+.mc-bd small { font-size: 11.5px; color: var(--muted); }
+.mc-ck { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 50%; background: var(--leaf); color: #fff; font-size: 13px; font-weight: 800; display: none; place-items: center; }
+.menu-card.on .mc-ck { display: grid; }
+
+/* ===== Anak berulang tahun (maks. 4) ===== */
+.kids-box { display: grid; gap: 10px; }
+.kid-row { display: grid; grid-template-columns: 70px 1.4fr 1fr .6fr; gap: 10px; align-items: end; background: var(--paper); border-radius: 14px; padding: 10px; box-shadow: 0 0 0 1.5px var(--line); }
+.kid-n { font-family: var(--head); font-size: 18px; color: var(--jungle); display: flex; gap: 6px; align-items: center; align-self: center; }
+.kids-box > .btn { justify-self: start; }
+@media (max-width: 700px) { .kid-row { grid-template-columns: 1fr 1fr; } .kid-n { grid-column: 1 / -1; } }
+
+/* ===== Run-down ===== */
+.rd-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.rd-actions .btn { box-shadow: none; }
+.rd-row { display: grid; grid-template-columns: 120px 1fr auto; gap: 8px; align-items: center; margin-bottom: 6px; }
+.rd-row input { padding: 8px 10px; border-radius: 10px; border: 1.5px solid var(--line); font: 600 14px var(--body); }
+.rd-row input[type=time] { font-weight: 800; color: var(--jungle); }
+
+/* ===== Mooki & e-invitation ===== */
+.mooki-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 5px var(--lime-soft), 0 8px 20px rgba(0, 0, 0, .15); }
+.invite-prev { display: grid; justify-items: center; gap: 10px; margin-top: 14px; padding: 12px; background: var(--lime-soft); border-radius: 16px; }
+.invite-prev img { width: 180px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0, 0, 0, .2); }
+
+.success-icon .mooki-img { display: block; margin: 0 auto 4px; }
+.booking-grid > *, .wstep > *, .wiz { min-width: 0; }
+
 </style>
 </head>
 <body class="admin-body">
@@ -1155,6 +1224,10 @@ function setLoading(btn, on, text) {
         ${info('Kue', escapeHtml(({ none: 'Tanpa kue', standard: 'Kue favorit', custom: 'Kue custom', own: 'Bawa kue sendiri' })[b.jenisKue] || '-') + (b.detailKue ? '<br><span class="small">' + escapeHtml(b.detailKue) + '</span>' : ''))}
         ${info('Tulisan di kue', b.tulisanKue ? '“' + escapeHtml(b.tulisanKue) + '”' : '-')}
         ${info('Foto desain kue', b.desainKue ? `<a href="${escapeHtml(b.desainKue)}" target="_blank" rel="noopener">🎂 Lihat foto</a>` : '-')}
+        ${info('Anak berulang tahun', escapeHtml(b.dataAnak || '-'))}
+        ${info('Bahasa hiburan', escapeHtml(b.bahasa || '-'))}
+        ${info('E-invitation', b.undangan ? `<a href="${escapeHtml(b.undangan)}" target="_blank" rel="noopener">💌 Lihat undangan</a>` : '-')}
+        ${info('Run-down', b.runDown ? '<span class="small" style="white-space:pre-line">' + escapeHtml(b.runDown) + '</span>' : '-')}
         ${b.catatan ? '<div style="grid-column:1/-1"><span>Catatan pelanggan</span>' + escapeHtml(b.catatan) + '</div>' : ''}
       </div>
 
