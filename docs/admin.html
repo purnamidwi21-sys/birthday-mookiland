@@ -1105,6 +1105,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .rk-btns { display: flex; gap: 10px; flex-wrap: wrap; }
 .rk-paste { margin-top: 14px; }
 .rk-paste textarea { width: 100%; font: 13px ui-monospace, Menlo, monospace; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px; }
+.warn-st { display: inline-block; margin-top: 4px; font-size: 11.5px; font-weight: 800; color: #b3541e; white-space: nowrap; }
 
 </style>
 </head>
@@ -1537,6 +1538,14 @@ function setLoading(btn, on, text) {
 
   const statusClass = (s) => ({ 'Menunggu Pembayaran': 'b-menunggu', 'DP Diterima': 'b-dp', 'Lunas': 'b-lunas', 'Selesai': 'b-selesai', 'Batal': 'b-batal' }[s] || 'b-menunggu');
   const badge = (s) => `<span class="badge ${statusClass(s)}">${escapeHtml(s)}</span>`;
+  // peringatan bila status tidak sesuai dengan pembayaran yang tercatat
+  const cekStatus = (b) => {
+    const st = b.status;
+    if ((st === 'DP Diterima' || st === 'Menunggu Pembayaran') && b.total > 0 && b.sisa <= 0) return '<br><span class="warn-st">⚠ sudah lunas – ubah ke Lunas</span>';
+    if (st === 'DP Diterima' && !(b.dibayar > 0)) return '<br><span class="warn-st">⚠ DP belum dicatat</span>';
+    if (st === 'Lunas' && b.sisa > 0) return '<br><span class="warn-st">⚠ masih ada sisa</span>';
+    return '';
+  };
 
   async function loadDashboard() {
     if (!$('#dFrom').value) setRange('3m');
@@ -1597,7 +1606,7 @@ function setLoading(btn, on, text) {
     $('#addonTable').innerHTML = mini(['Add-on', 'Dipesan', 'Nilai'], d.byAddOn.slice(0, 10).map(x => `<tr><td>${escapeHtml(x.nama)}</td><td class="r">${x.jumlah}×</td><td class="r">${rupiah(x.nilai)}</td></tr>`));
     $('#menuTable').innerHTML = mini(['Menu', 'Booking', 'Porsi'], d.byMenu.map(x => `<tr><td>${escapeHtml(x.nama)}</td><td class="r">${x.jumlah}</td><td class="r">${x.nilai}</td></tr>`));
     $('#upcomingTable').innerHTML = mini(['Tanggal', 'Anak', 'Lokasi', 'Anak/Dws', 'Menu & add-on', 'Status', 'Sisa'], d.upcoming.map(u =>
-      `<tr class="click" data-id="${escapeHtml(u.id)}" style="cursor:pointer"><td>${tglIndo(u.tglAcara)}<br><span class="muted small">${escapeHtml(u.jam)}–${escapeHtml(u.jamSelesai)}</span></td><td>${escapeHtml(u.namaAnak)}<br><span class="muted small">${escapeHtml(u.nama)}</span></td><td>${escapeHtml(u.lokasi)}</td><td class="r">${u.anak} / ${u.dewasa}</td><td class="small">${escapeHtml(u.menu || '-')}<br><span class="muted">${escapeHtml(u.addOn || '')}</span></td><td class="r">${badge(u.status)}</td><td class="r">${rupiah(u.sisa)}</td></tr>`));
+      `<tr class="click" data-id="${escapeHtml(u.id)}" style="cursor:pointer"><td>${tglIndo(u.tglAcara)}<br><span class="muted small">${escapeHtml(u.jam)}–${escapeHtml(u.jamSelesai)}</span></td><td>${escapeHtml(u.namaAnak)}<br><span class="muted small">${escapeHtml(u.nama)}</span></td><td>${escapeHtml(u.lokasi)}</td><td class="r">${u.anak} / ${u.dewasa}</td><td class="small">${escapeHtml(u.menu || '-')}<br><span class="muted">${escapeHtml(u.addOn || '')}</span></td><td class="r">${badge(u.status)}${cekStatus({ status: u.status, total: u.total, sisa: u.sisa, dibayar: u.dibayar })}</td><td class="r">${rupiah(u.sisa)}${u.dibayar > 0 ? `<br><span class="muted small">dibayar ${rupiah(u.dibayar)}</span>` : ''}</td></tr>`));
     $('#quota').textContent = d.emailQuota != null ? 'Sisa kuota email hari ini: ' + d.emailQuota : '';
   }
 
@@ -1650,8 +1659,8 @@ function setLoading(btn, on, text) {
           <td>${escapeHtml(b.lokasiNama)}</td>
           <td class="r">${b.jumlahAnak} / ${b.jumlahDewasa}</td>
           <td class="r">${rupiah(b.total)}</td>
-          <td class="r">${rupiah(b.sisa)}</td>
-          <td>${badge(b.status)}</td>
+          <td class="r">${rupiah(b.sisa)}${b.dibayar > 0 ? `<br><span class="muted small">dibayar ${rupiah(b.dibayar)}</span>` : ''}</td>
+          <td>${badge(b.status)}${cekStatus(b)}</td>
         </tr>`).join('');
     } catch (e) {
       tbody.innerHTML = `<tr><td colspan="8" class="empty-row">${escapeHtml(e.message)}</td></tr>`;
