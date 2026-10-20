@@ -1199,7 +1199,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .pd-nums b { font-size: 15px; color: var(--ink); }
 .pd-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
 .pd-row .lbl, .pd-row > span { font-size: 13px; font-weight: 800; color: var(--ink-2); }
-.pd-row select, .pd-row input { padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 12px; font: 15px var(--body); }
+.pd-row select, .pd-row input:not([type=checkbox]) { padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 12px; font: 15px var(--body); }
 #pdJml { font: 700 20px var(--head); }
 .seg { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 6px; }
 .seg button { border: 1.5px solid var(--line); background: #fff; border-radius: 12px; padding: 10px 8px; font: 800 13.5px var(--body); cursor: pointer; color: var(--ink); }
@@ -1216,6 +1216,26 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .pd-prev .err, #pdFee .err { color: var(--red); font-weight: 800; }
 .fd-saran.alt { background: #fff; border-style: dashed; font-size: 13px; }
 .fin-scroll { overflow-x: auto; max-width: 100%; } .fin-scroll table { min-width: 560px; }
+
+/* ===== Vendor & Staff ===== */
+.vs-row { display: grid; grid-template-columns: 1.3fr 1.2fr 1.4fr auto; gap: 12px; align-items: center; padding: 11px 4px; border-top: 1px solid var(--line); font-size: 13.5px; }
+#detVendor .vs-row { grid-template-columns: 1.2fr 1.5fr auto; }
+.vs-row.done { opacity: .75; }
+.vs-row > span { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.vs-row small { color: var(--muted); font-size: 12px; }
+.vs-row small em { color: var(--red); font-style: normal; font-weight: 700; }
+.vs-row a { color: inherit; font-weight: 700; }
+.vs-row .vs-a { align-items: flex-end; }
+.vs-row .chip { width: fit-content; }
+@media (max-width: 760px) { .vs-row, #detVendor .vs-row { grid-template-columns: 1fr 1fr; } .vs-row .vs-a { grid-column: 1 / -1; align-items: flex-start; } }
+.vd-st { margin: -4px 0 12px; }
+.vd-to { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.vd-to label { display: flex; gap: 8px; align-items: center; }
+.vd-teks { width: 100%; box-sizing: border-box; font: 13px/1.5 ui-monospace, Menlo, monospace; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px; resize: vertical; }
+.vd-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+
+.vd-to label { font-weight: 600; justify-content: flex-start; }
+.vd-to input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--leaf); margin: 0; }
 
 </style>
 </head>
@@ -1242,6 +1262,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
         <button data-tab="bookings">Booking</button>
         <button data-tab="slot">Ketersediaan</button>
         <button data-tab="rekon">Keuangan</button>
+        <button data-tab="vendor">Vendor &amp; Staff</button>
         <button data-tab="akun">Akun</button>
       </div>
       <div class="user-menu"><span id="whoami"></span><button class="btn sm ghost" id="logoutBtn" style="color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4)">Keluar</button></div>
@@ -1400,6 +1421,27 @@ body.is-admin .admin-only.hidden { display: none !important; }
       </details>
     </section>
 
+    <!-- ======= VENDOR & STAFF ======= -->
+    <section id="tab-vendor" class="hidden">
+      <div class="fin-head">
+        <div><h2 style="margin:0">Vendor &amp; Staff</h2>
+          <p class="small muted" style="margin:4px 0 0">Pesanan ke vendor (kue, entertainment, dekorasi, restoran) <b>disiapkan otomatis</b> dari setiap booking. Admin cukup cek isinya lalu klik <b>Kirim</b>. Staff menerima info otomatis setiap ada booking baru, perubahan jumlah tamu, dan pembatalan, plus jadwal 30 hari ke depan setiap Senin pagi.</p></div>
+        <button type="button" class="btn" id="vsJadwalBtn">📅 Kirim jadwal ke staff sekarang</button>
+      </div>
+      <div class="fin-cards" id="vsCards"></div>
+      <div class="panel" style="margin-bottom:16px">
+        <div class="fin-sec-h"><h3><span class="fin-num">1</span>Pesanan vendor</h3>
+          <div class="rk-filter" id="vsFilter"><button data-f="perlu" class="active">Perlu dikirim</button><button data-f="kirim">Sudah dikirim</button><button data-f="semua">Semua</button></div></div>
+        <p class="small muted fin-help">Acara mulai hari ini, urut tanggal. <b>Ada perubahan</b> = booking berubah setelah pesanan dikirim (kirim update). <b>Perlu pembatalan</b> = booking batal, vendor sudah terlanjur dikirimi pesanan.</p>
+        <div id="vsList"><p class="muted small">Memuat…</p></div>
+      </div>
+      <div class="panel">
+        <div class="fin-sec-h"><h3><span class="fin-num">2</span>Kontak vendor &amp; staff</h3></div>
+        <p class="small muted fin-help">Diubah langsung di Google Sheet: sheet <b>Vendor</b> (nama, email, WA, add-on yang ditangani) dan sheet <b>Staff</b> (penerima info acara &amp; jadwal; kolom WA boleh diisi ID grup WhatsApp).</p>
+        <div id="vsKontak"></div>
+      </div>
+    </section>
+
     <!-- ======= AKUN ======= -->
     <section id="tab-akun" class="hidden">
       <form class="card" id="pwForm" style="max-width:440px">
@@ -1420,6 +1462,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
 <!-- Modal detail booking -->
 <dialog id="detailModal"><div class="modal-body" id="detailBody"></div></dialog>
 <dialog id="payDialog" class="pay-dlg"><div class="modal-body" id="payBody"></div></dialog>
+<dialog id="vendDialog" class="pay-dlg"><div class="modal-body" id="vendBody"></div></dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
@@ -1640,11 +1683,12 @@ function setLoading(btn, on, text) {
   // ---------- Tab ----------
   function switchTab(name) {
     document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
-    ['dashboard', 'bookings', 'slot', 'rekon', 'akun'].forEach(t => $('#tab-' + t).classList.toggle('hidden', t !== name));
+    ['dashboard', 'bookings', 'slot', 'rekon', 'vendor', 'akun'].forEach(t => $('#tab-' + t).classList.toggle('hidden', t !== name));
     if (name === 'dashboard') loadDashboard();
     if (name === 'slot') loadSlotTab();
     if (name === 'bookings') loadBookings();
     if (name === 'rekon') loadRekon();
+    if (name === 'vendor') loadVendor();
   }
   $('#tabs').addEventListener('click', (e) => { if (e.target.dataset.tab) switchTab(e.target.dataset.tab); });
 
@@ -1862,6 +1906,9 @@ function setLoading(btn, on, text) {
       </div>
       <div id="payFormBox"></div>
 
+      <h4 class="subhead">Pesanan vendor &amp; info staff</h4>
+      <div id="detVendor"><p class="small muted">Memuat…</p></div>
+
       <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
         <label class="f" style="flex:1;min-width:180px"><span>Ubah status</span>
           <select id="newStatus">${['Menunggu Pembayaran', 'DP Diterima', 'Lunas', 'Selesai', 'Batal'].map(s => `<option ${s === b.status ? 'selected' : ''}>${s}</option>`).join('')}</select></label>
@@ -1878,6 +1925,7 @@ function setLoading(btn, on, text) {
       ${d.emails.length ? `<table class="mini-table">${d.emails.map(m => `<tr><td class="small">${escapeHtml(m.waktu)}</td><td>${escapeHtml(m.jenis)}</td><td>${m.status === 'Gagal' ? '<span class="badge b-batal">Gagal</span>' : escapeHtml(m.status)}${m.ket ? '<br><span class="muted small">' + escapeHtml(m.ket) + '</span>' : ''}</td></tr>`).join('')}</table>`
         : '<p class="muted small">Belum ada.</p>'}
     `;
+    loadDetVendor(b.id);
   }
 
   function adjustForm(b) {
@@ -2692,6 +2740,142 @@ function setLoading(btn, on, text) {
       if (PD.dariDetail || $('#detailModal').open) openDetail(b.id);
       if (!$('#tab-bookings').classList.contains('hidden')) loadBookings();
     } catch (err) { toast(err.message, 'error'); } finally { if (document.body.contains(btn)) setLoading(btn, false); }
+  });
+
+  // ============================================================
+  //  VENDOR & STAFF (pesanan vendor disiapkan otomatis, dikirim setelah dicek admin)
+  // ============================================================
+  const VS = { data: null, filter: 'perlu', dlg: null };
+  const VIC = { Kue: '🎂', Entertainment: '🎭', Dekorasi: '🎈', Restoran: '🍽️' };
+  const vsChip = (t) => ({
+    'Belum dikirim': '<span class="chip orange">belum dikirim</span>',
+    'Ada perubahan': '<span class="chip orange">ada perubahan – kirim update</span>',
+    'Perlu pembatalan': '<span class="chip red">booking batal – kirim pembatalan</span>',
+    'Terkirim': `<span class="chip green">✓ terkirim${t.dikirim ? ' ' + escapeHtml(t.dikirim) : ''}${t.via ? ' · ' + escapeHtml(t.via) : ''}</span>`,
+    'Dibatalkan': '<span class="chip">pembatalan terkirim</span>',
+  }[t.status] || escapeHtml(t.status));
+  const vsTombol = (t) => ({ 'Belum dikirim': 'Cek & kirim', 'Ada perubahan': 'Kirim update', 'Perlu pembatalan': 'Kirim pembatalan' }[t.status] || 'Lihat');
+  const vsPerlu = (t) => t.status !== 'Terkirim' && t.status !== 'Dibatalkan';
+
+  function vsRow(t, i, src, tanpaBooking) {
+    return `<div class="vs-row ${vsPerlu(t) ? '' : 'done'}">
+      ${tanpaBooking ? '' : `<span class="vs-b"><b>${tglPendek(t.tgl)} · ${escapeHtml(t.jam)}</b><small><a href="#" data-vs="detail" data-bk="${escapeHtml(t.bookingId)}">${escapeHtml(t.anak)}</a> · ${escapeHtml(t.bookingId)} · ${escapeHtml(t.lokasi)}</small></span>`}
+      <span class="vs-v"><b>${VIC[t.jenis] || '📦'} ${escapeHtml(t.vendor)}</b><small>${escapeHtml(t.jenis)}${t.kontak ? '' : ' · <em>kontak belum diisi</em>'}</small></span>
+      <span class="vs-s">${vsChip(t)}${vsPerlu(t) && !t.dpMasuk && t.status !== 'Perlu pembatalan' ? '<small class="warn-st">DP belum diterima</small>' : ''}</span>
+      <span class="vs-a"><button class="btn sm ${vsPerlu(t) ? '' : 'ghost'}" data-vs="buka" data-src="${src}" data-i="${i}">${vsTombol(t)}</button></span>
+    </div>`;
+  }
+
+  async function loadVendor() {
+    try { VS.data = await call('getVendorTasks', {}); renderVendor(); } catch (e) { $('#vsList').innerHTML = `<p class="small">${escapeHtml(e.message)}</p>`; }
+  }
+
+  function renderVendor() {
+    const d = VS.data; if (!d) return;
+    const tanpaKontak = d.vendors.filter(v => v.aktif && !v.kontak).length;
+    const card = (ic, judul, val, sub, cls, go) => `<button type="button" class="fin-card ${cls || ''}" ${go ? `data-vsgo="${go}"` : ''}><span class="ic">${ic}</span><span class="t">${judul}</span><b>${val}</b><small>${sub}</small></button>`;
+    $('#vsCards').innerHTML =
+      card('📦', 'Pesanan vendor perlu dikirim', d.perlu, d.perlu ? 'cek isi lalu klik Kirim' : 'semua sudah dikirim ✓', d.perlu ? 'warn' : 'ok', 'perlu') +
+      card('👥', 'Staff penerima info', d.staff.length, d.staff.length ? d.staff.map(s => s.nama).slice(0, 3).join(', ') + (d.staff.length > 3 ? '…' : '') : 'isi sheet Staff', d.staff.length ? 'ok' : 'bad', 'kontak') +
+      card('🏪', 'Vendor aktif', d.vendors.filter(v => v.aktif).length, tanpaKontak ? `<em>${tanpaKontak} belum ada kontak</em>` : 'semua punya kontak ✓', tanpaKontak ? 'bad' : 'ok', 'kontak') +
+      card('💬', 'WhatsApp otomatis', d.waAktif ? 'Aktif' : 'Belum aktif', d.waAktif ? 'pesan WA terkirim otomatis' : 'isi WA_TOKEN di Settings; sementara pakai tombol Buka WhatsApp', d.waAktif ? 'ok' : 'warn', '');
+    document.querySelectorAll('#vsFilter button').forEach(b => b.classList.toggle('active', b.dataset.f === VS.filter));
+    const list = d.tasks.map((t, i) => [t, i]).filter(([t]) => VS.filter === 'semua' || (VS.filter === 'perlu' ? vsPerlu(t) : !vsPerlu(t)));
+    $('#vsList').innerHTML = list.length ? list.map(([t, i]) => vsRow(t, i, 'tab')).join('')
+      : `<p class="fin-empty">${VS.filter === 'perlu' ? '✓ Semua pesanan vendor untuk acara mendatang sudah dikirim.' : 'Belum ada.'}</p>`;
+    $('#vsKontak').innerHTML = `<div class="fin-scroll"><table class="mini-table"><tr><th>Vendor</th><th>Jenis</th><th>Menangani</th><th>Kontak</th></tr>
+      ${d.vendors.map(v => `<tr><td><b>${escapeHtml(v.nama)}</b><br><span class="muted small">${escapeHtml(v.id)}${v.aktif ? '' : ' · tidak aktif'}</span></td><td>${VIC[v.jenis] || '📦'} ${escapeHtml(v.jenis)}</td><td class="small">${escapeHtml(v.menangani)}</td><td>${v.kontak ? '<span class="chip green">✓ ada</span>' : '<span class="chip red">belum diisi</span>'}</td></tr>`).join('')}</table></div>
+      <div class="fin-scroll" style="margin-top:12px"><table class="mini-table"><tr><th>Staff</th><th>Bagian</th><th>Email</th><th>WhatsApp</th><th>Info acara</th><th>Jadwal ${d.hariJadwal} hari</th></tr>
+      ${d.staff.length ? d.staff.map(s => `<tr><td><b>${escapeHtml(s.nama)}</b></td><td>${escapeHtml(s.bagian)}</td><td>${s.email ? '✓' : '–'}</td><td>${s.wa ? '✓' : '–'}</td><td>${s.info ? '✓' : '–'}</td><td>${s.jadwal ? '✓' : '–'}</td></tr>`).join('') : '<tr><td colspan="6" class="muted">Belum ada staff aktif. Isi sheet Staff (email / WA) dan ubah Aktif ke Ya.</td></tr>'}</table></div>`;
+  }
+
+  $('#vsFilter').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (!b) return; VS.filter = b.dataset.f; renderVendor(); });
+  $('#vsCards').addEventListener('click', (e) => {
+    const c = e.target.closest('[data-vsgo]'); if (!c) return;
+    if (c.dataset.vsgo === 'perlu') { VS.filter = 'perlu'; renderVendor(); $('#vsList').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    if (c.dataset.vsgo === 'kontak') $('#vsKontak').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  $('#vsJadwalBtn').addEventListener('click', async (e) => {
+    const b = e.currentTarget;
+    if (!confirm('Kirim jadwal semua acara ' + ((VS.data && VS.data.hariJadwal) || 30) + ' hari ke depan ke staff sekarang?')) return;
+    setLoading(b, true, 'Mengirim…');
+    try { const r = await call('kirimJadwalStaff', {}); toast(`Jadwal ${r.acara} acara terkirim · ${r.email} email · ${r.wa} WhatsApp`, 'success'); }
+    catch (err) { toast(err.message, 'error'); } finally { setLoading(b, false); }
+  });
+  $('#tab-vendor').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-vs]'); if (!b) return;
+    e.preventDefault();
+    if (b.dataset.vs === 'detail') return openDetail(b.dataset.bk);
+    if (b.dataset.vs === 'buka') openVend(VS.data.tasks[Number(b.dataset.i)], 'tab');
+  });
+
+  // ---- dialog cek & kirim pesanan ----
+  function waLinkVendor(t, teks) {
+    const no = String(t.wa || '').replace(/\D/g, '').replace(/^0/, '62');
+    return /@g\.us$/.test(String(t.wa)) || !no ? '' : 'https://wa.me/' + no + '?text=' + encodeURIComponent(teks);
+  }
+  function openVend(t, src) {
+    VS.dlg = { t: t, src: src };
+    const waOk = !!t.wa, emailOk = /@/.test(t.email || ''), waAuto = VS.waAktif !== false && (VS.data ? VS.data.waAktif : true);
+    const label = { 'Ada perubahan': 'Kirim update pesanan', 'Perlu pembatalan': 'Kirim pembatalan' }[t.status] || 'Kirim pesanan';
+    $('#vendBody').innerHTML = `
+      <div class="modal-head"><div><h2 style="margin:0">${VIC[t.jenis] || '📦'} ${escapeHtml(t.vendor)}</h2><div class="small muted">${escapeHtml(t.jenis)} · ${escapeHtml(t.bookingId)} · ${escapeHtml(t.anak)} · ${tglPendek(t.tgl)} ${escapeHtml(t.jam)}</div></div><button class="x" data-vd="close" aria-label="Tutup">×</button></div>
+      <div class="vd-st">${vsChip(t)}</div>
+      ${!t.dpMasuk && t.status !== 'Perlu pembatalan' && vsPerlu(t) ? '<div class="pd-bank" style="background:#fff1d6">⚠ DP booking ini belum diterima. Sebaiknya pesan ke vendor setelah DP masuk.</div>' : ''}
+      ${t.status === 'Ada perubahan' ? '<div class="pd-bank">✏️ Booking berubah setelah pesanan dikirim. Teks di bawah sudah memakai data terbaru; vendor menerimanya sebagai UPDATE.</div>' : ''}
+      <div class="pd-row"><span class="lbl">Dikirim ke</span>
+        <div class="vd-to">${emailOk ? `<label><input type="checkbox" id="vdEmail" checked> ✉️ ${escapeHtml(t.email)}</label>` : '<span class="muted small">✉️ email belum diisi</span>'}
+        ${waOk ? `<label><input type="checkbox" id="vdWa" ${waAuto ? 'checked' : 'disabled'}> 💬 ${escapeHtml(t.wa)}${waAuto ? '' : ' <span class="muted small">(WhatsApp otomatis belum aktif – pakai Buka WhatsApp)</span>'}</label>` : '<span class="muted small">💬 WA belum diisi</span>'}</div>
+        ${!t.kontak ? '<p class="small" style="margin:4px 0 0;color:var(--red);font-weight:700">Isi email / WA vendor ini di sheet Vendor, lalu buka lagi halaman ini.</p>' : ''}</div>
+      <div class="pd-row"><span class="lbl">Isi pesan (boleh diedit sebelum dikirim)</span><textarea id="vdTeks" rows="14" class="vd-teks" ${vsPerlu(t) ? '' : 'readonly'}>${escapeHtml(t.teks)}</textarea></div>
+      <div class="vd-btns">
+        ${vsPerlu(t) ? `<button class="btn" id="vdKirim" ${emailOk || (waOk && waAuto) ? '' : 'disabled'}>${label}</button>` : ''}
+        ${waOk && waLinkVendor(t, t.teks) ? `<a class="btn ghost" id="vdWaLink" target="_blank" rel="noopener" href="${waLinkVendor(t, t.teks)}">Buka WhatsApp</a>` : ''}
+        ${vsPerlu(t) ? '<button class="btn ghost" id="vdManual" title="Sudah dikirim lewat WhatsApp / telepon pribadi">Tandai sudah dikirim</button>' : ''}
+        <button class="btn ghost" data-vd="close">Tutup</button>
+      </div>`;
+    $('#vendDialog').showModal();
+  }
+  $('#vendBody').addEventListener('input', (e) => {
+    if (e.target.id === 'vdTeks' && $('#vdWaLink')) $('#vdWaLink').href = waLinkVendor(VS.dlg.t, e.target.value);
+  });
+  $('#vendBody').addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-vd],#vdKirim,#vdManual'); if (!b) return;
+    if (b.dataset.vd === 'close') return $('#vendDialog').close();
+    const t = VS.dlg.t, manual = b.id === 'vdManual';
+    if (manual && !confirm('Tandai pesanan ke ' + t.vendor + ' sudah dikirim (lewat WhatsApp / telepon pribadi)?')) return;
+    const p = { bookingId: t.bookingId, vendorId: t.vendorId, teks: $('#vdTeks').value, manual: manual, scope: VS.dlg.src === 'detail' ? 'booking' : '',
+      email: $('#vdEmail') ? $('#vdEmail').checked : false, wa: $('#vdWa') ? $('#vdWa').checked : false };
+    setLoading(b, true, manual ? 'Menyimpan…' : 'Mengirim…');
+    try {
+      const d = await call('kirimPesananVendor', p);
+      $('#vendDialog').close();
+      toast(manual ? 'Ditandai sudah dikirim ke ' + t.vendor + '.' : 'Pesanan terkirim ke ' + d.terkirim.vendor + ' (' + d.terkirim.via + ').', 'success');
+      if (VS.dlg.src === 'detail') renderDetVendor(d); else { VS.data = d; renderVendor(); }
+    } catch (err) { toast(err.message, 'error'); } finally { if (document.body.contains(b)) setLoading(b, false); }
+  });
+
+  // ---- di detail booking ----
+  let DV = null;
+  async function loadDetVendor(id) {
+    const box = $('#detVendor'); if (!box) return;
+    try { renderDetVendor(await call('getVendorTasks', { bookingId: id })); } catch (e) { box.innerHTML = `<p class="small muted">${escapeHtml(e.message)}</p>`; }
+  }
+  function renderDetVendor(d) {
+    DV = d; VS.waAktif = d.waAktif;
+    const box = $('#detVendor'); if (!box) return;
+    box.innerHTML = (d.tasks.length ? d.tasks.map((t, i) => vsRow(t, i, 'detail', true)).join('') : '<p class="small muted">Tidak ada item untuk vendor di booking ini (atau vendor belum diatur di sheet Vendor).</p>') +
+      `<div style="margin-top:10px"><button class="btn sm ghost" data-vs2="staff">📣 Kirim info acara ke staff</button> <span class="small muted">${d.staff.length ? d.staff.length + ' staff penerima' : 'belum ada staff di sheet Staff'}</span></div>`;
+  }
+  $('#detailBody').addEventListener('click', async (e) => {
+    const b = e.target.closest('#detVendor [data-vs],#detVendor [data-vs2]'); if (!b) return;
+    e.preventDefault();
+    if (b.dataset.vs === 'buka') return openVend(DV.tasks[Number(b.dataset.i)], 'detail');
+    if (b.dataset.vs2 === 'staff') {
+      setLoading(b, true, 'Mengirim…');
+      try { const r = await call('kirimInfoStaff', { bookingId: currentDetail.booking.id }); toast(`Info terkirim ke staff · ${r.email} email · ${r.wa} WhatsApp`, 'success'); }
+      catch (err) { toast(err.message, 'error'); } finally { setLoading(b, false); }
+    }
   });
 
   start();

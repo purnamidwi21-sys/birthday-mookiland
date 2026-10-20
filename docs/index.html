@@ -1199,7 +1199,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .pd-nums b { font-size: 15px; color: var(--ink); }
 .pd-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
 .pd-row .lbl, .pd-row > span { font-size: 13px; font-weight: 800; color: var(--ink-2); }
-.pd-row select, .pd-row input { padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 12px; font: 15px var(--body); }
+.pd-row select, .pd-row input:not([type=checkbox]) { padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 12px; font: 15px var(--body); }
 #pdJml { font: 700 20px var(--head); }
 .seg { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 6px; }
 .seg button { border: 1.5px solid var(--line); background: #fff; border-radius: 12px; padding: 10px 8px; font: 800 13.5px var(--body); cursor: pointer; color: var(--ink); }
@@ -1216,6 +1216,26 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .pd-prev .err, #pdFee .err { color: var(--red); font-weight: 800; }
 .fd-saran.alt { background: #fff; border-style: dashed; font-size: 13px; }
 .fin-scroll { overflow-x: auto; max-width: 100%; } .fin-scroll table { min-width: 560px; }
+
+/* ===== Vendor & Staff ===== */
+.vs-row { display: grid; grid-template-columns: 1.3fr 1.2fr 1.4fr auto; gap: 12px; align-items: center; padding: 11px 4px; border-top: 1px solid var(--line); font-size: 13.5px; }
+#detVendor .vs-row { grid-template-columns: 1.2fr 1.5fr auto; }
+.vs-row.done { opacity: .75; }
+.vs-row > span { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.vs-row small { color: var(--muted); font-size: 12px; }
+.vs-row small em { color: var(--red); font-style: normal; font-weight: 700; }
+.vs-row a { color: inherit; font-weight: 700; }
+.vs-row .vs-a { align-items: flex-end; }
+.vs-row .chip { width: fit-content; }
+@media (max-width: 760px) { .vs-row, #detVendor .vs-row { grid-template-columns: 1fr 1fr; } .vs-row .vs-a { grid-column: 1 / -1; align-items: flex-start; } }
+.vd-st { margin: -4px 0 12px; }
+.vd-to { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.vd-to label { display: flex; gap: 8px; align-items: center; }
+.vd-teks { width: 100%; box-sizing: border-box; font: 13px/1.5 ui-monospace, Menlo, monospace; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px; resize: vertical; }
+.vd-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+
+.vd-to label { font-weight: 600; justify-content: flex-start; }
+.vd-to input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--leaf); margin: 0; }
 
 </style>
 </head>
