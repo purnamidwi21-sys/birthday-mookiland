@@ -1236,6 +1236,10 @@ body.is-admin .admin-only.hidden { display: none !important; }
 
 .vd-to label { font-weight: 600; justify-content: flex-start; }
 .vd-to input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--leaf); margin: 0; }
+.alt-hint { color: #1d4f91; font-weight: 700; }
+.vd-items { display: flex; flex-direction: column; gap: 6px; }
+.vd-it { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 10px; font-size: 13.5px; }
+.vd-it select { padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 9px; font: 13px var(--body); }
 
 </style>
 </head>
@@ -2760,7 +2764,7 @@ function setLoading(btn, on, text) {
   function vsRow(t, i, src, tanpaBooking) {
     return `<div class="vs-row ${vsPerlu(t) ? '' : 'done'}">
       ${tanpaBooking ? '' : `<span class="vs-b"><b>${tglPendek(t.tgl)} · ${escapeHtml(t.jam)}</b><small><a href="#" data-vs="detail" data-bk="${escapeHtml(t.bookingId)}">${escapeHtml(t.anak)}</a> · ${escapeHtml(t.bookingId)} · ${escapeHtml(t.lokasi)}</small></span>`}
-      <span class="vs-v"><b>${VIC[t.jenis] || '📦'} ${escapeHtml(t.vendor)}</b><small>${escapeHtml(t.jenis)}${t.kontak ? '' : ' · <em>kontak belum diisi</em>'}</small></span>
+      <span class="vs-v"><b>${VIC[t.jenis] || '📦'} ${escapeHtml(t.vendor)}</b><small>${escapeHtml(t.jenis)}${t.kontak ? '' : ' · <em>kontak belum diisi</em>'}${t.adaAlternatif && vsPerlu(t) ? ' · <span class="alt-hint">⇄ ada vendor lain</span>' : ''}</small></span>
       <span class="vs-s">${vsChip(t)}${vsPerlu(t) && !t.dpMasuk && t.status !== 'Perlu pembatalan' ? '<small class="warn-st">DP belum diterima</small>' : ''}</span>
       <span class="vs-a"><button class="btn sm ${vsPerlu(t) ? '' : 'ghost'}" data-vs="buka" data-src="${src}" data-i="${i}">${vsTombol(t)}</button></span>
     </div>`;
@@ -2827,6 +2831,9 @@ function setLoading(btn, on, text) {
         <div class="vd-to">${emailOk ? `<label><input type="checkbox" id="vdEmail" checked> ✉️ ${escapeHtml(t.email)}</label>` : '<span class="muted small">✉️ email belum diisi</span>'}
         ${waOk ? `<label><input type="checkbox" id="vdWa" ${waAuto ? 'checked' : 'disabled'}> 💬 ${escapeHtml(t.wa)}${waAuto ? '' : ' <span class="muted small">(WhatsApp otomatis belum aktif – pakai Buka WhatsApp)</span>'}</label>` : '<span class="muted small">💬 WA belum diisi</span>'}</div>
         ${!t.kontak ? '<p class="small" style="margin:4px 0 0;color:var(--red);font-weight:700">Isi email / WA vendor ini di sheet Vendor, lalu buka lagi halaman ini.</p>' : ''}</div>
+      ${t.items.length && t.status !== 'Dibatalkan' ? `<div class="pd-row"><span class="lbl">Item di pesanan ini</span><div class="vd-items">${t.items.map(x => `<div class="vd-it"><span>${escapeHtml(x.nama)}</span>${x.alt.length > 1
+        ? `<label class="small">Vendor: <select data-vdkey="${escapeHtml(x.key)}">${x.alt.map((a, i) => `<option value="${escapeHtml(a.id)}" ${a.id === t.vendorId ? 'selected' : ''}>${escapeHtml(a.nama)}${i === 0 ? ' (utama)' : ''}</option>`).join('')}</select></label>`
+        : '<small class="muted">hanya vendor ini</small>'}</div>`).join('')}</div>${t.adaAlternatif ? '<p class="small muted" style="margin:4px 0 0">Ganti vendor untuk memindahkan item ke vendor lain khusus booking ini. Vendor utama = baris paling atas di sheet Vendor.</p>' : ''}</div>` : ''}
       <div class="pd-row"><span class="lbl">Isi pesan (boleh diedit sebelum dikirim)</span><textarea id="vdTeks" rows="14" class="vd-teks" ${vsPerlu(t) ? '' : 'readonly'}>${escapeHtml(t.teks)}</textarea></div>
       <div class="vd-btns">
         ${vsPerlu(t) ? `<button class="btn" id="vdKirim" ${emailOk || (waOk && waAuto) ? '' : 'disabled'}>${label}</button>` : ''}
@@ -2836,6 +2843,20 @@ function setLoading(btn, on, text) {
       </div>`;
     $('#vendDialog').showModal();
   }
+  $('#vendBody').addEventListener('change', async (e) => {
+    const sel = e.target.closest('select[data-vdkey]'); if (!sel) return;
+    const t = VS.dlg.t;
+    if (sel.value === t.vendorId) return;
+    const nama = sel.options[sel.selectedIndex].text.replace(' (utama)', '');
+    if (!confirm('Pindahkan item ini ke ' + nama + ' untuk booking ' + t.bookingId + '?' + (t.status === 'Terkirim' || t.status === 'Ada perubahan' ? '\n\n' + t.vendor + ' sudah dikirimi pesanan – nanti kirim update / pembatalan ke ' + t.vendor + '.' : ''))) { sel.value = t.vendorId; return; }
+    sel.disabled = true;
+    try {
+      const d = await call('pilihVendor', { bookingId: t.bookingId, key: sel.dataset.vdkey, vendorId: sel.value, scope: VS.dlg.src === 'detail' ? 'booking' : '' });
+      $('#vendDialog').close();
+      toast(d.dipindah.item + ' dipindah ke ' + d.dipindah.vendor + '. Kirim pesanan ke ' + d.dipindah.vendor + ' dari daftar.', 'success');
+      if (VS.dlg.src === 'detail') renderDetVendor(d); else { VS.data = d; renderVendor(); }
+    } catch (err) { toast(err.message, 'error'); sel.disabled = false; sel.value = t.vendorId; }
+  });
   $('#vendBody').addEventListener('input', (e) => {
     if (e.target.id === 'vdTeks' && $('#vdWaLink')) $('#vdWaLink').href = waLinkVendor(VS.dlg.t, e.target.value);
   });
