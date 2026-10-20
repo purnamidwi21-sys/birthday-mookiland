@@ -1106,6 +1106,10 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .rk-paste { margin-top: 14px; }
 .rk-paste textarea { width: 100%; font: 13px ui-monospace, Menlo, monospace; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px; }
 .warn-st { display: inline-block; margin-top: 4px; font-size: 11.5px; font-weight: 800; color: #b3541e; white-space: nowrap; }
+.rk-s.bk { border-color: #f2c48d; background: #fffaf2; }
+.rk-mail { font-size: 12.5px; font-weight: 700; color: var(--ink-2); display: inline-flex; gap: 6px; align-items: center; margin-right: auto; margin-left: 16px; }
+.rk-manual select[data-rksel] { flex: 1 1 100%; }
+.rk-manual select[data-rkmet] { flex: 0 0 auto; width: auto; min-width: 150px; }
 
 </style>
 </head>
@@ -1264,6 +1268,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
       <div class="rk-stats" id="rkStats"></div>
       <div class="panel">
         <div class="rk-head"><h3>Dana masuk di rekening koran</h3>
+          <label class="rk-mail"><input type="checkbox" id="rkMail" checked> Kirim email ke klien saat mencatat pembayaran dari rekening koran</label>
           <div class="rk-filter" id="rkFilter"><button data-f="belum" class="active">Belum cocok</button><button data-f="cocok">Sudah cocok</button><button data-f="abaikan">Diabaikan</button><button data-f="semua">Semua</button></div></div>
         <div id="rkList"><p class="muted small">Memuat…</p></div>
       </div>
@@ -2372,8 +2377,15 @@ function setLoading(btn, on, text) {
       if (k.status === 'Cocok') right = `<div class="rk-ok">✓ ${k.payment ? payLabel(k.payment) : escapeHtml(k.paymentId)}${k.biayaBank ? `<span class="rk-fee">biaya bank ${rupiah(k.biayaBank)}${k.payment ? ' (' + (k.biayaBank / k.payment.jumlah * 100).toFixed(2) + '%) · tagihan klien tetap ' + rupiah(k.payment.jumlah) : ''}</span>` : ''}<span class="muted small">${escapeHtml(k.catatan)}</span></div><button class="btn sm ghost" data-rk="unmatch" data-id="${k.id}">Batalkan</button>`;
       else if (k.status === 'Abaikan') right = `<div class="muted small">Diabaikan – ${escapeHtml(k.catatan)}</div><button class="btn sm ghost" data-rk="unignore" data-id="${k.id}">Kembalikan</button>`;
       else right = `<div class="rk-saran">${(k.saran || []).map(s => `<div class="rk-s ${s.jenisCocok}"><div>${payLabel(s)}${s.jenisCocok === 'fee' ? `<span class="rk-fee">dipotong MDR ${rupiah(s.selisih)} (${(s.selisih / s.jumlah * 100).toFixed(2)}%)</span>` : ''}</div>
-            <button class="btn sm green" data-rk="match" data-id="${k.id}" data-pay="${escapeHtml(s.id)}">Cocokkan</button></div>`).join('') || '<span class="muted small">Tidak ada pembayaran yang cocok.</span>'}
-          <div class="rk-manual"><select data-rksel="${k.id}"><option value="">Pilih pembayaran lain…</option>${pilihan.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.id + ' · ' + (p.anak || p.bookingId) + ' · ' + p.metode + ' · ' + rupiah(p.jumlah) + ' · ' + p.tanggal)}</option>`).join('')}</select>
+            <button class="btn sm green" data-rk="match" data-id="${k.id}" data-pay="${escapeHtml(s.id)}">Cocokkan</button></div>`).join('')}
+          ${(k.saran || []).length ? '' : (k.saranBooking || []).map(s => `<div class="rk-s bk"><div><span>📋 Catat sebagai <b>${escapeHtml(s.jenisBayar === 'DP' ? 'DP' : s.jenisBayar === 'Pelunasan' ? 'pelunasan' : 'pembayaran')}</b> · <b>${escapeHtml(s.id)}</b> · ${escapeHtml(s.anak)} · acara ${tglIndo(s.tgl)}</span>
+              <span class="muted small">${escapeHtml(s.nama)} · total ${rupiah(s.total)} · sudah dibayar ${rupiah(s.dibayar)} · sisa ${rupiah(s.sisa)}${s.dpKurang ? ' · DP kurang ' + rupiah(s.dpKurang) : ''}</span></div>
+              <button class="btn sm green" data-rk="bayar" data-id="${k.id}" data-bk="${escapeHtml(s.id)}">Catat & cocokkan</button></div>`).join('')}
+          ${(k.saran || []).length || (k.saranBooking || []).length ? '' : '<span class="muted small">Tidak ada pembayaran / booking yang cocok otomatis – pilih manual di bawah.</span>'}
+          <div class="rk-manual"><select data-rksel="${k.id}"><option value="">Pilih pembayaran / booking…</option>
+            ${pilihan.length ? `<optgroup label="Pembayaran yang sudah dicatat">${pilihan.map(p => `<option value="pay:${escapeHtml(p.id)}">${escapeHtml(p.id + ' · ' + (p.anak || p.bookingId) + ' · ' + p.metode + ' · ' + rupiah(p.jumlah) + ' · ' + p.tanggal)}</option>`).join('')}</optgroup>` : ''}
+            ${(d.bookingTerbuka || []).length ? `<optgroup label="Booking – catat pembayaran baru dari dana ini">${d.bookingTerbuka.filter(b => b.sisa >= k.kredit).map(b => `<option value="bk:${escapeHtml(b.id)}">${escapeHtml(b.id + ' · ' + b.anak + ' · acara ' + b.tgl + ' · sisa ' + rupiah(b.sisa))}</option>`).join('')}</optgroup>` : ''}</select>
+            <select data-rkmet="${k.id}" title="Jenis transaksi untuk pembayaran baru"><option>Bank Transfer</option><option>QRIS</option></select>
           <button class="btn sm ghost" data-rk="matchsel" data-id="${k.id}">Cocokkan</button><button class="btn sm ghost" data-rk="ignore" data-id="${k.id}" title="Bukan pembayaran birthday (mis. tiket, restoran)">Abaikan</button></div></div>`;
       return `<div class="rk-row ${k.status === 'Cocok' ? 'ok' : k.status === 'Abaikan' ? 'ign' : ''}"><div class="rk-k"><b>${rupiah(k.kredit)}</b><span>${tglIndo(k.tanggal)}</span><small>${escapeHtml(k.ket || '-')}</small></div><div class="rk-r">${right}</div></div>`;
     }).join('') : '<p class="muted small">Tidak ada data. Upload rekening koran untuk mulai.</p>';
@@ -2386,12 +2398,28 @@ function setLoading(btn, on, text) {
     const id = b.dataset.id, act = b.dataset.rk;
     let action, payload = { stmtId: id }, msg;
     if (act === 'match') { action = 'matchRecon'; payload.paymentId = b.dataset.pay; msg = 'Dicocokkan.'; }
-    if (act === 'matchsel') { const v = document.querySelector(`[data-rksel="${id}"]`).value; if (!v) return toast('Pilih pembayaran dulu.', 'error'); action = 'matchRecon'; payload.paymentId = v; msg = 'Dicocokkan.'; }
+    const kred = (RK.data.koran.find(x => x.id === id) || {}).kredit || 0;
+    if (act === 'matchsel') {
+      const v = document.querySelector(`[data-rksel="${id}"]`).value;
+      if (!v) return toast('Pilih pembayaran atau booking dulu.', 'error');
+      if (v.indexOf('bk:') === 0) {
+        if (!confirm('Catat pembayaran ' + rupiah(kred) + ' untuk booking ' + v.slice(3) + ' dan cocokkan dengan dana masuk ini?')) return;
+        action = 'bayarDariKoran'; payload.bookingId = v.slice(3); payload.metode = document.querySelector(`[data-rkmet="${id}"]`).value; payload.kirimEmail = $('#rkMail').checked; msg = 'Pembayaran dicatat & dicocokkan.';
+      } else { action = 'matchRecon'; payload.paymentId = v.replace(/^pay:/, ''); msg = 'Dicocokkan.'; }
+    }
+    if (act === 'bayar') {
+      if (!confirm('Catat pembayaran ' + rupiah(kred) + ' untuk booking ' + b.dataset.bk + ' dan cocokkan dengan dana masuk ini?')) return;
+      action = 'bayarDariKoran'; payload.bookingId = b.dataset.bk; payload.metode = document.querySelector(`[data-rkmet="${id}"]`).value; payload.kirimEmail = $('#rkMail').checked; msg = 'Pembayaran dicatat & dicocokkan.';
+    }
     if (act === 'unmatch') { if (!confirm('Batalkan pencocokan ini?')) return; action = 'unmatchRecon'; msg = 'Pencocokan dibatalkan.'; }
     if (act === 'ignore') { const ket = prompt('Keterangan (mis. tiket masuk, restoran):', 'bukan pembayaran birthday'); if (ket === null) return; action = 'ignoreRecon'; payload.ket = ket; msg = 'Diabaikan.'; }
     if (act === 'unignore') { action = 'ignoreRecon'; payload.batal = true; msg = 'Dikembalikan.'; }
     setLoading(b, true);
-    try { RK.data = await call(action, payload); renderRekon(); toast(msg, 'success'); } catch (err) { toast(err.message, 'error'); } finally { if (document.body.contains(b)) setLoading(b, false); }
+    try {
+      RK.data = await call(action, payload); renderRekon(); toast(msg, 'success');
+      const c = RK.data.dicatat;
+      if (c) toast(c.paymentId + ' · status booking ' + c.bookingId + ': ' + c.status + (c.email ? ' · email terkirim ke klien' : ''), 'success');
+    } catch (err) { toast(err.message, 'error'); } finally { if (document.body.contains(b)) setLoading(b, false); }
   });
 
   start();
