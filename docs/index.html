@@ -972,7 +972,8 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .rv-score .stars { color: #f6b100; letter-spacing: 2px; }
 .rv-score small { color: var(--ink-2); font-weight: 700; }
 .rv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-.rv-card { margin: 0; background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; display: flex; flex-direction: column; gap: 8px; }
+.rv-card { margin: 0; background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; display: flex; flex-direction: column; gap: 8px; height: var(--rv-h, 400px); }
+@media (max-width: 560px) { .rv-card { --rv-h: 380px; } }
 .rv-top { display: flex; align-items: center; gap: 10px; }
 .rv-top img, .rv-top .av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: none; }
 .rv-top .av { background: var(--lime-soft); color: var(--jungle); display: grid; place-items: center; font: 700 18px var(--head); }
@@ -982,7 +983,9 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .rv-top .g { font: 800 16px Arial, sans-serif; color: #4285f4; }
 .rv-stars { color: #f6b100; letter-spacing: 2px; }
 .rv-stars i { color: #dfe3d8; font-style: normal; }
-.rv-card blockquote { margin: 0; color: var(--ink-2); font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden; }
+/* teks review tampil 100%: ukuran huruf otomatis mengecil (lihat fitReviews di app.js), min. 12px; bila masih kurang, bisa digulir */
+.rv-card blockquote { margin: 0; color: var(--ink-2); font-size: 15px; line-height: 1.5; flex: 1 1 auto; min-height: 0; overflow: hidden; }
+.rv-card blockquote.scroll { overflow-y: auto; padding-right: 4px; }
 .rv-card a { margin-top: auto; font-weight: 800; font-size: 13px; color: var(--leaf); text-decoration: none; }
 .rv-empty { background: #fff; border-radius: var(--radius); padding: 22px; text-align: center; font-weight: 700; color: var(--ink-2); box-shadow: var(--shadow); grid-column: 1 / -1; }
 .rv-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
@@ -2446,6 +2449,7 @@ window.I18N = {
       try { history.pushState({ page: pg }, '', pg === 'info' ? location.pathname + location.search : '#' + pg); } catch (e) { /* abaikan */ }
     }
     if (pg === 'book' && S.data && S.step === 2) renderMapPins();
+    if (pg === 'info') setTimeout(fitReviews, 30);
   }
   // pindah dari halaman info ke booking: mulai dari atas halaman booking (tombol kembali & judul terlihat)
   function openBooking(n) {
@@ -2507,17 +2511,34 @@ window.I18N = {
     $('#rvGrid').innerHTML = r.reviews.length ? r.reviews.map(x => `
       <figure class="rv-card">
         <div class="rv-top">${x.foto ? `<img src="${escapeHtml(x.foto)}" alt="" referrerpolicy="no-referrer" loading="lazy">` : `<span class="av">${escapeHtml((x.nama || '?').trim().charAt(0).toUpperCase())}</span>`}
-          <div><b>${escapeHtml(x.nama)}</b><small>${escapeHtml(x.tanggal ? dateShort(x.tanggal) : '')}</small></div><span class="g">G</span></div>
+          <div><b>${escapeHtml(x.nama)}</b><small>${escapeHtml(x.tanggal ? dateShort(x.tanggal) : (x.tanggalTeks || ''))}</small></div><span class="g">G</span></div>
         <div class="rv-stars">${stars(x.rating)}</div>
         <blockquote>${escapeHtml(x.teks)}</blockquote>
         ${x.link ? `<a href="${escapeHtml(x.link)}" target="_blank" rel="noopener">${escapeHtml(t('rv_more'))} ↗</a>` : ''}
       </figure>`).join('') : `<div class="rv-empty">${escapeHtml(t('rv_empty'))}</div>`;
+    fitReviews();
     $('#rvWrite').href = r.tulisUrl || r.url || '#';
     $('#rvAll').href = r.url || r.tulisUrl || '#';
     $('#rvAll').classList.toggle('hidden', !r.url);
     $('#footReview').href = r.tulisUrl || '#';
     $('#footReview').classList.toggle('hidden', !r.tulisUrl);
   }
+  // ukuran huruf review menyesuaikan kartu (tinggi kartu tetap): 15px -> min. 12px
+  const RV_FONT_MAX = 15, RV_FONT_MIN = 12;
+  function fitReviews() {
+    document.querySelectorAll('.rv-card blockquote').forEach(q => {
+      if (!q.offsetParent) return;                 // halaman tersembunyi: diukur lagi saat tampil
+      q.classList.remove('scroll');
+      let f = RV_FONT_MAX;
+      q.style.fontSize = f + 'px';
+      while (q.scrollHeight > q.clientHeight + 1 && f > RV_FONT_MIN) { f = Math.round((f - 0.5) * 10) / 10; q.style.fontSize = f + 'px'; }
+      q.classList.toggle('scroll', q.scrollHeight > q.clientHeight + 1);
+      q.dataset.fs = f;
+    });
+  }
+  let rvTimer = null;
+  window.addEventListener('resize', () => { clearTimeout(rvTimer); rvTimer = setTimeout(fitReviews, 150); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fitReviews());
   const dateShort = (s) => { const d = parseYmd(s); if (!d) return s; return isId() ? d.getDate() + ' ' + BULAN_ID[d.getMonth()] + ' ' + d.getFullYear() : MONTHS_EN[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear(); };
 
   // ---------------- Kode promo / diskon ----------------

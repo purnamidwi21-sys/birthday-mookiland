@@ -972,7 +972,8 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .rv-score .stars { color: #f6b100; letter-spacing: 2px; }
 .rv-score small { color: var(--ink-2); font-weight: 700; }
 .rv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-.rv-card { margin: 0; background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; display: flex; flex-direction: column; gap: 8px; }
+.rv-card { margin: 0; background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; display: flex; flex-direction: column; gap: 8px; height: var(--rv-h, 400px); }
+@media (max-width: 560px) { .rv-card { --rv-h: 380px; } }
 .rv-top { display: flex; align-items: center; gap: 10px; }
 .rv-top img, .rv-top .av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: none; }
 .rv-top .av { background: var(--lime-soft); color: var(--jungle); display: grid; place-items: center; font: 700 18px var(--head); }
@@ -982,7 +983,9 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .rv-top .g { font: 800 16px Arial, sans-serif; color: #4285f4; }
 .rv-stars { color: #f6b100; letter-spacing: 2px; }
 .rv-stars i { color: #dfe3d8; font-style: normal; }
-.rv-card blockquote { margin: 0; color: var(--ink-2); font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden; }
+/* teks review tampil 100%: ukuran huruf otomatis mengecil (lihat fitReviews di app.js), min. 12px; bila masih kurang, bisa digulir */
+.rv-card blockquote { margin: 0; color: var(--ink-2); font-size: 15px; line-height: 1.5; flex: 1 1 auto; min-height: 0; overflow: hidden; }
+.rv-card blockquote.scroll { overflow-y: auto; padding-right: 4px; }
 .rv-card a { margin-top: auto; font-weight: 800; font-size: 13px; color: var(--leaf); text-decoration: none; }
 .rv-empty { background: #fff; border-radius: var(--radius); padding: 22px; text-align: center; font-weight: 700; color: var(--ink-2); box-shadow: var(--shadow); grid-column: 1 / -1; }
 .rv-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
