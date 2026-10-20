@@ -1241,6 +1241,43 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .vd-it { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 10px; font-size: 13.5px; }
 .vd-it select { padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 9px; font: 13px var(--body); }
 
+/* ===== Ubah add-on / jadwal / booking manual ===== */
+.ae { display: flex; flex-direction: column; gap: 6px; }
+.ae-lbl { font-size: 12.5px; font-weight: 800; color: var(--ink-2); margin: 10px 0 4px; }
+.ae-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; }
+.ae-row select, .ae-row input { padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 9px; font: 13px var(--body); }
+.ae-row .ae-id { flex: 1 1 260px; min-width: 0; }
+.ae-row .ae-f { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.ae-row .ae-qty { width: 72px; }
+.ae-row .x { width: 28px; height: 28px; font-size: 16px; flex: none; }
+.ae .ae-add { align-self: flex-start; }
+.pv-box { margin-top: 10px; padding: 10px 14px; border-radius: 12px; background: #f3f8ec; font-size: 13.5px; display: flex; flex-direction: column; gap: 4px; }
+.pv-box.err { background: #fde2df; color: #b3261e; font-weight: 700; }
+.pv-plus { color: #24652b; font-weight: 700; }
+.pv-min { color: #b3261e; font-weight: 700; }
+.pv-tot { font-size: 15px; margin-top: 4px; }
+.bdp { display: inline-flex; gap: 6px; align-items: center; font-weight: 800; font-size: 13px; }
+.bdp input { padding: 4px 8px; border: 1.5px solid var(--line); border-radius: 8px; font: 13px var(--body); }
+.nb-dlg { max-width: min(980px, calc(100vw - 24px)); }
+.nb-paste { margin: 4px 0 12px; border: 1.5px dashed var(--line); border-radius: 12px; padding: 8px 12px; }
+.nb-paste summary { cursor: pointer; font-weight: 800; font-size: 13.5px; }
+.nb-paste textarea { width: 100%; box-sizing: border-box; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px; font: 13px ui-monospace, Menlo, monospace; }
+.nb-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.nb-table th { text-align: left; font-weight: 700; color: var(--ink-2); padding: 7px 8px; width: 16%; vertical-align: top; white-space: nowrap; }
+.nb-table td { padding: 5px 8px; vertical-align: top; }
+.nb-table tr.nb-sec th { background: var(--lime-soft); color: var(--jungle); font-weight: 800; padding: 8px 10px; border-radius: 8px; width: auto; }
+.nb-table input, .nb-table select { width: 100%; box-sizing: border-box; padding: 7px 9px; border: 1.5px solid var(--line); border-radius: 9px; font: 13.5px var(--body); }
+.nb-table input[type=checkbox] { width: auto; }
+.nb-table .nb-2 { display: flex; gap: 6px; }
+.nb-menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 4px 12px; }
+.nb-menu label { display: flex; gap: 6px; align-items: center; font-size: 13px; }
+.nb-opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; margin-top: 12px; }
+@media (max-width: 760px) {
+  .nb-table, .nb-table tbody, .nb-table tr, .nb-table th, .nb-table td { display: block; width: auto; }
+  .nb-table th { padding: 8px 2px 2px; white-space: normal; }
+  .nb-table td { padding: 2px; }
+}
+
 </style>
 </head>
 <body>

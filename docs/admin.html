@@ -1241,6 +1241,43 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .vd-it { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 10px; font-size: 13.5px; }
 .vd-it select { padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 9px; font: 13px var(--body); }
 
+/* ===== Ubah add-on / jadwal / booking manual ===== */
+.ae { display: flex; flex-direction: column; gap: 6px; }
+.ae-lbl { font-size: 12.5px; font-weight: 800; color: var(--ink-2); margin: 10px 0 4px; }
+.ae-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; }
+.ae-row select, .ae-row input { padding: 6px 8px; border: 1.5px solid var(--line); border-radius: 9px; font: 13px var(--body); }
+.ae-row .ae-id { flex: 1 1 260px; min-width: 0; }
+.ae-row .ae-f { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.ae-row .ae-qty { width: 72px; }
+.ae-row .x { width: 28px; height: 28px; font-size: 16px; flex: none; }
+.ae .ae-add { align-self: flex-start; }
+.pv-box { margin-top: 10px; padding: 10px 14px; border-radius: 12px; background: #f3f8ec; font-size: 13.5px; display: flex; flex-direction: column; gap: 4px; }
+.pv-box.err { background: #fde2df; color: #b3261e; font-weight: 700; }
+.pv-plus { color: #24652b; font-weight: 700; }
+.pv-min { color: #b3261e; font-weight: 700; }
+.pv-tot { font-size: 15px; margin-top: 4px; }
+.bdp { display: inline-flex; gap: 6px; align-items: center; font-weight: 800; font-size: 13px; }
+.bdp input { padding: 4px 8px; border: 1.5px solid var(--line); border-radius: 8px; font: 13px var(--body); }
+.nb-dlg { max-width: min(980px, calc(100vw - 24px)); }
+.nb-paste { margin: 4px 0 12px; border: 1.5px dashed var(--line); border-radius: 12px; padding: 8px 12px; }
+.nb-paste summary { cursor: pointer; font-weight: 800; font-size: 13.5px; }
+.nb-paste textarea { width: 100%; box-sizing: border-box; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px; font: 13px ui-monospace, Menlo, monospace; }
+.nb-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.nb-table th { text-align: left; font-weight: 700; color: var(--ink-2); padding: 7px 8px; width: 16%; vertical-align: top; white-space: nowrap; }
+.nb-table td { padding: 5px 8px; vertical-align: top; }
+.nb-table tr.nb-sec th { background: var(--lime-soft); color: var(--jungle); font-weight: 800; padding: 8px 10px; border-radius: 8px; width: auto; }
+.nb-table input, .nb-table select { width: 100%; box-sizing: border-box; padding: 7px 9px; border: 1.5px solid var(--line); border-radius: 9px; font: 13.5px var(--body); }
+.nb-table input[type=checkbox] { width: auto; }
+.nb-table .nb-2 { display: flex; gap: 6px; }
+.nb-menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 4px 12px; }
+.nb-menu label { display: flex; gap: 6px; align-items: center; font-size: 13px; }
+.nb-opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; margin-top: 12px; }
+@media (max-width: 760px) {
+  .nb-table, .nb-table tbody, .nb-table tr, .nb-table th, .nb-table td { display: block; width: auto; }
+  .nb-table th { padding: 8px 2px 2px; white-space: normal; }
+  .nb-table td { padding: 2px; }
+}
+
 </style>
 </head>
 <body class="admin-body">
@@ -1328,7 +1365,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
         <label class="f"><span>Acara dari</span><input type="date" id="bFrom"></label>
         <label class="f"><span>s/d</span><input type="date" id="bTo"></label>
         <button class="btn sm" id="bLoad">Cari</button>
-        <a class="btn sm green" href="index.html?admin=1">＋ Booking manual</a>
+        <button type="button" class="btn sm green" id="bNew">＋ Booking manual</button>
       </div>
       <div class="table-wrap">
         <table class="data">
@@ -1467,6 +1504,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
 <dialog id="detailModal"><div class="modal-body" id="detailBody"></div></dialog>
 <dialog id="payDialog" class="pay-dlg"><div class="modal-body" id="payBody"></div></dialog>
 <dialog id="vendDialog" class="pay-dlg"><div class="modal-body" id="vendBody"></div></dialog>
+<dialog id="nbDialog" class="nb-dlg"><div class="modal-body" id="nbBody"></div></dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
@@ -1891,6 +1929,7 @@ function setLoading(btn, on, text) {
         ${b.pajak ? `<tr><td colspan="2" class="r muted">Pajak</td><td class="r">${rupiah(b.pajak)}</td></tr>` : ''}
         <tr><td colspan="2" class="r"><b>Total</b></td><td class="r"><b>${rupiah(b.total)}</b></td></tr>
         <tr><td colspan="2" class="r muted">DP minimal</td><td class="r">${rupiah(b.dp)}</td></tr>
+        ${!batal && b.dibayar < b.dp ? `<tr><td colspan="3" class="r"><span class="bdp">Batas DP <input type="date" id="bdpInput" value="${escapeHtml(b.batasDP || '')}" max="${escapeHtml(b.tglAcara)}"> <button class="btn sm ghost" data-act="batasdp">Simpan</button></span>${b.batasDP && b.batasDP < ymd(new Date()) ? ' <span class="warn-st">lewat batas</span>' : ''}<br><span class="muted small">Pengingat otomatis ke klien sehari sebelum & pada hari batas DP.</span></td></tr>` : ''}
         <tr><td colspan="2" class="r muted">Sudah dibayar</td><td class="r">${rupiah(b.dibayar)}</td></tr>
         <tr><td colspan="2" class="r"><b>Sisa</b></td><td class="r"><b style="color:${lunas ? 'var(--leaf)' : 'var(--red)'}">${rupiah(b.sisa)}</b></td></tr>
       </table>
@@ -1907,6 +1946,8 @@ function setLoading(btn, on, text) {
         <button class="btn sm ghost" data-act="adjust" ${batal ? 'disabled' : ''}>± Penyesuaian harga</button>
         <button class="btn sm ghost" data-act="guests" ${batal ? 'disabled' : ''}>👥 Ubah jumlah anak / dewasa</button>
         <button class="btn sm ghost" data-act="discount" ${batal ? 'disabled' : ''}>🏷️ Diskon</button>
+        <button class="btn sm ghost" data-act="ubahaddon" ${batal ? 'disabled' : ''}>🧩 Ubah add-on</button>
+        <button class="btn sm ghost" data-act="ubahjadwal" ${batal ? 'disabled' : ''}>📅 Ubah jadwal</button>
       </div>
       <div id="payFormBox"></div>
 
@@ -2898,6 +2939,264 @@ function setLoading(btn, on, text) {
       catch (err) { toast(err.message, 'error'); } finally { setLoading(b, false); }
     }
   });
+
+  // ============================================================
+  //  DATA PAKET (sekali muat) + EDITOR ADD-ON (dipakai di Ubah add-on & Booking manual)
+  // ============================================================
+  let PK = null;
+  async function loadPK() { if (!PK) PK = await api('getPackages'); return PK; }
+  const isRestoKat = (k) => k === 'Food & Drinks' || /^Restaurant/i.test(String(k || ''));
+  const adById = (id) => (PK ? PK.addon.find(a => a.id === id) : null);
+  const satuanTxt = (a) => ({ per_anak: '/anak', per_pax: '/paket', per_item: '/item', on_request: ' (on request)' }[a.satuan] || '');
+
+  function aeOptions(resto, sel) {
+    const list = PK.addon.filter(a => a.kategori !== 'Cake' && (resto ? isRestoKat(a.kategori) : !isRestoKat(a.kategori)));
+    const kats = [...new Set(list.map(a => a.kategori))];
+    return '<option value="">– pilih –</option>' + kats.map(k => `<optgroup label="${escapeHtml(k)}">${list.filter(a => a.kategori === k).map(a => `<option value="${escapeHtml(a.id)}" ${a.id === sel ? 'selected' : ''}>${escapeHtml(a.nama)} · ${a.harga ? rupiah(a.harga) + satuanTxt(a) : 'on request'}</option>`).join('')}</optgroup>`).join('');
+  }
+  function aeFields(r, anak) {
+    const a = adById(r.id);
+    if (!a) return '';
+    const langs = String(a.bahasa || '').split(',').map(x => x.trim()).filter(Boolean);
+    let h = '';
+    if (a.pilihan.length) h += `<select class="ae-pil" title="Pilihan">${a.pilihan.map(p => `<option ${p === r.pilihan ? 'selected' : ''}>${escapeHtml(p)}</option>`).join('')}</select>`;
+    if (a.satuan === 'per_item') h += `<input class="ae-qty" type="number" min="1" max="500" value="${r.qty || 1}" title="Jumlah">`;
+    if (a.satuan === 'per_pax') h += `<input class="ae-qty" type="number" min="1" max="500" value="${r.qty || anak || a.termasukPax || 1}" title="Jumlah peserta">`;
+    if (langs.length > 1) h += `<select class="ae-bhs" title="Bahasa">${langs.map(l => `<option ${l.toUpperCase() === String(r.bahasa || '').toUpperCase() ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('')}</select>`;
+    if (a.grup === 'mc') h += `<input class="ae-kar" placeholder="Karakter MC" value="${escapeHtml(r.karakter || '')}">`;
+    if (a.minJam) h += `<small class="muted">mulai ≥ ${escapeHtml(a.minJam)}</small>`;
+    return h;
+  }
+  function aeRow(r, resto, anak) {
+    return `<div class="ae-row"><select class="ae-id">${aeOptions(resto, r.id)}</select><span class="ae-f">${aeFields(r, anak)}</span><button type="button" class="x ae-del" title="Hapus">×</button></div>`;
+  }
+  function addonEditor(id, rows, resto, anak) {
+    return `<div class="ae" id="${id}" data-resto="${resto ? 1 : 0}">${rows.map(r => aeRow(r, resto, anak)).join('')}<button type="button" class="btn sm ghost ae-add">＋ Tambah ${resto ? 'pesanan resto' : 'add-on'}</button></div>`;
+  }
+  function readEditor(el) {
+    return Array.from(el.querySelectorAll('.ae-row')).map(row => {
+      const id = row.querySelector('.ae-id').value; if (!id) return null;
+      const g = (c) => row.querySelector(c);
+      return { id: id, qty: g('.ae-qty') ? Number(g('.ae-qty').value) || 1 : 1, pilihan: g('.ae-pil') ? g('.ae-pil').value : '', bahasa: g('.ae-bhs') ? g('.ae-bhs').value : '', karakter: g('.ae-kar') ? g('.ae-kar').value.trim() : '' };
+    }).filter(Boolean);
+  }
+  document.addEventListener('click', (e) => {
+    const add = e.target.closest('.ae-add');
+    if (add) { const box = add.closest('.ae'); add.insertAdjacentHTML('beforebegin', aeRow({ id: '' }, box.dataset.resto === '1', 0)); return; }
+    const del = e.target.closest('.ae-del');
+    if (del) { const box = del.closest('.ae'); del.closest('.ae-row').remove(); box.dispatchEvent(new Event('change', { bubbles: true })); }
+  });
+  document.addEventListener('change', (e) => {
+    if (!e.target.classList.contains('ae-id')) return;
+    const row = e.target.closest('.ae-row');
+    const anak = Number((document.querySelector('#nbForm [name=jumlahAnak]') || {}).value) || (currentDetail ? currentDetail.booking.jumlahAnak : 0);
+    row.querySelector('.ae-f').innerHTML = aeFields({ id: e.target.value }, anak);
+  });
+
+  // ============================================================
+  //  DETAIL BOOKING: UBAH ADD-ON, UBAH JADWAL, BATAS DP
+  // ============================================================
+  const listPerubahan = (r) => `<div class="pv-box">
+      ${r.lama ? `<div><b>Jadwal:</b> ${tglIndo(r.lama.tgl)} ${escapeHtml(r.lama.jam)} · ${escapeHtml(r.lama.lokasi)} (${escapeHtml(r.lama.tipe)}) → <b>${tglIndo(r.baru.tgl)} ${escapeHtml(r.baru.jam)} · ${escapeHtml(r.baru.lokasi)} (${escapeHtml(r.baru.tipe)})</b></div>` : ''}
+      ${r.ditambah && r.ditambah.length ? `<div class="pv-plus">＋ ${r.ditambah.map(escapeHtml).join('<br>＋ ')}</div>` : ''}
+      ${r.dihapus && r.dihapus.length ? `<div class="pv-min">－ ${r.dihapus.map(escapeHtml).join('<br>－ ')}</div>` : ''}
+      ${r.mode === 'addon' && !(r.ditambah || []).length && !(r.dihapus || []).length ? '<div class="muted">Tidak ada item yang berubah.</div>' : ''}
+      <div class="pv-tot">Total: ${rupiah(r.totalLama)} → <b>${rupiah(r.totalBaru)}</b> <span class="${r.selisih > 0 ? 'pv-plus' : r.selisih < 0 ? 'pv-min' : 'muted'}">(${r.selisih > 0 ? '+' : ''}${rupiah(r.selisih)})</span></div>
+      <div>Sudah dibayar ${rupiah(r.dibayar)} · sisa baru <b>${rupiah(r.sisaBaru)}</b> · DP ${rupiah(r.dpBaru)}${r.statusBaru !== r.statusLama ? ` · status → <b>${escapeHtml(r.statusBaru)}</b>` : ''}</div>
+      ${r.undanganLama ? '<div class="warn-st">E-invitation lama masih memuat tanggal lama – kirim undangan baru ke klien.</div>' : ''}
+      ${r.batasDPBaru ? `<div class="warn-st">Batas DP ikut dimajukan ke ${tglIndo(r.batasDPBaru)}.</div>` : ''}
+      <div class="small muted">Setelah disimpan: staff menerima info perubahan, pesanan vendor terkait berstatus "Ada perubahan".</div></div>`;
+
+  async function ubahAddonForm(b) {
+    $('#payFormBox').innerHTML = '<p class="small muted">Memuat daftar add-on…</p>';
+    try { await loadPK(); } catch (e) { $('#payFormBox').innerHTML = `<p class="small">${escapeHtml(e.message)}</p>`; return; }
+    const cakeIds = PK.addon.filter(a => a.kategori === 'Cake').map(a => a.id);
+    const rows = (b.rincian.lines || []).filter(l => l.addonId && cakeIds.indexOf(l.addonId) < 0).map(l => ({ id: l.addonId, qty: l.pax || l.qty, pilihan: l.pilihan || '', bahasa: l.bahasa || '', karakter: l.karakter || '' }));
+    const resto = ((b.rincian.resto && b.rincian.resto.lines) || []).map(l => ({ id: l.addonId, qty: l.qty, pilihan: l.pilihan || '' }));
+    $('#payFormBox').innerHTML = `<form class="pay-form" id="aeForm">
+      <p class="small" style="margin:0 0 10px"><b>Ubah add-on</b> – tambah, hapus atau ganti add-on dan pesanan resto. Kue diubah lewat Penyesuaian harga. Item yang tidak berubah tetap memakai harga lamanya; diskon dan penyesuaian harga dipertahankan.</p>
+      <div class="ae-lbl">Add-on</div>${addonEditor('aeAdd', rows, false, b.jumlahAnak)}
+      <div class="ae-lbl">Pesanan restoran (bill terpisah)</div>${addonEditor('aeResto', resto, true, b.jumlahAnak)}
+      <div id="aePrev"></div>
+      <label class="check full" style="padding:8px 10px;margin-top:10px"><input type="checkbox" name="kirimDokumen" checked><div><b>Kirim dokumen terbaru ke klien</b><small>Proforma bila masih ada sisa, invoice lunas bila sudah lunas.</small></div></label>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button type="button" class="btn sm ghost" id="aeCek">Hitung perubahan</button><button class="btn sm" id="aeSave" disabled>Simpan perubahan</button><button class="btn sm ghost" type="button" data-act="paycancel">Batal</button></div>
+    </form>`;
+    $('#aeForm').addEventListener('change', () => { $('#aeSave').disabled = true; $('#aePrev').innerHTML = ''; });
+  }
+
+  async function ubahJadwalForm(b) {
+    $('#payFormBox').innerHTML = '<p class="small muted">Memuat…</p>';
+    try { await loadPK(); } catch (e) { $('#payFormBox').innerHTML = `<p class="small">${escapeHtml(e.message)}</p>`; return; }
+    const slots = PK.info.jamSlot || [];
+    $('#payFormBox').innerHTML = `<form class="pay-form" id="jdForm">
+      <p class="small" style="margin:0 0 10px"><b>Ubah jadwal</b> – sistem mengecek bentrok dengan booking lain & blokir slot, menghitung ulang harga weekday/weekend, dan menggeser jam run-down. Saat ini: <b>${tglIndo(b.tglAcara)} ${escapeHtml(b.jam)}–${escapeHtml(b.jamSelesai)} · ${escapeHtml(b.lokasiNama)}</b>.</p>
+      <div class="form-grid">
+        <label class="f"><span>Tanggal baru</span><input type="date" name="tglAcara" value="${escapeHtml(b.tglAcara)}" min="${ymd(new Date())}" required></label>
+        <label class="f"><span>Jam mulai</span><input name="jam" list="jdSlots" value="${escapeHtml(b.jam)}" pattern="[0-9]{2}:[0-9]{2}" placeholder="10:00" required><datalist id="jdSlots">${slots.map(s => `<option value="${escapeHtml(s)}">`).join('')}</datalist></label>
+        <label class="f"><span>Area</span><select name="lokasiId">${PK.lokasi.map(l => `<option value="${escapeHtml(l.id)}" ${l.id === b.lokasiId ? 'selected' : ''}>${escapeHtml(l.nama)}</option>`).join('')}</select></label>
+      </div>
+      <div id="jdPrev"></div>
+      <label class="check full" style="padding:8px 10px;margin-top:10px"><input type="checkbox" name="kirimDokumen" checked><div><b>Kirim proforma / invoice terbaru ke klien</b><small>Berisi tanggal, jam dan area baru.</small></div></label>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button type="button" class="btn sm ghost" id="jdCek">Cek & hitung</button><button class="btn sm" id="jdSave" disabled>Simpan jadwal baru</button><button class="btn sm ghost" type="button" data-act="paycancel">Batal</button></div>
+    </form>`;
+    $('#jdForm').addEventListener('input', () => { $('#jdSave').disabled = true; $('#jdPrev').innerHTML = ''; });
+  }
+
+  const jdPayload = (b) => { const f = $('#jdForm'); return { bookingId: b.id, tglAcara: f.tglAcara.value, jam: f.jam.value.trim(), lokasiId: f.lokasiId.value, kirimDokumen: f.kirimDokumen.checked }; };
+  const aePayload = (b) => ({ bookingId: b.id, addOns: readEditor($('#aeAdd')), resto: readEditor($('#aeResto')), kirimDokumen: $('#aeForm [name=kirimDokumen]').checked });
+
+  $('#detailBody').addEventListener('click', async (e) => {
+    const btn = e.target.closest('#aeCek,#jdCek,[data-act="ubahaddon"],[data-act="ubahjadwal"],[data-act="batasdp"]'); if (!btn || !currentDetail) return;
+    const b = currentDetail.booking;
+    if (btn.dataset.act === 'ubahaddon') return ubahAddonForm(b);
+    if (btn.dataset.act === 'ubahjadwal') return ubahJadwalForm(b);
+    if (btn.dataset.act === 'batasdp') {
+      const v = $('#bdpInput').value; if (!v) return toast('Pilih tanggal batas DP.', 'error');
+      const d = await doAction('ubahBatasDP', { bookingId: b.id, tanggal: v }, btn, 'Batas DP diubah ke ' + tglIndo(v) + '. Pengingat ke klien mengikuti tanggal baru.');
+      return d;
+    }
+    const isAe = btn.id === 'aeCek';
+    const box = isAe ? $('#aePrev') : $('#jdPrev');
+    setLoading(btn, true, 'Menghitung…');
+    try {
+      const r = await call(isAe ? 'ubahAddOn' : 'ubahJadwal', Object.assign(isAe ? aePayload(b) : jdPayload(b), { preview: true }));
+      box.innerHTML = listPerubahan(r);
+      $(isAe ? '#aeSave' : '#jdSave').disabled = false;
+    } catch (err) { box.innerHTML = `<div class="pv-box err">${escapeHtml(err.message)}</div>`; }
+    finally { setLoading(btn, false); }
+  });
+  $('#detailBody').addEventListener('submit', async (e) => {
+    if (e.target.id !== 'aeForm' && e.target.id !== 'jdForm') return;
+    e.preventDefault();
+    const b = currentDetail.booking, isAe = e.target.id === 'aeForm';
+    if (!confirm(isAe ? 'Simpan perubahan add-on untuk ' + b.id + '?' : 'Pindahkan ' + b.id + ' ke jadwal baru?')) return;
+    const d = await doAction(isAe ? 'ubahAddOn' : 'ubahJadwal', isAe ? aePayload(b) : jdPayload(b), $(isAe ? '#aeSave' : '#jdSave'), isAe ? 'Add-on diperbarui.' : 'Jadwal diperbarui.');
+    if (d) toast('Total: ' + rupiah(d.perubahan.totalLama) + ' → ' + rupiah(d.perubahan.totalBaru) + (d.proformaTerkirim ? ' · proforma terkirim' : '') + (d.invoiceTerkirim ? ' · invoice terkirim' : '') + ' · staff diberi tahu', 'success');
+  });
+
+  // ============================================================
+  //  BOOKING MANUAL (dari halaman admin)
+  // ============================================================
+  const SUMBER = ['WhatsApp', 'Telepon', 'Walk-in', 'Instagram', 'Email', 'Lainnya'];
+  async function bukaBookingManual() {
+    const body = $('#nbBody');
+    body.innerHTML = '<p class="muted">Memuat…</p>';
+    $('#nbDialog').showModal();
+    try { await loadPK(); } catch (e) { body.innerHTML = `<p>${escapeHtml(e.message)}</p>`; return; }
+    const I = PK.info, opt = (arr, sel) => arr.map(x => `<option ${x === sel ? 'selected' : ''}>${escapeHtml(x)}</option>`).join('');
+    const cakeStd = PK.addon.filter(a => a.kategori === 'Cake' && a.pilihan.length);
+    body.innerHTML = `
+      <div class="modal-head"><div><h2 style="margin:0">Booking manual</h2><div class="small muted">Untuk booking dari WhatsApp, telepon atau datang langsung. Ketik atau tempel datanya; harga & slot dicek otomatis.</div></div><button class="x" data-nb="close" aria-label="Tutup">×</button></div>
+      <details class="nb-paste"><summary>📋 Tempel data dari chat (opsional)</summary>
+        <p class="small muted">Tempel teks seperti <code>Nama: Ibu Rina</code>, <code>WA: 0812…</code>, <code>Nama anak: Laras</code>, <code>Tanggal acara: 20/11/2026</code>, <code>Jam: 10:00</code>, <code>Jumlah anak: 12</code>, <code>Dewasa: 10</code>, <code>Tema: Jungle</code>. Kolom yang dikenali terisi otomatis.</p>
+        <textarea id="nbPaste" rows="5"></textarea><button type="button" class="btn sm" id="nbPasteGo" style="margin-top:6px">Isi formulir</button></details>
+      <form id="nbForm" autocomplete="off">
+        <table class="nb-table">
+          <tr class="nb-sec"><th colspan="4">1. Pemesan &amp; anak</th></tr>
+          <tr><th>Sumber booking</th><td><select name="sumber">${opt(SUMBER, 'WhatsApp')}</select></td><th>Bahasa email klien</th><td><select name="lang"><option value="id">Indonesia</option><option value="en">English</option></select></td></tr>
+          <tr><th>Nama orang tua *</th><td><input name="nama" required></td><th>WhatsApp *</th><td><input name="hp" required inputmode="tel" placeholder="0812…"></td></tr>
+          <tr><th>Email</th><td><input name="email" type="email" placeholder="opsional"></td><th>Tema</th><td><input name="tema" list="nbTema"><datalist id="nbTema">${(I.tema || []).map(t => `<option value="${escapeHtml(t.id)}">`).join('')}</datalist></td></tr>
+          <tr><th>Nama anak *</th><td><input name="namaAnak" required></td><th>Tanggal lahir · usia</th><td class="nb-2"><input name="tglLahir" type="date"><input name="usia" type="number" min="0" max="20" placeholder="usia"></td></tr>
+          <tr class="nb-sec"><th colspan="4">2. Jadwal &amp; tamu</th></tr>
+          <tr><th>Tanggal acara *</th><td><input name="tglAcara" type="date" required min="${ymd(new Date())}"></td><th>Jam mulai *</th><td><input name="jam" list="nbSlots" required placeholder="10:00" pattern="[0-9]{2}:[0-9]{2}"><datalist id="nbSlots">${(I.jamSlot || []).map(s => `<option value="${escapeHtml(s)}">`).join('')}</datalist></td></tr>
+          <tr><th>Area *</th><td><select name="lokasiId" required>${PK.lokasi.map(l => `<option value="${escapeHtml(l.id)}">${escapeHtml(l.nama)}</option>`).join('')}</select></td><th>Anak · dewasa *</th><td class="nb-2"><input name="jumlahAnak" type="number" min="1" value="10" required><input name="jumlahDewasa" type="number" min="0" value="10"></td></tr>
+          <tr class="nb-sec"><th colspan="4">3. Menu, kue &amp; add-on</th></tr>
+          <tr><th>Menu buffet anak<br><small class="muted">maks. ${I.maxMenu || 4}</small></th><td colspan="3"><div class="nb-menu">${PK.menu.map(m => `<label><input type="checkbox" name="menu" value="${escapeHtml(m.nama)}"> ${escapeHtml(m.namaId || m.nama)}</label>`).join('')}</div></td></tr>
+          <tr><th>Kue</th><td><select name="kueJenis"><option value="none">Tanpa kue</option><option value="standard">Kue favorit</option><option value="custom">Kue custom</option><option value="own">Bawa kue sendiri</option></select></td><th>Tulisan di kue</th><td><input name="kueTulisan" maxlength="60"></td></tr>
+          <tr class="nb-kue nb-std hidden"><th>Kue favorit</th><td><select name="kueStd">${cakeStd.map(a => `<option value="${escapeHtml(a.id)}">${escapeHtml(a.nama)} · ${rupiah(a.harga)}</option>`).join('')}</select></td><th>Rasa</th><td><select name="kueRasa"></select></td></tr>
+          <tr class="nb-kue nb-cus hidden"><th>Layered</th><td><select name="kueLayered"><option value="">–</option>${opt(I.cakeLayered || [])}</select></td><th>Filling</th><td><select name="kueFilling"><option value="">–</option>${opt(I.cakeFilling || [])}</select></td></tr>
+          <tr class="nb-kue nb-cus hidden"><th>Finishing</th><td><select name="kueFinishing"><option value="">–</option>${opt(I.cakeFinishing || [])}</select></td><th>Catatan kue</th><td><input name="kueLain" placeholder="mis. desain dino, warna biru"></td></tr>
+          <tr><th>Add-on</th><td colspan="3">${addonEditor('nbAdd', [], false, 10)}</td></tr>
+          <tr><th>Pre-order resto<br><small class="muted">bill terpisah</small></th><td colspan="3">${addonEditor('nbResto', [], true, 10)}</td></tr>
+          <tr class="nb-sec"><th colspan="4">4. Lainnya</th></tr>
+          <tr><th>Kode promo</th><td><input name="kodeDiskon" style="text-transform:uppercase"></td><th>Catatan klien</th><td><input name="catatan" placeholder="alergi, permintaan khusus"></td></tr>
+        </table>
+        <div class="nb-opts">
+          <label class="check"><input type="checkbox" name="kirimEmail" checked><div><b>Kirim email konfirmasi + proforma ke klien</b><small>Hanya bila email diisi.</small></div></label>
+          <label class="check"><input type="checkbox" name="kirimWa" checked><div><b>Kirim WhatsApp konfirmasi</b><small>Bila WhatsApp otomatis aktif.</small></div></label>
+          <label class="check"><input type="checkbox" name="lepasBlokir"><div><b>Pakai slot yang diblokir</b><small>Blokir slot itu dilepas otomatis.</small></div></label>
+        </div>
+        <div id="nbPrev"></div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button type="button" class="btn ghost" id="nbCek">Hitung harga</button><button class="btn" id="nbSave">Simpan booking</button><button type="button" class="btn ghost" data-nb="close">Batal</button></div>
+      </form>`;
+    syncKue();
+  }
+  function syncKue() {
+    const f = $('#nbForm'); if (!f) return;
+    const j = f.kueJenis.value;
+    document.querySelectorAll('#nbForm .nb-std').forEach(x => x.classList.toggle('hidden', j !== 'standard'));
+    document.querySelectorAll('#nbForm .nb-cus').forEach(x => x.classList.toggle('hidden', j !== 'custom'));
+    const a = adById(f.kueStd.value);
+    if (a && f.kueRasa.dataset.for !== a.id) { f.kueRasa.innerHTML = a.pilihan.map(p => `<option>${escapeHtml(p)}</option>`).join(''); f.kueRasa.dataset.for = a.id; }
+  }
+  function nbPayload() {
+    const f = $('#nbForm'), v = (n) => (f[n] ? String(f[n].value).trim() : '');
+    const kue = { jenis: v('kueJenis'), tulisan: v('kueTulisan') };
+    const addOns = readEditor($('#nbAdd'));
+    if (kue.jenis === 'standard') addOns.push({ id: v('kueStd'), qty: 1, pilihan: v('kueRasa') });
+    if (kue.jenis === 'custom') { Object.assign(kue, { layered: v('kueLayered'), filling: v('kueFilling'), finishing: v('kueFinishing'), lain: v('kueLain') }); addOns.push({ id: 'C04', qty: 1 }); }
+    if (kue.jenis === 'own') addOns.push({ id: 'C05', qty: 1 });
+    return {
+      sumber: v('sumber'), lang: v('lang'), nama: v('nama'), hp: v('hp'), email: v('email'), tema: v('tema'), namaAnak: v('namaAnak'), tglLahir: v('tglLahir'), usia: v('usia'),
+      tglAcara: v('tglAcara'), jam: v('jam'), lokasiId: v('lokasiId'), jumlahAnak: Number(v('jumlahAnak')) || 0, jumlahDewasa: Number(v('jumlahDewasa')) || 0,
+      menu: Array.from(f.querySelectorAll('[name=menu]:checked')).map(x => x.value), kue: kue, addOns: addOns, resto: readEditor($('#nbResto')),
+      kodeDiskon: v('kodeDiskon').toUpperCase(), catatan: v('catatan'), kirimEmail: f.kirimEmail.checked, kirimWa: f.kirimWa.checked, lepasBlokir: f.lepasBlokir.checked, setuju: true,
+    };
+  }
+  // tempel data dari chat -> isi formulir
+  function isiDariTeks(txt) {
+    const f = $('#nbForm'); let n = 0;
+    const KEY = [[/^(nama\s*(orang\s*tua|ortu|pemesan|ibu|bapak)?|name|parent)$/i, 'nama'], [/^(wa|whatsapp|hp|no\.?\s*hp|telp|telepon|phone|nomor)$/i, 'hp'], [/^(e-?mail)$/i, 'email'],
+      [/^(nama\s*anak|anak|child|child'?s?\s*name|yang\s*ulang\s*tahun)$/i, 'namaAnak'], [/^(tgl\.?\s*lahir|tanggal\s*lahir|lahir|birth\s*date|dob)$/i, 'tglLahir'], [/^(usia|umur|age)$/i, 'usia'],
+      [/^(tgl\.?\s*acara|tanggal\s*acara|tanggal|date|event\s*date)$/i, 'tglAcara'], [/^(jam|waktu|time|pukul)$/i, 'jam'], [/^(jumlah\s*anak|anak-anak|kids|children|jml\s*anak)$/i, 'jumlahAnak'],
+      [/^(dewasa|jumlah\s*dewasa|adults|jml\s*dewasa)$/i, 'jumlahDewasa'], [/^(tema|theme)$/i, 'tema'], [/^(catatan|note|notes)$/i, 'catatan'], [/^(promo|kode\s*promo|kode)$/i, 'kodeDiskon'], [/^(area|lokasi|tempat)$/i, 'lokasiId']];
+    String(txt).split(/\r?\n/).forEach(line => {
+      const m = /^\s*[-•*]?\s*([^:=]{2,40})\s*[:=]\s*(.+)$/.exec(line); if (!m) return;
+      const k = KEY.find(x => x[0].test(m[1].trim())); if (!k) return;
+      let val = m[2].trim(); const name = k[1];
+      if (name === 'tglAcara' || name === 'tglLahir') { const d = /^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})$/.exec(val); if (d) val = (d[3].length === 2 ? '20' + d[3] : d[3]) + '-' + d[2].padStart(2, '0') + '-' + d[1].padStart(2, '0'); }
+      if (name === 'jam') val = val.replace('.', ':').replace(/^(\d):/, '0$1:').slice(0, 5);
+      if (name === 'jumlahAnak' || name === 'jumlahDewasa' || name === 'usia') val = String(parseInt(val, 10) || '');
+      if (name === 'lokasiId') { const l = PK.lokasi.find(x => x.nama.toLowerCase().indexOf(val.toLowerCase()) >= 0 || val.toLowerCase().indexOf(x.nama.toLowerCase()) >= 0); if (!l) return; val = l.id; }
+      if (f[name] && val) { f[name].value = val; n++; }
+    });
+    return n;
+  }
+  $('#nbBody').addEventListener('click', async (e) => {
+    const t = e.target.closest('[data-nb],#nbCek,#nbPasteGo'); if (!t) return;
+    if (t.dataset.nb === 'close') return $('#nbDialog').close();
+    if (t.id === 'nbPasteGo') { const n = isiDariTeks($('#nbPaste').value); toast(n ? n + ' kolom terisi. Cek lagi sebelum menyimpan.' : 'Tidak ada kolom yang dikenali.', n ? 'success' : 'error'); return; }
+    if (t.id === 'nbCek') {
+      setLoading(t, true, 'Menghitung…');
+      try {
+        const p = nbPayload();
+        const est = await call('adminEstimate', Object.assign({}, p, { lang: 'id' }));
+        $('#nbPrev').innerHTML = `<div class="pv-box"><table class="mini-table">${est.lines.map(l => `<tr><td>${escapeHtml(l.desc)}</td><td class="r">${l.qty}</td><td class="r">${rupiah(l.total)}</td></tr>`).join('')}
+          <tr><td colspan="2" class="r"><b>Total</b></td><td class="r"><b>${rupiah(est.total)}</b></td></tr><tr><td colspan="2" class="r muted">DP ${est.persenDP}%</td><td class="r">${rupiah(est.dp)}</td></tr>
+          ${est.resto && est.resto.lines.length ? `<tr><td colspan="2" class="r muted">Pre-order resto (bill terpisah)</td><td class="r">${rupiah(est.resto.total)}</td></tr>` : ''}</table>
+          ${(est.notes || []).length ? `<ul class="note-list">${est.notes.map(n => `<li>${escapeHtml(n)}</li>`).join('')}</ul>` : ''}</div>`;
+      } catch (err) { $('#nbPrev').innerHTML = `<div class="pv-box err">${escapeHtml(err.message)}</div>`; }
+      finally { setLoading(t, false); }
+    }
+  });
+  $('#nbBody').addEventListener('change', (e) => { if (e.target.name === 'kueJenis' || e.target.name === 'kueStd') syncKue(); });
+  $('#nbBody').addEventListener('submit', async (e) => {
+    if (e.target.id !== 'nbForm') return;
+    e.preventDefault();
+    const p = nbPayload();
+    if (p.menu.length > ((PK.info && PK.info.maxMenu) || 4)) return toast('Menu buffet maksimal ' + ((PK.info && PK.info.maxMenu) || 4) + '.', 'error');
+    if (!confirm('Simpan booking untuk ' + p.namaAnak + ' pada ' + tglIndo(p.tglAcara) + ' ' + p.jam + '?')) return;
+    const btn = $('#nbSave');
+    setLoading(btn, true, 'Menyimpan…');
+    try {
+      const r = await call('adminCreateBooking', p);
+      $('#nbDialog').close();
+      toast('Booking ' + r.bookingId + ' tersimpan · total ' + rupiah(r.total) + (r.emailKonfirmasi ? ' · email terkirim' : '') + (r.waKonfirmasi ? ' · WA terkirim' : ''), 'success');
+      if (!$('#tab-bookings').classList.contains('hidden')) loadBookings();
+      openDetail(r.bookingId);
+    } catch (err) { toast(err.message, 'error'); } finally { if (document.body.contains(btn)) setLoading(btn, false); }
+  });
+  $('#bNew').addEventListener('click', bukaBookingManual);
 
   start();
 })();
