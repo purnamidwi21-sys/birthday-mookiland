@@ -1118,6 +1118,104 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .rk-extra .xc { display: none; }
 .rk-extra.card .xc { display: flex; }
 .rk-extra.card span.xc { display: inline; }
+.rk-ok-read { margin: 8px 0 10px; padding: 9px 12px; border-radius: 10px; background: #eef7e6; font-size: 13.5px; }
+.rk-ok-read.bad { background: #fff1d6; }
+.rk-adv { margin-top: 12px; border: 1.5px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+.rk-adv summary { cursor: pointer; font-weight: 700; font-size: 13px; color: var(--ink-2); }
+.rk-adv[open] summary { margin-bottom: 6px; }
+
+/* ===== Halaman Keuangan ===== */
+.fin-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 14px; margin-bottom: 14px; }
+.fin-head > div { flex: 1; min-width: 260px; }
+.fin-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.fin-card { text-align: left; border: 0; cursor: pointer; background: #fff; border-radius: 16px; box-shadow: var(--shadow); padding: 14px 16px; display: grid; grid-template-columns: auto 1fr; column-gap: 10px; row-gap: 2px; font: inherit; color: inherit; border-left: 5px solid var(--line); transition: transform .12s; }
+.fin-card:hover { transform: translateY(-2px); }
+.fin-card .ic { grid-row: span 3; font-size: 22px; }
+.fin-card .t { font-size: 12.5px; font-weight: 800; color: var(--ink-2); }
+.fin-card b { font: 700 22px var(--head); color: var(--jungle); }
+.fin-card small { font-size: 12px; color: var(--muted); font-weight: 700; }
+.fin-card em { color: var(--red); font-style: normal; }
+.fin-card.warn { border-left-color: var(--orange); }
+.fin-card.bad { border-left-color: var(--red); }
+.fin-card.ok { border-left-color: var(--leaf); }
+.fin-sec-h { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+.fin-sec-h h3 { margin: 0; display: flex; align-items: center; gap: 8px; }
+.fin-num { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--jungle); color: #fff; font: 800 13px var(--body); }
+.fin-help { margin: 6px 0 12px; }
+.fin-empty { margin: 4px 0; padding: 12px 14px; border-radius: 12px; background: #f3f8ec; font-size: 14px; }
+#tab-rekon > .panel { margin-bottom: 16px; }
+.fin-month { font-size: 13px; font-weight: 800; display: inline-flex; gap: 8px; align-items: center; }
+.fin-month input { padding: 6px 10px; border: 1.5px solid var(--line); border-radius: 10px; font: 13px var(--body); }
+.fin-imp { display: grid; grid-template-columns: 1fr auto 1.4fr; gap: 14px; align-items: stretch; }
+.fin-or { align-self: center; font-weight: 800; color: var(--muted); font-size: 13px; }
+.fin-imp .rk-paste { margin: 0; }
+@media (max-width: 760px) { .fin-imp { grid-template-columns: 1fr; } .fin-or { justify-self: center; } }
+
+.fin-dana { display: grid; grid-template-columns: minmax(170px, 220px) 1fr; gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); }
+.fd-amt { display: flex; flex-direction: column; gap: 2px; }
+.fd-amt b { font: 700 18px var(--head); color: var(--jungle); }
+.fd-amt span { font-size: 13px; font-weight: 700; color: var(--ink-2); }
+.fd-amt small { color: var(--muted); font-size: 12px; word-break: break-word; }
+.fd-r { display: flex; flex-direction: column; gap: 8px; }
+.fd-saran { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: #fffaf2; border: 1.5px solid #f2c48d; font-size: 13.5px; }
+.fd-saran.pay { background: #f1f9ea; border-color: #9ccf86; }
+.fd-saran.none { background: var(--paper); border-color: var(--line); color: var(--ink-2); }
+.fd-saran > button { flex: 0 0 auto; }
+.fd-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 760px) { .fin-dana { grid-template-columns: 1fr; } .fd-saran { flex-direction: column; align-items: stretch; } }
+
+.fin-tg { display: grid; grid-template-columns: 1fr 1.4fr 1.3fr 1fr 1.2fr auto; gap: 12px; align-items: center; padding: 11px 6px; border-top: 1px solid var(--line); font-size: 13.5px; }
+.fin-tg.head { font-size: 11.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; border-top: 0; padding-bottom: 4px; }
+.fin-tg.late { background: #fff6f5; }
+.fin-tg > span { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.fin-tg small { color: var(--muted); font-size: 12px; }
+.fin-tg a { color: inherit; text-decoration: none; }
+.fin-tg a:hover b { text-decoration: underline; }
+.fin-tg .act { flex-direction: row; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.tahap { display: inline-block; width: fit-content; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
+.tahap.dp { background: #fde7d6; color: #a2440b; }
+.tahap.ln { background: #e2eefc; color: #1d4f91; }
+.bar { display: block; height: 7px; border-radius: 99px; background: #edf1e8; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--leaf); border-radius: 99px; }
+.chip.red { background: #fde2df; color: #b3261e; }
+.chip.orange { background: #fde7d6; color: #a2440b; }
+.chip.green { background: #e3f4d9; color: #24652b; }
+@media (max-width: 900px) {
+  .fin-tg { grid-template-columns: 1fr 1fr; padding: 12px 4px; }
+  .fin-tg.head { display: none; }
+  .fin-tg > span[data-l]::before { content: attr(data-l); font-size: 10.5px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: .04em; }
+  .fin-tg .act { grid-column: 1 / -1; justify-content: flex-start; }
+}
+.fin-rw tr.tot td { border-top: 2px solid var(--line); background: #f6faf1; }
+.fin-more summary { cursor: pointer; font-weight: 800; color: var(--ink-2); }
+.fin-more[open] summary { margin-bottom: 8px; }
+
+/* formulir Terima pembayaran */
+.pay-dlg { max-width: min(560px, calc(100vw - 24px)); }
+.pd-bank { background: #eef5fc; border-radius: 12px; padding: 10px 12px; font-size: 14px; margin-bottom: 12px; }
+.pd-bk { background: var(--paper); border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 14px; margin-bottom: 14px; }
+.pd-nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-top: 8px; }
+.pd-nums span { display: flex; flex-direction: column; font-size: 11.5px; color: var(--muted); font-weight: 700; }
+.pd-nums b { font-size: 15px; color: var(--ink); }
+.pd-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.pd-row .lbl, .pd-row > span { font-size: 13px; font-weight: 800; color: var(--ink-2); }
+.pd-row select, .pd-row input { padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 12px; font: 15px var(--body); }
+#pdJml { font: 700 20px var(--head); }
+.seg { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 6px; }
+.seg button { border: 1.5px solid var(--line); background: #fff; border-radius: 12px; padding: 10px 8px; font: 800 13.5px var(--body); cursor: pointer; color: var(--ink); }
+.seg button.on { border-color: var(--jungle); background: var(--jungle); color: #fff; }
+.pd-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.pd-chips button { border: 0; background: var(--lime-soft); color: var(--jungle); border-radius: 999px; padding: 6px 12px; font: 800 12.5px var(--body); cursor: pointer; }
+.pd-fixed { font: 700 20px var(--head); color: var(--jungle); }
+.pd-det { margin-bottom: 4px; }
+.pd-mail { margin-top: 10px; padding: 8px 10px; }
+.pd-prev { margin-top: 12px; padding: 10px 14px; border-radius: 12px; background: #f3f8ec; font-size: 13.5px; }
+.pd-prev ul { margin: 6px 0 0; padding-left: 18px; }
+.pd-prev li { margin: 2px 0; }
+.pd-prev .warn { color: #a2440b; font-weight: 700; }
+.pd-prev .err, #pdFee .err { color: var(--red); font-weight: 800; }
+.fd-saran.alt { background: #fff; border-style: dashed; font-size: 13px; }
+.fin-scroll { overflow-x: auto; max-width: 100%; } .fin-scroll table { min-width: 560px; }
 
 </style>
 </head>
@@ -1872,7 +1970,7 @@ window.I18N = {
     pg1: 'Booking sent', pg2: 'Deposit paid', pg3: 'Paid in full', pg4: 'Party day',
     st_menunggu: 'Waiting for deposit', st_dp: 'Deposit received', st_lunas: 'Paid in full', st_selesai: 'Party done', st_batal: 'Cancelled',
     nx_menunggu: 'Next step: pay the {p} deposit to secure your date. The bank details are in your confirmation email and proforma invoice.',
-    nx_dp: 'Next step: pay the remaining {p} before the party.', nx_lunas: 'All paid – see you at the party! 🎉', nx_selesai: 'Thank you for celebrating with us!', nx_batal: 'This booking has been cancelled.',
+    nx_dp: 'Next step: pay the remaining {p} by the party day at the latest.', nx_lunas: 'All paid – see you at the party! 🎉', nx_selesai: 'Thank you for celebrating with us!', nx_batal: 'This booking has been cancelled.',
     ck_date: 'Party date', ck_area: 'Party area', ck_guests: 'Guests', ck_theme: 'Theme', ck_menu: 'Kids\' buffet', ck_booked: 'Booked on {d}',
     ck_items: 'Your party', ck_total: 'Total', ck_paid: 'Paid', ck_balance: 'Balance', ck_deposit: 'Deposit', ck_rd: 'Run-down', ck_resto: 'Restaurant pre-order (separate bill)',
     ck_docs: 'Your documents', ck_dl_inv: '⬇ E-invitation', ck_dl_pro: '⬇ Proforma invoice (PDF)', ck_dl_fin: '⬇ Final invoice (PDF)', ck_dl_fin_wait: 'Final invoice – available once paid in full', ck_dl_wait: 'Preparing…',
@@ -2085,7 +2183,7 @@ window.I18N = {
     pg1: 'Booking terkirim', pg2: 'DP dibayar', pg3: 'Lunas', pg4: 'Hari pesta',
     st_menunggu: 'Menunggu DP', st_dp: 'DP diterima', st_lunas: 'Lunas', st_selesai: 'Pesta selesai', st_batal: 'Dibatalkan',
     nx_menunggu: 'Langkah berikutnya: bayar DP {p} untuk mengamankan tanggal. Detail rekening ada di email konfirmasi dan proforma invoice.',
-    nx_dp: 'Langkah berikutnya: lunasi sisa {p} sebelum pesta.', nx_lunas: 'Sudah lunas – sampai jumpa di hari pesta! 🎉', nx_selesai: 'Terima kasih sudah merayakan bersama kami!', nx_batal: 'Booking ini sudah dibatalkan.',
+    nx_dp: 'Langkah berikutnya: lunasi sisa {p} paling lambat pada hari pesta.', nx_lunas: 'Sudah lunas – sampai jumpa di hari pesta! 🎉', nx_selesai: 'Terima kasih sudah merayakan bersama kami!', nx_batal: 'Booking ini sudah dibatalkan.',
     ck_date: 'Tanggal pesta', ck_area: 'Area pesta', ck_guests: 'Tamu', ck_theme: 'Tema', ck_menu: 'Buffet anak', ck_booked: 'Dibooking {d}',
     ck_items: 'Rincian pesta', ck_total: 'Total', ck_paid: 'Sudah dibayar', ck_balance: 'Sisa', ck_deposit: 'DP', ck_rd: 'Run-down', ck_resto: 'Pre-order restoran (bill terpisah)',
     ck_docs: 'Dokumen Anda', ck_dl_inv: '⬇ E-invitation', ck_dl_pro: '⬇ Proforma invoice (PDF)', ck_dl_fin: '⬇ Invoice final (PDF)', ck_dl_fin_wait: 'Invoice final – tersedia setelah lunas', ck_dl_wait: 'Menyiapkan…',
