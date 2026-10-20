@@ -1066,6 +1066,41 @@ body.is-admin .admin-only.hidden { display: none !important; }
 }
 .invite-custom { background: var(--lime-soft); color: var(--jungle); border-radius: 12px; padding: 10px 14px; font-weight: 700; font-size: 14px; text-align: center; margin: 12px 0 0; }
 
+/* ---------- Admin: rekonsiliasi bank ---------- */
+.rk-drop { position: relative; border: 2px dashed var(--line); border-radius: 16px; padding: 22px; text-align: center; background: var(--paper); transition: background .15s, border-color .15s; }
+.rk-drop.over { border-color: var(--leaf); background: var(--lime-soft); }
+.rk-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.rk-drop label { display: grid; gap: 4px; pointer-events: none; }
+#rkMap { margin-top: 16px; }
+.rk-file { font-size: 14px; margin-bottom: 10px; }
+.rk-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 16px 0; }
+.rk-stat { background: #fff; border-radius: 14px; box-shadow: var(--shadow); padding: 12px 14px; display: grid; grid-template-columns: auto 1fr; column-gap: 10px; align-items: center; }
+.rk-stat span { grid-row: span 2; font-size: 22px; }
+.rk-stat b { font: 700 22px var(--head); color: var(--jungle); }
+.rk-stat small { color: var(--muted); font-size: 12px; font-weight: 700; }
+.rk-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+.rk-filter { display: flex; gap: 6px; flex-wrap: wrap; }
+.rk-filter button { border: 0; background: var(--lime-soft); color: var(--jungle); font: 800 12.5px var(--body); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+.rk-filter button.active { background: var(--jungle); color: #fff; }
+.rk-row { display: grid; grid-template-columns: minmax(200px, 1fr) 2fr; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.rk-row.ok .rk-k b { color: var(--leaf); }
+.rk-row.ign { opacity: .6; }
+.rk-k { display: flex; flex-direction: column; gap: 2px; }
+.rk-k b { font: 700 17px var(--head); }
+.rk-k span { font-size: 13px; font-weight: 700; color: var(--ink-2); }
+.rk-k small { color: var(--muted); font-size: 12px; word-break: break-word; }
+.rk-r { display: flex; flex-direction: column; gap: 8px; }
+.rk-r > button { align-self: flex-start; }
+.rk-ok, .rk-s > div { font-size: 13.5px; display: flex; flex-direction: column; gap: 2px; }
+.rk-saran { display: flex; flex-direction: column; gap: 8px; }
+.rk-s { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: var(--paper); border: 1.5px solid var(--line); border-radius: 12px; padding: 8px 10px; }
+.rk-s.exact { border-color: #9ccf86; }
+.rk-fee { font-size: 12px; font-weight: 800; color: #8a5a00; }
+.rk-manual { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.rk-manual select { flex: 1; min-width: 220px; padding: 7px 10px; border-radius: 10px; border: 1.5px solid var(--line); font: 13px var(--body); }
+@media (max-width: 760px) { .rk-row { grid-template-columns: 1fr; } }
+.pf-det { margin-top: 4px; }
+
 </style>
 </head>
 <body class="admin-body">
@@ -1090,6 +1125,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
         <button data-tab="dashboard" class="active">Dashboard</button>
         <button data-tab="bookings">Booking</button>
         <button data-tab="slot">Ketersediaan</button>
+        <button data-tab="rekon">Rekonsiliasi</button>
         <button data-tab="akun">Akun</button>
       </div>
       <div class="user-menu"><span id="whoami"></span><button class="btn sm ghost" id="logoutBtn" style="color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4)">Keluar</button></div>
@@ -1194,6 +1230,30 @@ body.is-admin .admin-only.hidden { display: none !important; }
           <h4 class="subhead">Blokir di tanggal ini</h4>
           <div id="aBlocks"><p class="muted small">-</p></div>
         </div>
+      </div>
+    </section>
+
+    <!-- ======= REKONSILIASI BANK ======= -->
+    <section id="tab-rekon" class="hidden">
+      <div class="panel">
+        <h3>Upload rekening koran</h3>
+        <p class="small muted" style="margin-top:-6px">File CSV atau Excel (.xlsx) dari internet banking. Hanya dana <b>masuk (kredit)</b> yang dipakai. Baris yang sudah pernah diupload otomatis dilewati, jadi aman upload ulang periode yang tumpang tindih.</p>
+        <div class="rk-drop" id="rkDrop">
+          <input type="file" id="rkFile" accept=".csv,.txt,.xlsx">
+          <label for="rkFile"><b>📄 Pilih file rekening koran</b><span class="small muted">atau seret file ke sini</span></label>
+        </div>
+        <div id="rkMap" class="hidden"></div>
+      </div>
+      <div class="rk-stats" id="rkStats"></div>
+      <div class="panel">
+        <div class="rk-head"><h3>Dana masuk di rekening koran</h3>
+          <div class="rk-filter" id="rkFilter"><button data-f="belum" class="active">Belum cocok</button><button data-f="cocok">Sudah cocok</button><button data-f="abaikan">Diabaikan</button><button data-f="semua">Semua</button></div></div>
+        <div id="rkList"><p class="muted small">Memuat…</p></div>
+      </div>
+      <div class="panel">
+        <h3>Pembayaran yang belum ditemukan di rekening koran</h3>
+        <p class="small muted" style="margin-top:-6px">Bank transfer, QRIS dan kartu yang sudah dicatat di admin tetapi dananya belum terlihat di rekening koran yang diupload. Pembayaran tunai tidak ikut rekonsiliasi.</p>
+        <div id="rkPay"></div>
       </div>
     </section>
 
@@ -1436,10 +1496,11 @@ function setLoading(btn, on, text) {
   // ---------- Tab ----------
   function switchTab(name) {
     document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
-    ['dashboard', 'bookings', 'slot', 'akun'].forEach(t => $('#tab-' + t).classList.toggle('hidden', t !== name));
+    ['dashboard', 'bookings', 'slot', 'rekon', 'akun'].forEach(t => $('#tab-' + t).classList.toggle('hidden', t !== name));
     if (name === 'dashboard') loadDashboard();
     if (name === 'slot') loadSlotTab();
     if (name === 'bookings') loadBookings();
+    if (name === 'rekon') loadRekon();
   }
   $('#tabs').addEventListener('click', (e) => { if (e.target.dataset.tab) switchTab(e.target.dataset.tab); });
 
@@ -1658,7 +1719,7 @@ function setLoading(btn, on, text) {
 
       <h4 class="subhead">Riwayat Pembayaran</h4>
       ${d.payments.length ? `<table class="mini-table"><tr><th>No.</th><th>Tanggal</th><th>Metode</th><th class="r">Jumlah</th></tr>
-        ${d.payments.map(p => `<tr><td>${escapeHtml(p.id)}</td><td>${tglIndo(p.tanggal)}</td><td>${escapeHtml(p.metode)}${p.keterangan ? '<br><span class="muted small">' + escapeHtml(p.keterangan) + '</span>' : ''}</td><td class="r">${rupiah(p.jumlah)}</td></tr>`).join('')}</table>`
+        ${d.payments.map(p => `<tr><td>${escapeHtml(p.id)}</td><td>${tglIndo(p.tanggal)}</td><td>${escapeHtml(p.metode)} ${rekonBadge(p)}${[p.kartu, p.pengirim, p.referensi ? 'Ref ' + p.referensi : '', p.keterangan].filter(Boolean).map(x => '<br><span class="muted small">' + escapeHtml(x) + '</span>').join('')}</td><td class="r">${rupiah(p.jumlah)}</td></tr>`).join('')}</table>`
         : '<p class="muted small">Belum ada pembayaran.</p>'}
 
       <h4 class="subhead">Log Email &amp; Aktivitas</h4>
@@ -1667,15 +1728,17 @@ function setLoading(btn, on, text) {
     `;
   }
 
-  function payForm(b) {
-    const saran = b.dibayar < b.dp ? b.dp - b.dibayar : b.sisa;
+  function payForm(b, pelunasan) {
+    const saran = pelunasan ? b.sisa : (b.dibayar < b.dp ? b.dp - b.dibayar : b.sisa);
     $('#payFormBox').innerHTML = `
       <form class="pay-form" id="payForm">
+        ${pelunasan ? `<p class="small" style="margin:0 0 10px;background:#fff1d6;border-radius:10px;padding:8px 12px"><b>Pelunasan</b> – masih ada sisa tagihan <b>${rupiah(b.sisa)}</b>. Catat pembayaran pelunasan di bawah; status otomatis menjadi <b>Lunas</b> dan invoice lunas dikirim ke pelanggan.</p>` : ''}
         <div class="form-grid">
           <label class="f"><span>Jumlah (Rp)</span><input name="jumlah" inputmode="numeric" required value="${Number(saran).toLocaleString('id-ID')}"></label>
           <label class="f"><span>Tanggal bayar</span><input name="tanggal" type="date" required value="${ymd(new Date())}"></label>
-          <label class="f"><span>Metode</span><select name="metode"><option>Transfer</option><option>QRIS</option><option>Tunai</option><option>Kartu Debit/Kredit</option><option>Lainnya</option></select></label>
-          <label class="f"><span>Keterangan</span><input name="keterangan" maxlength="300" placeholder="mis. BCA a.n. …"></label>
+          <label class="f"><span>Jenis transaksi</span><select name="metode" id="pfMetode"><option>Bank Transfer</option><option>QRIS</option><option>Card</option><option>Cash</option></select></label>
+          <label class="f"><span>Keterangan (opsional)</span><input name="keterangan" maxlength="300" placeholder="catatan internal"></label>
+          <div class="full pf-det" id="pfDet"></div>
           <label class="check full" style="padding:8px 10px"><input type="checkbox" name="kirimEmail" checked><div><b>Kirim email konfirmasi pembayaran</b><small>Jika lunas, invoice lunas juga otomatis dikirim.</small></div></label>
         </div>
         <div style="display:flex;gap:8px;margin-top:12px">
@@ -1684,6 +1747,23 @@ function setLoading(btn, on, text) {
           <button class="btn sm ghost" type="button" data-act="paylunas">Isi sisa penuh (${rupiah(b.sisa)})</button>
         </div>
       </form>`;
+    const DET = {
+      'Bank Transfer': `<div class="form-grid"><label class="f"><span>Nama pengirim (sesuai rekening)</span><input name="pengirim" maxlength="60" placeholder="mis. Anna Petrova"></label>
+        <label class="f"><span>Bank pengirim</span><input name="bankPengirim" maxlength="30" placeholder="mis. BCA / Mandiri / Wise"></label>
+        <label class="f"><span>No. referensi (opsional)</span><input name="referensi" maxlength="40"></label></div>`,
+      'QRIS': `<div class="form-grid"><label class="f"><span>No. referensi / RRN (dari struk / notifikasi)</span><input name="referensi" maxlength="40"></label>
+        <label class="f"><span>Aplikasi / nama pembayar (opsional)</span><input name="pengirim" maxlength="60" placeholder="mis. GoPay – Anna"></label></div>`,
+      'Card': `<div class="form-grid"><label class="f"><span>Jenis kartu *</span><select name="jenisKartu"><option>VISA</option><option>Mastercard</option><option>JCB</option><option>AMEX</option><option>Debit (GPN)</option><option>UnionPay</option></select></label>
+        <label class="f"><span>4 digit terakhir kartu *</span><input name="last4" required inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="1234"></label>
+        <label class="f"><span>Kode approval (struk EDC) *</span><input name="approval" required maxlength="12" placeholder="mis. 0A1B2C"></label>
+        <label class="f"><span>Mesin EDC (bank)</span><select name="edc"><option>BNI</option><option>BCA</option><option>Mandiri</option><option>BRI</option><option>Lainnya</option></select></label>
+        <label class="f"><span>No. trace / batch (opsional)</span><input name="trace" maxlength="20"></label></div>
+        <p class="small muted" style="margin:6px 0 0">🔒 Jangan isi nomor kartu lengkap – cukup 4 digit terakhir & kode approval untuk dicocokkan saat rekonsiliasi.</p>`,
+      'Cash': `<div class="form-grid"><label class="f"><span>No. kuitansi (opsional)</span><input name="referensi" maxlength="40"></label>
+        <label class="f"><span>Diterima oleh</span><input name="pengirim" maxlength="60" placeholder="nama staf"></label></div>`,
+    };
+    const syncDet = () => { $('#pfDet').innerHTML = DET[$('#pfMetode').value] || ''; };
+    $('#pfMetode').addEventListener('change', syncDet); syncDet();
     const input = $('#payForm [name=jumlah]');
     input.addEventListener('input', () => {
       const n = input.value.replace(/\D/g, '');
@@ -1743,6 +1823,10 @@ function setLoading(btn, on, text) {
     f.nilai.focus();
   }
 
+  const rekonBadge = (p) => /cash|tunai/i.test(p.metode) ? '' : (p.rekon === 'Cocok'
+    ? `<span class="badge b-lunas" title="Dana masuk ${escapeHtml(p.rekonTgl || '')} · ${escapeHtml(p.rekonRef || '')}">✓ Rekon</span>`
+    : '<span class="badge b-menunggu" title="Belum ditemukan di rekening koran">Belum rekon</span>');
+
   function guestsForm(b) {
     $('#payFormBox').innerHTML = `
       <form class="pay-form" id="guestForm">
@@ -1794,6 +1878,12 @@ function setLoading(btn, on, text) {
     if (act === 'status') {
       const st = $('#newStatus').value;
       if (st === b.status) return;
+      // Lunas harus lewat pencatatan pelunasan (supaya riwayat bayar, invoice & rekonsiliasi lengkap)
+      if (st === 'Lunas' && b.sisa > 0) {
+        payForm(b, true);
+        $('#payFormBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
       if (st === 'Batal' && !confirm('Batalkan booking ' + b.id + '?')) return;
       const d = await doAction('updateStatus', { bookingId: b.id, status: st }, btn, 'Status diperbarui.');
       if (d && d.emailDP) toast('Email konfirmasi DP otomatis terkirim ke ' + b.email, 'success');
@@ -1841,9 +1931,12 @@ function setLoading(btn, on, text) {
     const b = currentDetail.booking;
     if (!jumlah) return toast('Isi jumlah pembayaran.', 'error');
     if (!confirm('Catat pembayaran ' + rupiah(jumlah) + ' untuk ' + b.id + '?')) return;
+    if (fd.get('metode') === 'Card' && !/^\d{4}$/.test(String(fd.get('last4') || ''))) return toast('Isi 4 digit terakhir kartu.', 'error');
     const d = await doAction('recordPayment', {
       bookingId: b.id, jumlah: jumlah, tanggal: fd.get('tanggal'), metode: fd.get('metode'),
       keterangan: fd.get('keterangan'), kirimEmail: !!fd.get('kirimEmail'),
+      pengirim: fd.get('pengirim') || '', bankPengirim: fd.get('bankPengirim') || '', referensi: fd.get('referensi') || '',
+      jenisKartu: fd.get('jenisKartu') || '', last4: fd.get('last4') || '', approval: fd.get('approval') || '', edc: fd.get('edc') || '', trace: fd.get('trace') || '',
     }, $('#paySave'), 'Pembayaran tercatat.');
     if (d && fd.get('kirimEmail')) {
       toast(d.emailPembayaran ? 'Email konfirmasi pembayaran terkirim.' : 'Email pembayaran gagal dikirim, cek log.', d.emailPembayaran ? 'success' : 'error');
@@ -2013,6 +2106,254 @@ function setLoading(btn, on, text) {
     if (!session || !session.token) return showLogin();
     try { await call('me'); showApp(); } catch (e) { showLogin(); }
   }
+
+  // ============================================================
+  //  REKONSILIASI BANK (upload rekening koran CSV / Excel)
+  // ============================================================
+  const RK = { data: null, filter: 'belum', file: null, rows: null };
+  async function loadRekon() {
+    try { RK.data = await call('getRecon', {}); renderRekon(); } catch (e) { toast(e.message, 'error'); }
+  }
+
+  // ---- membaca file ----
+  function parseCsv(text) {
+    const first = text.split(/\r?\n/).slice(0, 15).join('\n');
+    const delim = [',', ';', '\t', '|'].map(d => [d, (first.match(new RegExp(d === '|' ? '\\|' : d, 'g')) || []).length]).sort((a, b) => b[1] - a[1])[0][0];
+    const out = []; let row = [], cur = '', q = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (q) { if (c === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += c; continue; }
+      if (c === '"') q = true;
+      else if (c === delim) { row.push(cur); cur = ''; }
+      else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(cur); out.push(row); row = []; cur = ''; }
+      else cur += c;
+    }
+    if (cur !== '' || row.length) { row.push(cur); out.push(row); }
+    return out.map(r => r.map(x => String(x).trim())).filter(r => r.some(x => x !== ''));
+  }
+  // Pembaca .xlsx sederhana (tanpa library luar): buka zip, ambil sheet pertama
+  async function readXlsx(buf) {
+    const dv = new DataView(buf), u8 = new Uint8Array(buf), td = new TextDecoder();
+    let e = buf.byteLength - 22;
+    while (e >= 0 && dv.getUint32(e, true) !== 0x06054b50) e--;
+    if (e < 0) throw new Error('File Excel tidak bisa dibaca.');
+    const files = {};
+    let off = dv.getUint32(e + 16, true);
+    for (let i = 0, n = dv.getUint16(e + 10, true); i < n; i++) {
+      const nl = dv.getUint16(off + 28, true), xl = dv.getUint16(off + 30, true), cl = dv.getUint16(off + 32, true);
+      files[td.decode(u8.subarray(off + 46, off + 46 + nl))] = { method: dv.getUint16(off + 10, true), size: dv.getUint32(off + 20, true), lho: dv.getUint32(off + 42, true) };
+      off += 46 + nl + xl + cl;
+    }
+    const get = async (name) => {
+      const f = files[name]; if (!f) return null;
+      const start = f.lho + 30 + dv.getUint16(f.lho + 26, true) + dv.getUint16(f.lho + 28, true);
+      const data = u8.subarray(start, start + f.size);
+      if (f.method === 0) return td.decode(data);
+      if (typeof DecompressionStream === 'undefined') throw new Error('Browser ini belum bisa membaca .xlsx – simpan file sebagai CSV.');
+      return new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text();
+    };
+    const xml = (s) => new DOMParser().parseFromString(s, 'application/xml');
+    const ssTxt = await get('xl/sharedStrings.xml');
+    const strings = ssTxt ? [...xml(ssTxt).getElementsByTagName('si')].map(si => [...si.getElementsByTagName('t')].map(t => t.textContent).join('')) : [];
+    let sheet = 'xl/worksheets/sheet1.xml';
+    try {   // sheet pertama sesuai urutan di workbook
+      const wb = xml(await get('xl/workbook.xml')), rels = xml(await get('xl/_rels/workbook.xml.rels'));
+      const rid = wb.getElementsByTagName('sheet')[0].getAttribute('r:id');
+      const t = [...rels.getElementsByTagName('Relationship')].find(r => r.getAttribute('Id') === rid).getAttribute('Target');
+      sheet = 'xl/' + t.replace(/^\/?xl\//, '').replace(/^\//, '');
+    } catch (err) { sheet = Object.keys(files).filter(n => /^xl\/worksheets\/sheet\d*\.xml$/.test(n)).sort()[0] || sheet; }
+    const doc = xml(await get(sheet));
+    const colIdx = (ref) => { let n = 0; for (const ch of ref.replace(/\d+/g, '')) n = n * 26 + ch.charCodeAt(0) - 64; return n - 1; };
+    return [...doc.getElementsByTagName('row')].map(row => {
+      const out = [];
+      [...row.getElementsByTagName('c')].forEach(c => {
+        const t = c.getAttribute('t'), v = c.getElementsByTagName('v')[0];
+        let val = '';
+        if (t === 's') val = strings[Number(v && v.textContent)] || '';
+        else if (t === 'inlineStr') val = [...c.getElementsByTagName('t')].map(x => x.textContent).join('');
+        else if (v) val = (t === 'str' || t === 'b' || t === 'e') ? v.textContent : Number(v.textContent);
+        out[colIdx(c.getAttribute('r') || '')] = val;
+      });
+      for (let i = 0; i < out.length; i++) if (out[i] === undefined) out[i] = '';
+      return out.map(x => (typeof x === 'string' ? x.trim() : x));
+    }).filter(r => r.some(x => x !== ''));
+  }
+  async function readStatementFile(file) {
+    const name = file.name.toLowerCase();
+    if (/\.xls$/.test(name)) throw new Error('Format .xls lama belum didukung – buka di Excel lalu Save As .xlsx atau .csv.');
+    if (/\.xlsx$/.test(name)) return readXlsx(await file.arrayBuffer());
+    return parseCsv(await file.text());
+  }
+  const RX = {
+    tgl: /^(tanggal|tgl|date|post ?date|trans(action)? ?date|tanggal transaksi|tgl\.? ?transaksi|value ?date|txn ?date)/i,
+    ket: /(keterangan|uraian|deskripsi|description|remark|berita|detail|narasi|transaction ?details?)/i,
+    kredit: /^(kredit|credit|cr|masuk|mutasi kredit|uang masuk|credit amount|jumlah kredit)$/i,
+    debit: /^(debit|debet|db|dr|keluar|mutasi debit|uang keluar|debit amount)$/i,
+    jumlah: /^(jumlah|mutasi|amount|nominal|nilai|transaction amount)$/i,
+    tipe: /^(db\/cr|cr\/db|d\/k|k\/d|dk|tipe|type|jenis|d\/c|c\/d)$/i,
+  };
+  function detectCols(rows) {
+    for (let i = 0; i < Math.min(rows.length, 40); i++) {
+      const h = rows[i].map(x => String(x).toLowerCase().replace(/\s+/g, ' ').trim());
+      const f = (rx) => h.findIndex(x => rx.test(x));
+      const m = { header: i, tgl: f(RX.tgl), ket: f(RX.ket), kredit: f(RX.kredit), debit: f(RX.debit), jumlah: f(RX.jumlah), tipe: f(RX.tipe) };
+      if (m.tgl >= 0 && (m.kredit >= 0 || m.jumlah >= 0)) {
+        // kolom DB/CR tanpa judul (mis. BCA): cari kolom yang isinya hampir semua CR / DB
+        if (m.tipe < 0 && m.kredit < 0) {
+          const data = rows.slice(i + 1, i + 60);
+          const w = Math.max(...data.map(r => r.length), 0);
+          for (let c = 0; c < w && m.tipe < 0; c++) {
+            const v = data.map(r => String(r[c] == null ? '' : r[c]).trim()).filter(Boolean);
+            if (v.length && v.filter(x => /^(cr|db|dr|k|d|c)$/i.test(x)).length >= v.length * 0.8) m.tipe = c;
+          }
+        }
+        return m;
+      }
+    }
+    return { header: 0, tgl: 0, ket: 1, kredit: 2, debit: -1, jumlah: -1, tipe: -1 };
+  }
+  function parseAmount(v) {
+    if (typeof v === 'number') return v;
+    let s = String(v || '').replace(/rp|idr|\s/gi, '').replace(/(cr|db|dr|k|d)$/i, '');
+    const neg = /^-|^\(.*\)$/.test(s);
+    s = s.replace(/[()\-+]/g, '');
+    if (/,\d{1,2}$/.test(s)) s = s.replace(/\./g, '').replace(',', '.');
+    else if (/\.\d{1,2}$/.test(s) && /,/.test(s)) s = s.replace(/,/g, '');
+    else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, '');
+    else s = s.replace(/,/g, '');
+    const n = parseFloat(s);
+    return isNaN(n) ? 0 : (neg ? -n : n);
+  }
+  const MON = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, mei: 5, jun: 6, jul: 7, aug: 8, agu: 8, agt: 8, ags: 8, sep: 9, oct: 10, okt: 10, nov: 11, dec: 12, des: 12 };
+  function parseTgl(v) {
+    const pad = (n) => String(n).padStart(2, '0');
+    const out = (y, m, d) => (y > 1900 && m >= 1 && m <= 12 && d >= 1 && d <= 31 ? y + '-' + pad(m) + '-' + pad(d) : '');
+    if (v instanceof Date && !isNaN(v)) return out(v.getFullYear(), v.getMonth() + 1, v.getDate());
+    if (typeof v === 'number' || /^\d{5}(\.\d+)?$/.test(String(v))) { const d = new Date(Math.round((Number(v) - 25569) * 86400000)); return out(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()); }
+    const s = String(v || '').trim();
+    let m = /^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/.exec(s); if (m) return out(+m[1], +m[2], +m[3]);
+    m = /^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{2,4})/.exec(s); if (m) { let y = +m[3]; if (y < 100) y += 2000; return out(y, +m[2], +m[1]); }
+    m = /^(\d{1,2})[ \-]([a-z]{3})[a-z]*[ \-,]+(\d{2,4})/i.exec(s); if (m && MON[m[2].toLowerCase()]) { let y = +m[3]; if (y < 100) y += 2000; return out(y, MON[m[2].toLowerCase()], +m[1]); }
+    m = /^(\d{1,2})[-\/.](\d{1,2})$/.exec(s);            // dd/mm tanpa tahun (mis. BCA)
+    if (m) { const now = new Date(); let y = now.getFullYear(); if (+m[2] > now.getMonth() + 2) y--; return out(y, +m[2], +m[1]); }
+    return '';
+  }
+  function statementRows(rows, c) {
+    return rows.slice(c.header + 1).map(r => {
+      let kredit = 0;
+      if (c.kredit >= 0) kredit = parseAmount(r[c.kredit]);
+      else if (c.jumlah >= 0) {
+        const raw = String(r[c.jumlah]); const tipe = c.tipe >= 0 ? String(r[c.tipe]) : '';
+        const isCr = /^(cr|k|kredit|credit|c)$/i.test(tipe.trim()) || /cr\s*$/i.test(raw) || (!tipe && !/(db|dr)\s*$/i.test(raw) && parseAmount(raw) > 0 && c.tipe < 0 && !/^-/.test(raw.trim()));
+        kredit = isCr ? Math.abs(parseAmount(raw)) : 0;
+      }
+      return { tanggal: parseTgl(r[c.tgl]), ket: c.ket >= 0 ? String(r[c.ket]) : '', kredit: Math.round(kredit) };
+    }).filter(x => x.tanggal && x.kredit > 0);
+  }
+  function renderMap() {
+    const rows = RK.rows, c = RK.cols;
+    const head = rows[c.header] || [];
+    const opt = (sel, allowNone) => (allowNone ? `<option value="-1" ${sel < 0 ? 'selected' : ''}>– tidak ada –</option>` : '') + head.map((h, i) => `<option value="${i}" ${i === sel ? 'selected' : ''}>${escapeHtml(String(h instanceof Date ? 'kolom ' + (i + 1) : h) || 'kolom ' + (i + 1))}</option>`).join('');
+    const parsed = statementRows(rows, c);
+    const total = parsed.reduce((a, x) => a + x.kredit, 0);
+    $('#rkMap').classList.remove('hidden');
+    $('#rkMap').innerHTML = `
+      <div class="rk-file">📄 <b>${escapeHtml(RK.file.name)}</b> · ${rows.length} baris · baris judul ke-${c.header + 1}</div>
+      <div class="form-grid rk-cols">
+        <label class="f"><span>Kolom tanggal</span><select data-col="tgl">${opt(c.tgl)}</select></label>
+        <label class="f"><span>Kolom keterangan</span><select data-col="ket">${opt(c.ket, true)}</select></label>
+        <label class="f"><span>Kolom kredit / dana masuk</span><select data-col="kredit">${opt(c.kredit, true)}</select></label>
+        <label class="f"><span>Atau: kolom jumlah (+ tipe DB/CR)</span><select data-col="jumlah">${opt(c.jumlah, true)}</select></label>
+        <label class="f"><span>Kolom tipe DB/CR</span><select data-col="tipe">${opt(c.tipe, true)}</select></label>
+        <label class="f"><span>Baris judul ke-</span><input type="number" min="1" max="${rows.length}" value="${c.header + 1}" data-col="header"></label>
+      </div>
+      <p class="small"><b>${parsed.length}</b> transaksi masuk terbaca · total <b>${rupiah(total)}</b></p>
+      <div class="slot-scroll"><table class="mini-table"><tr><th>Tanggal</th><th>Keterangan</th><th class="r">Kredit</th></tr>
+        ${parsed.slice(0, 8).map(x => `<tr><td>${tglIndo(x.tanggal)}</td><td class="small">${escapeHtml(x.ket)}</td><td class="r">${rupiah(x.kredit)}</td></tr>`).join('') || '<tr><td colspan="3" class="muted">Belum ada transaksi masuk yang terbaca – sesuaikan pilihan kolom di atas.</td></tr>'}
+      </table></div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn sm" id="rkUpload" ${parsed.length ? '' : 'disabled'}>⬆ Upload & cocokkan otomatis (${parsed.length})</button>
+        <button class="btn sm ghost" id="rkCancel" type="button">Batal</button>
+      </div>`;
+    RK.parsed = parsed;
+  }
+  async function pickStatement(file) {
+    if (!file) return;
+    try {
+      RK.file = file;
+      RK.rows = await readStatementFile(file);
+      if (!RK.rows.length) throw new Error('File kosong.');
+      RK.cols = detectCols(RK.rows);
+      renderMap();
+    } catch (e) { toast(e.message, 'error'); }
+  }
+  $('#rkFile').addEventListener('change', (e) => pickStatement(e.target.files[0]));
+  const drop = $('#rkDrop');
+  ['dragover', 'dragenter'].forEach(ev => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, () => drop.classList.remove('over')));
+  drop.addEventListener('drop', (e) => { e.preventDefault(); pickStatement(e.dataTransfer.files[0]); });
+  $('#rkMap').addEventListener('change', (e) => {
+    const k = e.target.dataset.col; if (!k) return;
+    RK.cols[k] = k === 'header' ? Math.max(0, Number(e.target.value) - 1) : Number(e.target.value);
+    if (k === 'header') { const d = detectCols(RK.rows.slice(RK.cols.header)); ['tgl', 'ket', 'kredit', 'debit', 'jumlah', 'tipe'].forEach(x => { RK.cols[x] = d[x]; }); }
+    renderMap();
+  });
+  $('#rkMap').addEventListener('click', async (e) => {
+    if (e.target.id === 'rkCancel') { $('#rkMap').classList.add('hidden'); $('#rkFile').value = ''; return; }
+    if (e.target.id !== 'rkUpload') return;
+    const btn = e.target;
+    setLoading(btn, true, 'Mengupload…');
+    try {
+      const d = await call('uploadStatement', { sumber: RK.file.name, rows: RK.parsed });
+      RK.data = d; RK.filter = 'belum';
+      const h = d.hasilUpload;
+      toast(`${h.baru} transaksi baru · ${h.otomatis} cocok otomatis${h.duplikat ? ' · ' + h.duplikat + ' sudah pernah diupload' : ''}`, 'success');
+      $('#rkMap').classList.add('hidden'); $('#rkFile').value = '';
+      renderRekon();
+    } catch (err) { toast(err.message, 'error'); } finally { if (document.body.contains(btn)) setLoading(btn, false); }
+  });
+
+  // ---- tampilan hasil ----
+  const metodeIc = (m) => ({ 'Bank Transfer': '🏦', QRIS: '📱', Card: '💳', Cash: '💵' }[m] || '💰');
+  const payLabel = (p) => `<span>${metodeIc(p.metode)} <b>${escapeHtml(p.id)}</b> · ${escapeHtml(p.anak || p.bookingId)} · ${tglIndo(p.tanggal)} · <b>${rupiah(p.jumlah)}</b></span>` +
+    `<span class="muted small">${[p.metode, p.pengirim, p.kartu, p.referensi ? 'Ref ' + p.referensi : ''].filter(Boolean).map(escapeHtml).join(' · ')}</span>`;
+  function renderRekon() {
+    const d = RK.data; if (!d) return;
+    const r = d.ringkasan;
+    $('#rkStats').innerHTML = [
+      ['📄', r.koran, 'dana masuk diupload'], ['✅', r.cocok, 'sudah cocok'], ['🔎', r.belum, 'belum cocok'],
+      ['⏳', r.bayarBelum, 'pembayaran belum ditemukan · ' + rupiah(r.bayarBelumNominal)], ['🙈', r.abaikan, 'diabaikan'],
+    ].map(x => `<div class="rk-stat"><span>${x[0]}</span><b>${x[1]}</b><small>${escapeHtml(x[2])}</small></div>`).join('');
+    document.querySelectorAll('#rkFilter button').forEach(b => b.classList.toggle('active', b.dataset.f === RK.filter));
+    const list = d.koran.filter(k => RK.filter === 'semua' || (RK.filter === 'belum' && !k.status) || (RK.filter === 'cocok' && k.status === 'Cocok') || (RK.filter === 'abaikan' && k.status === 'Abaikan'));
+    const pilihan = d.pembayaranBelum;
+    $('#rkList').innerHTML = list.length ? list.map(k => {
+      let right;
+      if (k.status === 'Cocok') right = `<div class="rk-ok">✓ ${k.payment ? payLabel(k.payment) : escapeHtml(k.paymentId)}<span class="muted small">${escapeHtml(k.catatan)}</span></div><button class="btn sm ghost" data-rk="unmatch" data-id="${k.id}">Batalkan</button>`;
+      else if (k.status === 'Abaikan') right = `<div class="muted small">Diabaikan – ${escapeHtml(k.catatan)}</div><button class="btn sm ghost" data-rk="unignore" data-id="${k.id}">Kembalikan</button>`;
+      else right = `<div class="rk-saran">${(k.saran || []).map(s => `<div class="rk-s ${s.jenisCocok}"><div>${payLabel(s)}${s.jenisCocok === 'fee' ? `<span class="rk-fee">dipotong MDR ${rupiah(s.selisih)} (${(s.selisih / s.jumlah * 100).toFixed(2)}%)</span>` : ''}</div>
+            <button class="btn sm green" data-rk="match" data-id="${k.id}" data-pay="${escapeHtml(s.id)}">Cocokkan</button></div>`).join('') || '<span class="muted small">Tidak ada pembayaran yang cocok.</span>'}
+          <div class="rk-manual"><select data-rksel="${k.id}"><option value="">Pilih pembayaran lain…</option>${pilihan.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.id + ' · ' + (p.anak || p.bookingId) + ' · ' + p.metode + ' · ' + rupiah(p.jumlah) + ' · ' + p.tanggal)}</option>`).join('')}</select>
+          <button class="btn sm ghost" data-rk="matchsel" data-id="${k.id}">Cocokkan</button><button class="btn sm ghost" data-rk="ignore" data-id="${k.id}" title="Bukan pembayaran birthday (mis. tiket, restoran)">Abaikan</button></div></div>`;
+      return `<div class="rk-row ${k.status === 'Cocok' ? 'ok' : k.status === 'Abaikan' ? 'ign' : ''}"><div class="rk-k"><b>${rupiah(k.kredit)}</b><span>${tglIndo(k.tanggal)}</span><small>${escapeHtml(k.ket || '-')}</small></div><div class="rk-r">${right}</div></div>`;
+    }).join('') : '<p class="muted small">Tidak ada data. Upload rekening koran untuk mulai.</p>';
+    $('#rkPay').innerHTML = pilihan.length ? `<table class="mini-table"><tr><th>Pembayaran</th><th>Booking</th><th>Tanggal</th><th>Metode & detail</th><th class="r">Jumlah</th></tr>${pilihan.map(p => `<tr class="click" data-open="${escapeHtml(p.bookingId)}"><td>${escapeHtml(p.id)}</td><td>${escapeHtml(p.anak || '')}<br><span class="muted small">${escapeHtml(p.bookingId)}</span></td><td>${tglIndo(p.tanggal)}</td><td>${metodeIc(p.metode)} ${escapeHtml(p.metode)}<br><span class="muted small">${[p.pengirim, p.kartu, p.referensi ? 'Ref ' + p.referensi : ''].filter(Boolean).map(escapeHtml).join(' · ')}</span></td><td class="r">${rupiah(p.jumlah)}</td></tr>`).join('')}</table>` : '<p class="muted small">Semua pembayaran non-tunai sudah ditemukan di rekening koran. 🎉</p>';
+  }
+  $('#rkFilter').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (!b) return; RK.filter = b.dataset.f; renderRekon(); });
+  $('#rkPay').addEventListener('click', (e) => { const tr = e.target.closest('[data-open]'); if (tr) openDetail(tr.dataset.open); });
+  $('#rkList').addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-rk]'); if (!b) return;
+    const id = b.dataset.id, act = b.dataset.rk;
+    let action, payload = { stmtId: id }, msg;
+    if (act === 'match') { action = 'matchRecon'; payload.paymentId = b.dataset.pay; msg = 'Dicocokkan.'; }
+    if (act === 'matchsel') { const v = document.querySelector(`[data-rksel="${id}"]`).value; if (!v) return toast('Pilih pembayaran dulu.', 'error'); action = 'matchRecon'; payload.paymentId = v; msg = 'Dicocokkan.'; }
+    if (act === 'unmatch') { if (!confirm('Batalkan pencocokan ini?')) return; action = 'unmatchRecon'; msg = 'Pencocokan dibatalkan.'; }
+    if (act === 'ignore') { const ket = prompt('Keterangan (mis. tiket masuk, restoran):', 'bukan pembayaran birthday'); if (ket === null) return; action = 'ignoreRecon'; payload.ket = ket; msg = 'Diabaikan.'; }
+    if (act === 'unignore') { action = 'ignoreRecon'; payload.batal = true; msg = 'Dikembalikan.'; }
+    setLoading(b, true);
+    try { RK.data = await call(action, payload); renderRekon(); toast(msg, 'success'); } catch (err) { toast(err.message, 'error'); } finally { if (document.body.contains(b)) setLoading(b, false); }
+  });
+
   start();
 })();
 
