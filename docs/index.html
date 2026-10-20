@@ -1050,6 +1050,22 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .nav-cek { display: none; color: #fff; font-weight: 800; font-size: 13px; text-decoration: none; white-space: nowrap; }
 @media (max-width: 860px) { .nav-cek { display: inline-flex; gap: 4px; align-items: center; } }
 
+/* Restoran: jumlah per rasa/pilihan (mis. 3 Coca-Cola + 2 Sprite) */
+.resto-item.multi { grid-template-columns: 56px 1fr auto; }
+.ri-tot { display: inline-block; background: var(--leaf); color: #fff; font-size: 12px; font-weight: 800; padding: 1px 8px; border-radius: 999px; margin-left: 4px; vertical-align: 1px; }
+.ri-flav { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 6px 12px; padding: 4px 4px 4px 68px; }
+.ri-flav-h { grid-column: 1 / -1; color: var(--muted); font-size: 12px; font-weight: 700; }
+.ri-flav .fl { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--paper); border: 1.5px solid var(--line); border-radius: 12px; padding: 4px 4px 4px 12px; font-size: 14px; font-weight: 700; }
+.ri-flav .fl.on { border-color: var(--leaf); background: #f3fae9; }
+.ri-flav .stepper button { width: 30px; height: 30px; }
+@media (max-width: 560px) {
+  .resto-item.multi { grid-template-columns: 48px 1fr; }
+  .resto-item.multi .ri-pr { grid-column: 2; grid-row: 2; }
+  .ri-flav { padding-left: 0; grid-template-columns: 1fr; }
+  .ri-flav .stepper { grid-column: auto; grid-row: auto; }
+}
+.invite-custom { background: var(--lime-soft); color: var(--jungle); border-radius: 12px; padding: 10px 14px; font-weight: 700; font-size: 14px; text-align: center; margin: 12px 0 0; }
+
 </style>
 </head>
 <body>
@@ -1540,6 +1556,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
     <div class="big-id" id="sBookingId">-</div>
     <div id="sDetail"></div>
     <p class="small muted" style="text-align:center;margin:10px 0 0" data-i18n-html="m_cek"></p>
+    <p class="invite-custom hidden" id="sInviteCustom" data-i18n="m_inv_custom"></p>
     <div class="invite-prev hidden" id="sInvite"><img id="sInviteImg" alt="E-invitation"><a class="btn sm green" id="sInviteDl" download="Mookiland-invitation.jpg" data-i18n="inv_dl">⬇ Download e-invitation</a></div>
     <div style="display:grid;gap:10px;margin-top:16px">
       <a class="btn wa block" id="sWa" target="_blank" rel="noopener" data-i18n="m_wa">Send my booking no. to Bu Dwi</a>
@@ -1704,7 +1721,7 @@ window.I18N = {
     kid_add: '＋ Add another birthday child', kid_max: 'Up to 4 birthday children in one party.',
     rd_title: 'Party run-down', rd_sub: 'When should the food, cake, piñata and entertainment happen? Use our suggestion or make your own.',
     rd_suggest: '✨ Use suggested run-down', rd_add: '＋ Add a row', rd_clear: 'Clear', rd_empty: 'No run-down yet – tap "Use suggested run-down" or add your own rows.', rd_ph: 'Activity',
-    rd_welcome: 'Guests arrive – welcome & playtime', rd_food: 'Kids\' buffet is served', rd_pinata: 'Piñata time!', rd_cake: 'Birthday cake & Happy Birthday song', rd_song: 'Happy Birthday song', rd_end: 'Thank-you & goodbye',
+    rd_welcome: 'Guests arrive – welcome & playtime', rd_food: 'Kids\' buffet is served', rd_pinata: 'Piñata time!', rd_cake: 'Birthday cake & Happy Birthday song', rd_song: 'Happy Birthday song', rd_end: 'Thank-you & goodbye', rd_deco: 'Decoration set up & ready', rd_long: '{x} starts ({d}, during the party)', rd_session: '– session {k} of {n}', rd_giftbag: 'Gift bags are handed out', rd_mc: '{x} – hosts games, piñata & cake ({d})', rd_busy: 'Lots of fun for 3 hours! Some activities run at the same time – adjust the run-down as you like.',
     inv_dl: '⬇ Download e-invitation',
     sb_date: 'Select date', st_spot: 'Party area', st_party: 'Party', st_addons: 'Add-ons', st_resto: 'Restaurant', st_confirm: 'Confirm',
     st1_t: 'When is the party?', st2_t: 'Pick your party area & time', map_hint: 'Choose an area on the map or from the list, then pick a start time.',
@@ -1777,6 +1794,10 @@ window.I18N = {
     faq_q11: 'What if some children don\'t come?', faq_a11: 'Registered children who don\'t come are charged 50% only, because the food is prepared for the number of children booked.',
     faq_q12: 'Can the party be held outside the available times?', faq_a12: 'Unfortunately not. Each party needs the full event time plus time to clean and prepare the area for the next party, so only the start times shown can be booked.',
     n_cake_custom: 'Custom cake: the price shown is a starting price. Our cake maker confirms the final price, and we update your invoice only after you approve it.',
+    rf_mix: 'Quantity per choice – mix as you like:',
+    n_inv_custom: 'Custom e-invitation: your personalised card is designed and sent separately once your deposit is confirmed.',
+    m_inv_custom: '🎨 Your custom e-invitation will be designed and sent to you separately once your deposit payment is confirmed.',
+    ck_inv_custom: 'Custom e-invitation – sent to you after the deposit is confirmed',
     nav_cek: 'My booking',
     rv_sign: 'What parents say', rv_write: '★ Write a Google review', rv_write_s: 'Google review', rv_all: 'See all reviews on Google', rv_score: '{n} Google reviews', rv_more: 'Read on Google',
     rv_empty: 'Celebrated your birthday at Mookiland? We would love to hear about it on Google!',
@@ -1913,7 +1934,7 @@ window.I18N = {
     kid_add: '＋ Tambah anak yang berulang tahun', kid_max: 'Maksimal 4 anak berulang tahun dalam satu pesta.',
     rd_title: 'Run-down acara', rd_sub: 'Jam berapa makanan, kue, piñata, dan hiburan? Pakai saran kami atau buat sendiri.',
     rd_suggest: '✨ Pakai saran run-down', rd_add: '＋ Tambah baris', rd_clear: 'Hapus', rd_empty: 'Belum ada run-down – klik "Pakai saran run-down" atau tambah baris sendiri.', rd_ph: 'Kegiatan',
-    rd_welcome: 'Tamu datang – sambutan & bermain', rd_food: 'Buffet anak disajikan', rd_pinata: 'Waktu piñata!', rd_cake: 'Kue ulang tahun & lagu Selamat Ulang Tahun', rd_song: 'Lagu Selamat Ulang Tahun', rd_end: 'Terima kasih & sampai jumpa',
+    rd_welcome: 'Tamu datang – sambutan & bermain', rd_food: 'Buffet anak disajikan', rd_pinata: 'Waktu piñata!', rd_cake: 'Kue ulang tahun & lagu Selamat Ulang Tahun', rd_song: 'Lagu Selamat Ulang Tahun', rd_end: 'Terima kasih & sampai jumpa', rd_deco: 'Dekorasi terpasang & siap', rd_long: '{x} dimulai ({d}, selama pesta)', rd_session: '– sesi {k} dari {n}', rd_giftbag: 'Pembagian gift bag', rd_mc: '{x} – memandu games, piñata & kue ({d})', rd_busy: 'Banyak keseruan untuk 3 jam! Beberapa aktivitas berjalan bersamaan – silakan sesuaikan run-down.',
     inv_dl: '⬇ Unduh e-invitation',
     sb_date: 'Pilih tanggal', st_spot: 'Area pesta', st_party: 'Pesta', st_addons: 'Add-on', st_resto: 'Restoran', st_confirm: 'Konfirmasi',
     st1_t: 'Kapan pestanya?', st2_t: 'Pilih area & jam pesta', map_hint: 'Pilih area di peta atau dari daftar, lalu pilih jam mulai.',
@@ -1986,6 +2007,10 @@ window.I18N = {
     faq_q11: 'Bagaimana kalau ada anak yang tidak datang?', faq_a11: 'Anak terdaftar yang tidak datang hanya dikenakan 50%, karena makanan disiapkan sesuai jumlah anak yang dibooking.',
     faq_q12: 'Apakah pesta bisa di luar jadwal yang tersedia?', faq_a12: 'Mohon maaf, tidak bisa. Setiap pesta membutuhkan durasi acara penuh plus waktu untuk membersihkan dan menyiapkan area bagi pesta berikutnya, jadi hanya jam mulai yang tersedia yang bisa dibooking.',
     n_cake_custom: 'Kue custom: harga yang tertera adalah harga mulai. Harga final dikonfirmasi oleh cake maker kami, dan invoice baru diperbarui setelah Anda menyetujuinya.',
+    rf_mix: 'Jumlah per pilihan – boleh dicampur:',
+    n_inv_custom: 'Undangan digital custom: kartu sesuai tema Anda dibuat dan dikirim terpisah setelah DP dikonfirmasi.',
+    m_inv_custom: '🎨 Undangan digital custom Anda akan dibuat dan dikirim terpisah setelah pembayaran DP dikonfirmasi.',
+    ck_inv_custom: 'Undangan custom – dikirim setelah DP dikonfirmasi',
     nav_cek: 'Booking saya',
     rv_sign: 'Kata para orang tua', rv_write: '★ Tulis review di Google', rv_write_s: 'Review Google', rv_all: 'Lihat semua review di Google', rv_score: '{n} review Google', rv_more: 'Baca di Google',
     rv_empty: 'Sudah merayakan ulang tahun di Mookiland? Ceritakan pengalaman Anda di Google!',
@@ -2386,10 +2411,10 @@ window.I18N = {
     if (!p) return;
     const jam = p.durasiJam || 3;
     $('#glance').innerHTML = [
-      ['⏱️', t('gl_hours', { n: jam }), t('gl_hours_s')],
-      ['🧒', t('gl_kids', { n: p.minAnak }), t('gl_kids_s')],
+      ['⏱️', t('gl_hours', { n: jam }), t('gl_hours_s', { n: jam })],
+      ['🧒', t('gl_kids', { n: p.minAnak }), t('gl_kids_s', { n: p.minAnak })],
       ['🌴', t('gl_day'), t('gl_day_s')],
-      ['🍽️', t('gl_menu', { n: info.maxMenu }), t('gl_menu_s')],
+      ['🍽️', t('gl_menu', { n: info.maxMenu }), t('gl_menu_s', { n: info.maxMenu })],
     ].map(g => `<div class="gl"><span class="ic">${g[0]}</span><b>${escapeHtml(g[1])}</b><small>${escapeHtml(g[2])}</small></div>`).join('');
 
     const TL = ['🎈', '🎩', '🍽️', '🪅', '🎂', '🌴'];
@@ -2649,7 +2674,7 @@ window.I18N = {
             ${b.notes.length ? `<ul class="ck-notes">${b.notes.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>` : ''}
           </div>
           <div class="ck-docs"><h4>${escapeHtml(t('ck_docs'))}</h4>
-            ${b.adaUndangan ? docBtn('undangan', t('ck_dl_inv')) : ''}
+            ${b.adaUndangan ? docBtn('undangan', t('ck_dl_inv')) : (b.undanganCustom && k !== 'batal' ? `<span class="ck-wait">🎨 ${escapeHtml(t('ck_inv_custom'))}</span>` : '')}
             ${k !== 'batal' ? docBtn('proforma', t('ck_dl_pro')) : ''}
             ${b.adaInvoice ? docBtn('invoice', t('ck_dl_fin')) : (k !== 'batal' ? `<span class="ck-wait">🔒 ${escapeHtml(t('ck_dl_fin_wait'))}</span>` : '')}
             ${(k === 'selesai' || past) && rvUrl ? `<a class="btn sm" href="${escapeHtml(rvUrl)}" target="_blank" rel="noopener">${escapeHtml(t('ck_review'))}</a>` : ''}
@@ -3471,6 +3496,7 @@ window.I18N = {
     });
     if (mulai) notes.push(t('n_start'));
     if (S.cake.jenis === 'custom') notes.push(t('n_cake_custom'));
+    if (S.addons.has('E03')) notes.push(t('n_inv_custom'));
     if (adaEnt) notes.push(t('n_ent', { n: d.info.minHariEnt || 3 }));
     if (S.promo && !promoErr(S.promo, tgl, anak)) { const dl = promoLine(S.promo, lines); if (dl) lines.push(dl); }
 
@@ -3530,36 +3556,46 @@ window.I18N = {
   // ---------------- Restoran: makanan & minuman tambahan (bill terpisah, tanpa DP) ----------------
   const rOrd = (a) => { const i = RESTO_ORDER.indexOf(a.id); return i < 0 ? 99 : i; };
   const restoItems = () => S.data.addon.filter(isResto).sort((x, y) => rOrd(x) - rOrd(y));
+  // pesanan restoran disimpan per item + pilihan rasa: kunci "R40|Coca-Cola" -> { id, pilihan, qty }
+  const rKey = (id, pil) => id + '|' + (pil || '');
+  const rQty = (id, pil) => (S.resto.get(rKey(id, pil)) || {}).qty || 0;
+  const itemQty = (a) => Array.from(S.resto.values()).filter(st => st.id === a.id).reduce((x, st) => x + (st.qty || 0), 0);
   function hitungResto() {
     const lines = [];
     restoItems().forEach(a => {
-      const st = S.resto.get(a.id);
-      if (!st || !st.qty) return;
-      const nm = aName(a) + (st.pilihan ? ' – ' + optLabel(a, st.pilihan) : '');
-      if (a.satuan === 'on_request') lines.push({ desc: nm, qty: st.qty, total: 0, req: true });
-      else lines.push({ desc: nm, qty: st.qty, total: st.qty * a.harga });
+      (a.pilihan.length ? a.pilihan : ['']).forEach(pil => {
+        const q = rQty(a.id, pil);
+        if (!q) return;
+        const nm = aName(a) + (pil ? ' – ' + optLabel(a, pil) : '');
+        if (a.satuan === 'on_request') lines.push({ desc: nm, qty: q, total: 0, req: true });
+        else lines.push({ desc: nm, qty: q, total: q * a.harga });
+      });
     });
     return { lines, total: lines.reduce((x, l) => x + l.total, 0) };
   }
   const RESTO_FOOD = ['F04', 'F05'];
   const restoFolder = (a) => (a.kategori === 'Restaurant Food' || RESTO_FOOD.indexOf(a.id) >= 0) ? 'food' : 'drink';
   const isFridge = (a) => a.grup === 'fridge';
-  const fridgeCount = () => restoItems().filter(isFridge).reduce((x, a) => x + ((S.resto.get(a.id) || {}).qty || 0), 0);
+  const fridgeCount = () => restoItems().filter(isFridge).reduce((x, a) => x + itemQty(a), 0);
   function fridgeMeter() {
     const n = fridgeCount();
     const pct = Math.min(100, Math.round(n / 24 * 100));
     return `<div class="fridge ${n >= 24 ? 'ok' : ''}"><div class="fr-bar"><span style="width:${pct}%"></span></div><b>${escapeHtml(n >= 24 ? t('fr_ok', { n }) : t('fr_need', { n, m: 24 - n }))}</b></div>`;
   }
+  const rStepper = (a, pil, q) => `<span class="stepper"><button type="button" data-rminus="${escapeHtml(a.id)}" data-rv="${escapeHtml(pil)}" aria-label="−">−</button><b>${q}</b><button type="button" data-rplus="${escapeHtml(a.id)}" data-rv="${escapeHtml(pil)}" aria-label="+">+</button></span>`;
   function restoRow(a) {
-    const st = S.resto.get(a.id) || { qty: 0, pilihan: S.restoPil[a.id] || a.pilihan[0] || '' };
+    const tot = itemQty(a);
     const unit = pick(a.unit, a.unitId);
     const price = a.satuan === 'on_request' || !a.harga ? t('on_request') : rupiah(a.harga);
-    return `<div class="resto-item ${st.qty ? 'on' : ''}">
-        <div class="ri-ph" style="${(a.gambar || FOOD_PHOTO[a.id]) ? `background-image:url('${escapeHtml(a.gambar || FOOD_PHOTO[a.id])}')` : ''}">${(a.gambar || FOOD_PHOTO[a.id]) ? '' : (EMOJI[a.id] || '🍽️')}</div>
-        <div class="ri-bd"><b>${escapeHtml(aName(a))}</b><small>${escapeHtml(aDesc(a))}</small>
-          ${a.pilihan.length ? `<select data-rpil="${escapeHtml(a.id)}">${a.pilihan.map(o => `<option value="${escapeHtml(o)}" ${o === st.pilihan ? 'selected' : ''}>${escapeHtml(optLabel(a, o))}</option>`).join('')}</select>` : ''}</div>
+    const ph = a.gambar || FOOD_PHOTO[a.id];
+    const multi = a.pilihan.length > 0;
+    return `<div class="resto-item ${multi ? 'multi' : ''} ${tot ? 'on' : ''}">
+        <div class="ri-ph" style="${ph ? `background-image:url('${escapeHtml(ph)}')` : ''}">${ph ? '' : (EMOJI[a.id] || '🍽️')}</div>
+        <div class="ri-bd"><b>${escapeHtml(aName(a))}${multi && tot ? ` <span class="ri-tot">× ${tot}</span>` : ''}</b><small>${escapeHtml(aDesc(a))}</small></div>
         <div class="ri-pr">${escapeHtml(price)}${unit && a.harga ? `<small>${escapeHtml(unit)}</small>` : ''}</div>
-        <span class="stepper"><button type="button" data-rminus="${escapeHtml(a.id)}">−</button><b>${st.qty || 0}</b><button type="button" data-rplus="${escapeHtml(a.id)}">+</button></span>
+        ${multi
+          ? `<div class="ri-flav"><small class="ri-flav-h">${escapeHtml(t('rf_mix'))}</small>${a.pilihan.map(o => { const q = rQty(a.id, o); return `<div class="fl ${q ? 'on' : ''}"><span>${escapeHtml(optLabel(a, o))}</span>${rStepper(a, o, q)}</div>`; }).join('')}</div>`
+          : rStepper(a, '', rQty(a.id, ''))}
       </div>`;
   }
   function renderResto() {
@@ -3568,7 +3604,7 @@ window.I18N = {
     $('#restoList').innerHTML = '<div class="folders">' + groups.map(g => {
       const its = restoItems().filter(a => restoFolder(a) === g.k);
       if (!its.length) return '';
-      const n = its.filter(a => (S.resto.get(a.id) || {}).qty).length;
+      const n = its.filter(a => itemQty(a)).length;
       const open = S.openResto === g.k;
       return `<section class="folder ${open ? 'open' : ''}" style="--tint:${g.tint}">
         <button type="button" class="folder-tab" data-rfold="${g.k}" aria-expanded="${open}"><span class="ic">${g.ic}</span>
@@ -3593,19 +3629,14 @@ window.I18N = {
     $('#restoSum').innerHTML = `<span>${escapeHtml(t('resto_est'))}</span><b>${rupiah(r.total)}</b><small>${escapeHtml(t('resto_nodp'))}</small>` + (fridgeCount() ? fridgeMeter() : '');
   }
   $('#restoList').addEventListener('click', (e) => {
-    const id = e.target.getAttribute('data-rplus') || e.target.getAttribute('data-rminus');
-    if (!id) return;
-    const a = S.data.addon.find(x => x.id === id);
-    const st = S.resto.get(id) || { qty: 0, pilihan: S.restoPil[id] || a.pilihan[0] || '' };
-    st.qty = Math.max(0, Math.min(500, (st.qty || 0) + (e.target.hasAttribute('data-rplus') ? 1 : -1)));
-    if (st.qty) S.resto.set(id, st); else S.resto.delete(id);
-    renderResto(); recalc();
-  });
-  $('#restoList').addEventListener('change', (e) => {
-    const id = e.target.getAttribute('data-rpil');
-    if (!id) return;
-    S.restoPil[id] = e.target.value;
-    if (S.resto.has(id)) S.resto.get(id).pilihan = e.target.value;
+    const btn = e.target.closest('[data-rplus], [data-rminus]');
+    if (!btn) return;
+    const id = btn.getAttribute('data-rplus') || btn.getAttribute('data-rminus');
+    const pil = btn.getAttribute('data-rv') || '';
+    const k = rKey(id, pil);
+    const st = S.resto.get(k) || { id: id, pilihan: pil, qty: 0 };
+    st.qty = Math.max(0, Math.min(500, (st.qty || 0) + (btn.hasAttribute('data-rplus') ? 1 : -1)));
+    if (st.qty) S.resto.set(k, st); else S.resto.delete(k);
     renderResto(); recalc();
   });
 
@@ -3843,28 +3874,76 @@ window.I18N = {
     m = /(\d+)\s*(min|menit)/.exec(s2); if (m) return +m[1];
     return 30;
   };
+  // durasi add-on: "2 x 15 min" -> 2 sesi @15 menit, "2 hours" -> 120, "30 min" -> 30
+  const durParts = (txt) => {
+    const s2 = String(txt || '').toLowerCase();
+    const m = /(\d+)\s*[x×]\s*(\d+)\s*min/.exec(s2);
+    return m ? { n: +m[1], d: +m[2] } : { n: 1, d: durMin(txt) };
+  };
   function suggestRundown() {
     const st = toMin($('#jam').value);
     if (isNaN(st)) return [];
-    const dur = Math.round((paket().durasiJam || 3) * 60);
+    const dur = Math.round((paket().durasiJam || 3) * 60), end = st + dur;
+    const food = st + 60, foodEnd = food + 30;
     const rows = [{ m: st, a: t('rd_welcome') }];
-    const shows = S.data.addon.filter(a => S.addons.has(a.id) && !a.induk && a.durasi && ['Entertainment', 'Science Show', 'Creative Workshop'].indexOf(a.kategori) >= 0 && a.satuan !== 'per_anak');
-    let cur = st + 30;
-    const food = st + 60;
-    shows.forEach(a => {
-      const d = Math.min(durMin(a.durasi), 120);
-      if (cur < food && cur + d > food && d <= 60) cur = food + 30;   // jangan bentrok dengan jam makan
-      rows.push({ m: cur, a: (a.grup === MC_GROUP ? t('mc_title') : aName(a)) + ' (' + d + ' min)' });
-      cur += d + 10;
+    const chosen = S.data.addon.filter(a => S.addons.has(a.id) && !a.induk && !isResto(a) && a.kategori !== 'Cake');
+    if (chosen.some(a => folderOf(a) === 'deco')) rows.push({ m: st - 15, a: t('rd_deco') });
+    // aktivitas: yang panjang (≥ 90 menit, mis. face painting 2 jam) berjalan paralel; yang pendek dijadwalkan berurutan
+    const timed = [];
+    const seenGrp = {};
+    chosen.forEach(a => {
+      const f = folderOf(a);
+      if (['show', 'workshop', 'fun'].indexOf(f) < 0 && a.id !== 'B02') return;
+      if (a.id === 'E08' || a.id === 'E14') return;            // piñata dijadwalkan sendiri
+      if (a.grup && seenGrp[a.grup]) return;
+      if (a.grup) seenGrp[a.grup] = true;
+      const nm = a.grup === MC_GROUP ? t('mc_title') + ((S.addons.get(a.id) || {}).karakter ? ' – ' + S.addons.get(a.id).karakter : '') : aName(a);
+      const p = a.id === 'B02' ? { n: 1, d: 30 } : durParts(a.durasi);
+      if (p.n === 1 && p.d >= 90 && a.grup !== MC_GROUP) { rows.push({ m: st + 15, a: t('rd_long', { x: nm, d: fmtDur(p.d) }) }); return; }
+      for (let k = 1; k <= p.n; k++) timed.push({ nm: p.n > 1 ? nm + ' ' + t('rd_session', { k, n: p.n }) : nm, base: a.id, d: Math.min(p.d, 120), k, mc: a.grup === MC_GROUP });
     });
+    // jadwal tetap: makan, piñata, kue, gift bag; MC Character memandu acara menjelang piñata & kue
+    const pin = S.addons.has('E08') || S.addons.has('E14');
+    const cakeT = end - 30, pinT = pin ? cakeT - 20 : cakeT;
+    const mc = timed.find(x => x.mc);
+    let w2End = pinT;
+    if (mc) {
+      const mcStart = Math.max(foodEnd, cakeT + 10 - mc.d);
+      rows.push({ m: mcStart, a: t('rd_mc', { x: mc.nm, d: fmtDur(mc.d) }) });
+      w2End = mcStart;
+    }
+    // aktivitas lain: diisi ke slot sebelum & sesudah makan, maks. 2 aktivitas bersamaan
+    const wins = [[st + 10, food], [foodEnd, w2End]];
+    // 2 jalur utama di slot kosong; bila penuh, jalur tambahan (aktivitas bersamaan) yang juga boleh berjalan saat MC memandu
+    const tracks = [[], [], [], []];
+    const winsX = wins.concat([[w2End, pinT]]).filter(w => w[1] > w[0]);
+    const free = (tr, a, b) => tr.every(x => b <= x[0] || a >= x[1]);
+    const lastEnd = {};           // sesi berikutnya (mis. Mooki sesi 2) minimal 30 menit setelah sesi sebelumnya
+    let tumpang = false;
+    timed.filter(x => !x.mc).sort((x, y) => x.k - y.k || y.d - x.d).forEach(it => {
+      const min = it.k > 1 ? (lastEnd[it.base] || st) + 30 : st + 10;
+      let best = null;
+      for (let ti = 0; ti < tracks.length && !best; ti++) {
+        for (const w of (ti < 2 ? wins : winsX)) {
+          for (let m = Math.max(w[0], min); m + it.d <= w[1]; m += 5) { if (free(tracks[ti], m, m + it.d)) { best = { ti, m }; break; } }
+          if (best) break;
+        }
+      }
+      if (!best) best = { ti: -1, m: Math.min(Math.max(min, st + 20), cakeT - it.d) };
+      if (best.ti !== 0) tumpang = true;
+      if (best.ti >= 0) tracks[best.ti].push([best.m, best.m + it.d]);
+      lastEnd[it.base] = best.m + it.d;
+      rows.push({ m: best.m, a: it.nm + ' (' + fmtDur(it.d) + ')' });
+    });
+    if (tumpang) setTimeout(() => toast(t('rd_busy')), 50);
     rows.push({ m: food, a: t('rd_food') });
-    const pinata = S.addons.has('E08') || S.addons.has('E14');
-    const cakeT = Math.max(st + 135, Math.min(cur, st + dur - 30));
-    if (pinata) rows.push({ m: Math.min(Math.max(st + 105, cur), cakeT - 20), a: t('rd_pinata') });
-    rows.push({ m: cakeT, a: S.cake.jenis === 'none' && !S.cake.extra.length ? t('rd_song') : t('rd_cake') });
-    rows.push({ m: st + dur - 10, a: t('rd_end') });
+    if (pin) rows.push({ m: pinT, a: t('rd_pinata') });
+    rows.push({ m: cakeT, a: cakeCount() ? t('rd_cake') : t('rd_song') });
+    if (chosen.some(a => folderOf(a) === 'favours' && a.grup === 'giftbag') || S.addons.has('B03')) rows.push({ m: end - 15, a: t('rd_giftbag') });
+    rows.push({ m: end - 10, a: t('rd_end') });
     return rows.sort((x, y) => x.m - y.m).map(r => ({ jam: fromMin(Math.round(r.m / 5) * 5), acara: r.a }));
   }
+  const fmtDur = (m) => (m >= 60 && m % 60 === 0 ? (m / 60) + (isId() ? ' jam' : (m === 60 ? ' hour' : ' hours')) : m + (isId() ? ' menit' : ' min'));
   function renderRundown() {
     const el = $('#rdList');
     if (!S.rundown.length) { el.innerHTML = `<p class="small muted rd-empty">${escapeHtml(t('rd_empty'))}</p>`; return; }
@@ -3995,7 +4074,7 @@ window.I18N = {
     payload.anakLain = kidsArr.slice(1);
     payload.rundown = S.rundown.filter(r => r.jam && r.acara.trim());
     delete payload.bahasa;
-    payload.resto = Array.from(S.resto.entries()).filter(([, st]) => st.qty > 0).map(([id, st]) => ({ id: id, qty: st.qty, pilihan: st.pilihan || '' }));
+    payload.resto = Array.from(S.resto.values()).filter(st => st.qty > 0).map(st => ({ id: st.id, qty: st.qty, pilihan: st.pilihan || '' }));
     payload.addOns = Array.from(S.addons.entries()).filter(([id]) => (cakeById(id) || {}).kategori !== 'Cake')
       .map(([id, st]) => ({ id: id, qty: st.qty || '', pilihan: st.pilihan || '', bahasa: st.bahasa || '', karakter: st.karakter || '' }))
       .concat(cakeItems().filter(x => !x.st.extra).map(({ a, st }) => ({ id: a.id, qty: st.qty || '', pilihan: st.pilihan || '' })));
@@ -4011,7 +4090,8 @@ window.I18N = {
     const btn = $('#submitBtn');
     setLoading(btn, true, t('sending'));
     let invite = null;
-    try { if (kidsArr[0].nama) invite = await makeInvitation(kidsArr.filter(k => k.nama), payload.tglAcara, payload.jam); } catch (err) { invite = null; }
+    const customInv = S.addons.has('E03');   // undangan custom dikirim terpisah setelah DP - undangan standar tidak dibuat
+    try { if (kidsArr[0].nama && !customInv) invite = await makeInvitation(kidsArr.filter(k => k.nama), payload.tglAcara, payload.jam); } catch (err) { invite = null; }
     if (invite) payload.undangan = invite;
     try {
       const r = ADMIN ? await adminApi('adminCreateBooking', payload) : await api('createBooking', payload);
@@ -4036,6 +4116,7 @@ window.I18N = {
       } else if (WA) sWa.href = waUrl(t('wa_booked', { id: r.bookingId, d: dateL(r.tglAcara), t: r.jam }));
       else sWa.classList.add('hidden');
       $('#sInvite').classList.toggle('hidden', !invite);
+      $('#sInviteCustom').classList.toggle('hidden', !customInv);
       if (invite) { $('#sInviteImg').src = invite; $('#sInviteDl').href = invite; $('#sInviteDl').download = 'Mookiland-invitation-' + r.bookingId + '.jpg'; }
       $('#successModal').showModal();
       form.reset();

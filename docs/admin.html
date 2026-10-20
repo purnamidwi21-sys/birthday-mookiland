@@ -1050,6 +1050,22 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .nav-cek { display: none; color: #fff; font-weight: 800; font-size: 13px; text-decoration: none; white-space: nowrap; }
 @media (max-width: 860px) { .nav-cek { display: inline-flex; gap: 4px; align-items: center; } }
 
+/* Restoran: jumlah per rasa/pilihan (mis. 3 Coca-Cola + 2 Sprite) */
+.resto-item.multi { grid-template-columns: 56px 1fr auto; }
+.ri-tot { display: inline-block; background: var(--leaf); color: #fff; font-size: 12px; font-weight: 800; padding: 1px 8px; border-radius: 999px; margin-left: 4px; vertical-align: 1px; }
+.ri-flav { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 6px 12px; padding: 4px 4px 4px 68px; }
+.ri-flav-h { grid-column: 1 / -1; color: var(--muted); font-size: 12px; font-weight: 700; }
+.ri-flav .fl { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--paper); border: 1.5px solid var(--line); border-radius: 12px; padding: 4px 4px 4px 12px; font-size: 14px; font-weight: 700; }
+.ri-flav .fl.on { border-color: var(--leaf); background: #f3fae9; }
+.ri-flav .stepper button { width: 30px; height: 30px; }
+@media (max-width: 560px) {
+  .resto-item.multi { grid-template-columns: 48px 1fr; }
+  .resto-item.multi .ri-pr { grid-column: 2; grid-row: 2; }
+  .ri-flav { padding-left: 0; grid-template-columns: 1fr; }
+  .ri-flav .stepper { grid-column: auto; grid-row: auto; }
+}
+.invite-custom { background: var(--lime-soft); color: var(--jungle); border-radius: 12px; padding: 10px 14px; font-weight: 700; font-size: 14px; text-align: center; margin: 12px 0 0; }
+
 </style>
 </head>
 <body class="admin-body">
@@ -1628,6 +1644,8 @@ function setLoading(btn, on, text) {
         <button class="btn sm" data-act="pay" ${batal || lunas ? 'disabled' : ''}>💰 Catat pembayaran</button>
         <button class="btn sm mint" data-act="invoice" ${!lunas ? 'disabled' : ''}>✅ Kirim invoice lunas</button>
         <button class="btn sm ghost" data-act="adjust" ${batal ? 'disabled' : ''}>± Penyesuaian harga</button>
+        <button class="btn sm ghost" data-act="guests" ${batal ? 'disabled' : ''}>👥 Ubah jumlah anak / dewasa</button>
+        <button class="btn sm ghost" data-act="discount" ${batal ? 'disabled' : ''}>🏷️ Diskon</button>
       </div>
       <div id="payFormBox"></div>
 
@@ -1691,6 +1709,60 @@ function setLoading(btn, on, text) {
     $('#adjForm [name=desc]').focus();
   }
 
+  function discountForm(b) {
+    const cur = (b.rincian.lines || []).find(l => l.manual);
+    const promo = (b.rincian.lines || []).filter(l => l.diskon && !l.manual);
+    $('#payFormBox').innerHTML = `
+      <form class="pay-form" id="discForm">
+        <p class="small" style="margin:0 0 10px"><b>Diskon</b> – pilih persen (%) atau angka (Rp). Satu diskon manual per booking; diskon baru menggantikan yang lama. Isi 0 untuk menghapus.
+          ${cur ? `<br>Diskon manual sekarang: <b>${escapeHtml(cur.desc)}</b> (${rupiah(cur.total)})` : ''}${promo.length ? `<br>Kode promo: ${promo.map(l => escapeHtml(l.desc) + ' (' + rupiah(l.total) + ')').join(', ')}` : ''}</p>
+        <div class="form-grid">
+          <label class="f"><span>Jenis diskon</span><select name="jenis"><option value="nominal" ${cur && cur.jenis === 'persen' ? '' : 'selected'}>Angka (Rp)</option><option value="persen" ${cur && cur.jenis === 'persen' ? 'selected' : ''}>Persen (%)</option></select></label>
+          <label class="f"><span id="discLbl">Nilai</span><input name="nilai" required inputmode="decimal" value="${cur ? cur.nilai : ''}" placeholder="mis. 200000 atau 10"></label>
+          <label class="f"><span>Berlaku untuk</span><select name="berlaku"><option value="paket" ${cur && cur.berlaku === 'semua' ? '' : 'selected'}>Harga paket saja</option><option value="semua" ${cur && cur.berlaku === 'semua' ? 'selected' : ''}>Semua item (paket + add-on)</option></select></label>
+          <label class="f"><span>Keterangan di invoice (opsional)</span><input name="keterangan" maxlength="120" placeholder="mis. Diskon member / Loyalty discount"></label>
+          <div class="full small" id="discPrev" style="font-weight:800;color:var(--leaf)"></div>
+          <label class="check full" style="padding:8px 10px"><input type="checkbox" name="kirimProforma" checked><div><b>Kirim ulang proforma invoice</b><small>Pelanggan menerima rincian harga terbaru.</small></div></label>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn sm" id="discSave">Simpan diskon</button>
+          <button class="btn sm ghost" type="button" data-act="paycancel">Batal</button>
+        </div>
+      </form>`;
+    const f = $('#discForm');
+    const prev = () => {
+      const jenis = f.jenis.value, raw = String(f.nilai.value);
+      const nilai = jenis === 'persen' ? (parseFloat(raw.replace(',', '.').replace(/[^\d.]/g, '')) || 0) : (Number(raw.replace(/\D/g, '')) || 0);
+      $('#discLbl').textContent = jenis === 'persen' ? 'Nilai (%)' : 'Nilai (Rp)';
+      const items = (b.rincian.lines || []).filter(l => !l.diskon);
+      const base = f.berlaku.value === 'semua' ? items.reduce((a, l) => a + Math.max(0, l.total), 0) : (items[0] ? items[0].total : 0);
+      const amt = Math.max(0, Math.min(base, jenis === 'persen' ? Math.round(base * nilai / 100) : nilai));
+      $('#discPrev').textContent = nilai ? 'Potongan: ' + rupiah(amt) + ' dari ' + rupiah(base) : (cur ? 'Diskon manual akan dihapus.' : '');
+    };
+    f.addEventListener('input', prev); f.addEventListener('change', prev); prev();
+    f.nilai.focus();
+  }
+
+  function guestsForm(b) {
+    $('#payFormBox').innerHTML = `
+      <form class="pay-form" id="guestForm">
+        <p class="small" style="margin:0 0 10px"><b>Ubah jumlah tamu</b> – harga paket per anak (min. pembayaran tetap berlaku), gift bag / add-on per anak, workshop per pax, tiket dewasa tambahan dan diskon persen dihitung ulang otomatis. Saat ini: <b>${b.jumlahAnak} anak · ${b.jumlahDewasa} dewasa</b>.</p>
+        <div class="form-grid">
+          <label class="f"><span>Jumlah anak (baru)</span><input name="jumlahAnak" type="number" min="1" max="300" required value="${b.jumlahAnak}"></label>
+          <label class="f"><span>Jumlah dewasa (baru)</span><input name="jumlahDewasa" type="number" min="0" max="600" required value="${b.jumlahDewasa}"></label>
+          <label class="check full" style="padding:8px 10px" id="gNoShowBox"><input type="checkbox" name="noShow" checked><div><b>Anak terdaftar yang tidak hadir dikenakan 50%</b><small>Hanya berlaku bila jumlah anak berkurang (makanan sudah disiapkan sesuai jumlah booking).</small></div></label>
+          <label class="check full" style="padding:8px 10px"><input type="checkbox" name="kirimDokumen" checked><div><b>Kirim dokumen terbaru ke pelanggan</b><small>Proforma invoice bila masih ada sisa, invoice final (lunas) bila sudah lunas.</small></div></label>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn sm" id="guestSave">Hitung ulang & simpan</button>
+          <button class="btn sm ghost" type="button" data-act="paycancel">Batal</button>
+        </div>
+      </form>`;
+    const sync = () => { $('#gNoShowBox').style.display = Number($('#guestForm [name=jumlahAnak]').value) < b.jumlahAnak ? '' : 'none'; };
+    $('#guestForm [name=jumlahAnak]').addEventListener('input', sync); sync();
+    $('#guestForm [name=jumlahAnak]').focus();
+  }
+
   async function doAction(action, payload, btn, okMsg) {
     setLoading(btn, true);
     try {
@@ -1715,17 +1787,41 @@ function setLoading(btn, on, text) {
     if (act === 'invoice') return doAction('sendPaidInvoice', { bookingId: b.id }, btn, 'Invoice lunas terkirim.');
     if (act === 'pay') return payForm(b);
     if (act === 'adjust') return adjustForm(b);
+    if (act === 'guests') return guestsForm(b);
+    if (act === 'discount') return discountForm(b);
     if (act === 'paycancel') { $('#payFormBox').innerHTML = ''; return; }
     if (act === 'paylunas') { $('#payForm [name=jumlah]').value = Number(b.sisa).toLocaleString('id-ID'); return; }
     if (act === 'status') {
       const st = $('#newStatus').value;
       if (st === b.status) return;
       if (st === 'Batal' && !confirm('Batalkan booking ' + b.id + '?')) return;
-      return doAction('updateStatus', { bookingId: b.id, status: st }, btn, 'Status diperbarui.');
+      const d = await doAction('updateStatus', { bookingId: b.id, status: st }, btn, 'Status diperbarui.');
+      if (d && d.emailDP) toast('Email konfirmasi DP otomatis terkirim ke ' + b.email, 'success');
+      return d;
     }
   });
 
   $('#detailBody').addEventListener('submit', async (e) => {
+    if (e.target.id === 'discForm') {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const b = currentDetail.booking;
+      const before = b.total;
+      const d = await doAction('applyDiscount', { bookingId: b.id, jenis: fd.get('jenis'), nilai: fd.get('nilai'), berlaku: fd.get('berlaku'), keterangan: fd.get('keterangan'), kirimProforma: !!fd.get('kirimProforma') }, $('#discSave'), 'Diskon tersimpan.');
+      if (d) toast('Total: ' + rupiah(before) + ' → ' + rupiah(d.booking.total) + (d.proformaTerkirim ? ' · proforma terkirim' : ''), 'success');
+      return;
+    }
+    if (e.target.id === 'guestForm') {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const b = currentDetail.booking;
+      const anak = Number(fd.get('jumlahAnak')), dewasa = Number(fd.get('jumlahDewasa'));
+      if (!confirm('Ubah ' + b.id + ' menjadi ' + anak + ' anak · ' + dewasa + ' dewasa dan hitung ulang harga?')) return;
+      const before = b.total;
+      const d = await doAction('adjustGuests', { bookingId: b.id, jumlahAnak: anak, jumlahDewasa: dewasa, noShow: !!fd.get('noShow'), kirimDokumen: !!fd.get('kirimDokumen') }, $('#guestSave'), 'Jumlah tamu diperbarui.');
+      if (d) toast('Total: ' + rupiah(before) + ' → ' + rupiah(d.booking.total) + (d.proformaTerkirim ? ' · proforma terkirim' : '') + (d.invoiceTerkirim ? ' · invoice final terkirim' : ''), 'success');
+      return;
+    }
     if (e.target.id === 'adjForm') {
       e.preventDefault();
       const fd = new FormData(e.target);
@@ -1763,10 +1859,11 @@ function setLoading(btn, on, text) {
 
   async function loadSlotTab() {
     if (!A.month) A.month = ymd(new Date()).slice(0, 7);
+    // kalender langsung tampil; data lokasi dimuat bersamaan (tidak menunggu)
+    loadAdminMonth(A.month);
     if (!A.lokasi) {
       try { A.lokasi = (await api('getPackages')).lokasi; } catch (e) { A.lokasi = []; }
     }
-    loadAdminMonth(A.month);
     if (A.date) loadAdminDay(A.date);
   }
 
