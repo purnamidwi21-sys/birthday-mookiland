@@ -1766,10 +1766,11 @@ function setLoading(btn, on, text) {
     `;
   }
 
-  function payForm(b, pelunasan) {
+  function payForm(b, pelunasan, modeDp) {
     const saran = pelunasan ? b.sisa : (b.dibayar < b.dp ? b.dp - b.dibayar : b.sisa);
     $('#payFormBox').innerHTML = `
       <form class="pay-form" id="payForm">
+        ${modeDp ? `<p class="small" style="margin:0 0 10px;background:#fff1d6;border-radius:10px;padding:8px 12px"><b>DP</b> – belum ada pembayaran yang tercatat. Catat pembayaran DP di bawah; status otomatis menjadi <b>DP Diterima</b> dan email konfirmasi DP (dengan rincian pembayaran) dikirim ke pelanggan.</p>` : ''}
         ${pelunasan ? `<p class="small" style="margin:0 0 10px;background:#fff1d6;border-radius:10px;padding:8px 12px"><b>Pelunasan</b> – masih ada sisa tagihan <b>${rupiah(b.sisa)}</b>. Catat pembayaran pelunasan di bawah; status otomatis menjadi <b>Lunas</b> dan invoice lunas dikirim ke pelanggan.</p>` : ''}
         <div class="form-grid">
           <label class="f"><span>Jumlah (Rp)</span><input name="jumlah" inputmode="numeric" required value="${Number(saran).toLocaleString('id-ID')}"></label>
@@ -1919,6 +1920,12 @@ function setLoading(btn, on, text) {
       // Lunas harus lewat pencatatan pelunasan (supaya riwayat bayar, invoice & rekonsiliasi lengkap)
       if (st === 'Lunas' && b.sisa > 0) {
         payForm(b, true);
+        $('#payFormBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      // DP Diterima harus ada pembayaran DP yang tercatat (supaya email DP berisi transaksi & sisa tagihan)
+      if (st === 'DP Diterima' && b.dibayar <= 0 && b.total > 0) {
+        payForm(b, false, true);
         $('#payFormBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
