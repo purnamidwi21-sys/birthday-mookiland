@@ -1100,6 +1100,11 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .rk-manual select { flex: 1; min-width: 220px; padding: 7px 10px; border-radius: 10px; border: 1.5px solid var(--line); font: 13px var(--body); }
 @media (max-width: 760px) { .rk-row { grid-template-columns: 1fr; } }
 .pf-det { margin-top: 4px; }
+.rk-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
+.rk-top > div:first-child { flex: 1; min-width: 260px; }
+.rk-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.rk-paste { margin-top: 14px; }
+.rk-paste textarea { width: 100%; font: 13px ui-monospace, Menlo, monospace; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px; }
 
 </style>
 </head>
@@ -1236,11 +1241,22 @@ body.is-admin .admin-only.hidden { display: none !important; }
     <!-- ======= REKONSILIASI BANK ======= -->
     <section id="tab-rekon" class="hidden">
       <div class="panel">
-        <h3>Upload rekening koran</h3>
-        <p class="small muted" style="margin-top:-6px">File CSV atau Excel (.xlsx) dari internet banking. Hanya dana <b>masuk (kredit)</b> yang dipakai. Baris yang sudah pernah diupload otomatis dilewati, jadi aman upload ulang periode yang tumpang tindih.</p>
+        <div class="rk-top">
+          <div><h3 style="margin:0">Import rekening koran</h3>
+            <p class="small muted" style="margin:4px 0 0">File CSV / Excel (.xlsx) dari internet banking, atau salin-tempel tabel mutasi. Hanya dana <b>masuk (kredit)</b> yang dipakai; baris yang sudah pernah diimport otomatis dilewati.</p></div>
+          <div class="rk-btns">
+            <button type="button" class="btn" id="rkImportBtn">⬆ Import rekening koran</button>
+            <button type="button" class="btn ghost" id="rkPasteBtn">📋 Tempel data</button>
+          </div>
+        </div>
         <div class="rk-drop" id="rkDrop">
           <input type="file" id="rkFile" accept=".csv,.txt,.xlsx">
-          <label for="rkFile"><b>📄 Pilih file rekening koran</b><span class="small muted">atau seret file ke sini</span></label>
+          <label for="rkFile"><b>📄 Seret file rekening koran ke sini</b><span class="small muted">atau klik untuk memilih file (.csv / .xlsx)</span></label>
+        </div>
+        <div class="rk-paste hidden" id="rkPasteBox">
+          <label class="f"><span>Tempel tabel mutasi di sini (salin dari Excel / halaman mutasi internet banking, termasuk baris judul kolom)</span>
+            <textarea id="rkPasteTxt" rows="7" placeholder="Tanggal	Keterangan	Debit	Kredit&#10;21/10/2026	TRF ANNA PETROVA	0	1.000.000"></textarea></label>
+          <div style="display:flex;gap:8px;margin-top:8px"><button type="button" class="btn sm" id="rkPasteGo">Baca data</button><button type="button" class="btn sm ghost" id="rkPasteCancel">Batal</button></div>
         </div>
         <div id="rkMap" class="hidden"></div>
       </div>
@@ -1824,7 +1840,7 @@ function setLoading(btn, on, text) {
   }
 
   const rekonBadge = (p) => /cash|tunai/i.test(p.metode) ? '' : (p.rekon === 'Cocok'
-    ? `<span class="badge b-lunas" title="Dana masuk ${escapeHtml(p.rekonTgl || '')} · ${escapeHtml(p.rekonRef || '')}">✓ Rekon</span>`
+    ? `<span class="badge b-lunas" title="Dana masuk ${escapeHtml(p.rekonTgl || '')} · ${escapeHtml(p.rekonRef || '')}">✓ Rekon</span>${p.biayaBank ? ` <span class="muted small">biaya bank ${rupiah(p.biayaBank)}</span>` : ''}`
     : '<span class="badge b-menunggu" title="Belum ditemukan di rekening koran">Belum rekon</span>');
 
   function guestsForm(b) {
@@ -2118,7 +2134,9 @@ function setLoading(btn, on, text) {
   // ---- membaca file ----
   function parseCsv(text) {
     const first = text.split(/\r?\n/).slice(0, 15).join('\n');
-    const delim = [',', ';', '\t', '|'].map(d => [d, (first.match(new RegExp(d === '|' ? '\\|' : d, 'g')) || []).length]).sort((a, b) => b[1] - a[1])[0][0];
+    const lines = first.split('\n').filter(l => l.trim());
+    const delim = lines.filter(l => l.indexOf('\t') >= 0).length >= lines.length * 0.6 ? '\t'      // tempel dari Excel = dipisah tab
+      : [',', ';', '|'].map(d => [d, (first.match(new RegExp(d === '|' ? '\\|' : d, 'g')) || []).length]).sort((a, b) => b[1] - a[1])[0][0];
     const out = []; let row = [], cur = '', q = false;
     for (let i = 0; i < text.length; i++) {
       const c = text[i];
@@ -2288,6 +2306,19 @@ function setLoading(btn, on, text) {
     } catch (e) { toast(e.message, 'error'); }
   }
   $('#rkFile').addEventListener('change', (e) => pickStatement(e.target.files[0]));
+  $('#rkImportBtn').addEventListener('click', () => { $('#rkFile').value = ''; $('#rkFile').click(); });
+  $('#rkPasteBtn').addEventListener('click', () => { $('#rkPasteBox').classList.toggle('hidden'); if (!$('#rkPasteBox').classList.contains('hidden')) $('#rkPasteTxt').focus(); });
+  $('#rkPasteCancel').addEventListener('click', () => { $('#rkPasteBox').classList.add('hidden'); $('#rkPasteTxt').value = ''; });
+  $('#rkPasteGo').addEventListener('click', () => {
+    const txt = $('#rkPasteTxt').value.trim();
+    if (!txt) return toast('Tempel data mutasi dulu.', 'error');
+    RK.file = { name: 'tempel-' + ymd(new Date()) + '.txt' };
+    RK.rows = parseCsv(txt);
+    if (!RK.rows.length) return toast('Data tidak terbaca.', 'error');
+    RK.cols = detectCols(RK.rows);
+    $('#rkPasteBox').classList.add('hidden');
+    renderMap();
+  });
   const drop = $('#rkDrop');
   ['dragover', 'dragenter'].forEach(ev => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
   ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, () => drop.classList.remove('over')));
@@ -2299,7 +2330,7 @@ function setLoading(btn, on, text) {
     renderMap();
   });
   $('#rkMap').addEventListener('click', async (e) => {
-    if (e.target.id === 'rkCancel') { $('#rkMap').classList.add('hidden'); $('#rkFile').value = ''; return; }
+    if (e.target.id === 'rkCancel') { $('#rkMap').classList.add('hidden'); $('#rkFile').value = ''; $('#rkPasteTxt').value = ''; return; }
     if (e.target.id !== 'rkUpload') return;
     const btn = e.target;
     setLoading(btn, true, 'Mengupload…');
@@ -2308,7 +2339,7 @@ function setLoading(btn, on, text) {
       RK.data = d; RK.filter = 'belum';
       const h = d.hasilUpload;
       toast(`${h.baru} transaksi baru · ${h.otomatis} cocok otomatis${h.duplikat ? ' · ' + h.duplikat + ' sudah pernah diupload' : ''}`, 'success');
-      $('#rkMap').classList.add('hidden'); $('#rkFile').value = '';
+      $('#rkMap').classList.add('hidden'); $('#rkFile').value = ''; $('#rkPasteTxt').value = '';
       renderRekon();
     } catch (err) { toast(err.message, 'error'); } finally { if (document.body.contains(btn)) setLoading(btn, false); }
   });
@@ -2322,14 +2353,14 @@ function setLoading(btn, on, text) {
     const r = d.ringkasan;
     $('#rkStats').innerHTML = [
       ['📄', r.koran, 'dana masuk diupload'], ['✅', r.cocok, 'sudah cocok'], ['🔎', r.belum, 'belum cocok'],
-      ['⏳', r.bayarBelum, 'pembayaran belum ditemukan · ' + rupiah(r.bayarBelumNominal)], ['🙈', r.abaikan, 'diabaikan'],
+      ['⏳', r.bayarBelum, 'pembayaran belum ditemukan · ' + rupiah(r.bayarBelumNominal)], ['🏦', rupiah(r.biayaBank || 0), 'biaya bank (MDR kartu / QRIS)'], ['🙈', r.abaikan, 'diabaikan'],
     ].map(x => `<div class="rk-stat"><span>${x[0]}</span><b>${x[1]}</b><small>${escapeHtml(x[2])}</small></div>`).join('');
     document.querySelectorAll('#rkFilter button').forEach(b => b.classList.toggle('active', b.dataset.f === RK.filter));
     const list = d.koran.filter(k => RK.filter === 'semua' || (RK.filter === 'belum' && !k.status) || (RK.filter === 'cocok' && k.status === 'Cocok') || (RK.filter === 'abaikan' && k.status === 'Abaikan'));
     const pilihan = d.pembayaranBelum;
     $('#rkList').innerHTML = list.length ? list.map(k => {
       let right;
-      if (k.status === 'Cocok') right = `<div class="rk-ok">✓ ${k.payment ? payLabel(k.payment) : escapeHtml(k.paymentId)}<span class="muted small">${escapeHtml(k.catatan)}</span></div><button class="btn sm ghost" data-rk="unmatch" data-id="${k.id}">Batalkan</button>`;
+      if (k.status === 'Cocok') right = `<div class="rk-ok">✓ ${k.payment ? payLabel(k.payment) : escapeHtml(k.paymentId)}${k.biayaBank ? `<span class="rk-fee">biaya bank ${rupiah(k.biayaBank)}${k.payment ? ' (' + (k.biayaBank / k.payment.jumlah * 100).toFixed(2) + '%) · tagihan klien tetap ' + rupiah(k.payment.jumlah) : ''}</span>` : ''}<span class="muted small">${escapeHtml(k.catatan)}</span></div><button class="btn sm ghost" data-rk="unmatch" data-id="${k.id}">Batalkan</button>`;
       else if (k.status === 'Abaikan') right = `<div class="muted small">Diabaikan – ${escapeHtml(k.catatan)}</div><button class="btn sm ghost" data-rk="unignore" data-id="${k.id}">Kembalikan</button>`;
       else right = `<div class="rk-saran">${(k.saran || []).map(s => `<div class="rk-s ${s.jenisCocok}"><div>${payLabel(s)}${s.jenisCocok === 'fee' ? `<span class="rk-fee">dipotong MDR ${rupiah(s.selisih)} (${(s.selisih / s.jumlah * 100).toFixed(2)}%)</span>` : ''}</div>
             <button class="btn sm green" data-rk="match" data-id="${k.id}" data-pay="${escapeHtml(s.id)}">Cocokkan</button></div>`).join('') || '<span class="muted small">Tidak ada pembayaran yang cocok.</span>'}
