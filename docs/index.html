@@ -948,6 +948,104 @@ body.is-admin .admin-only.hidden { display: none !important; }
 .back-info { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-weight: 800; color: var(--leaf); margin: -18px 0 14px; padding: 6px 0; }
 .back-info:hover { color: var(--jungle); text-decoration: underline; }
 .is-admin .back-info { display: none; }
+.cake-note { display: block; margin-top: 8px; background: var(--orange-soft); color: #8a3d0c; border-radius: 10px; padding: 8px 12px; font-weight: 700; font-size: 12.5px; }
+
+/* ---------- Promo ---------- */
+.promo-banner { display: grid; gap: 8px; margin: 14px 0 0; }
+.promo-banner .pb { background: linear-gradient(90deg, var(--orange), #f79a3c); color: #fff; border-radius: 14px; padding: 10px 16px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; box-shadow: var(--shadow); }
+.promo-banner .pb small { opacity: .9; font-weight: 600; }
+.promo-banner .code { background: #fff; color: var(--orange-2); padding: 1px 8px; border-radius: 6px; letter-spacing: .04em; }
+.promo-banner .btn { margin-left: auto; box-shadow: none; }
+#pageBook .promo-banner { margin: -6px 0 16px; }
+.promo-row { display: flex; gap: 10px; }
+.promo-row input { flex: 1; min-width: 0; text-transform: uppercase; letter-spacing: .04em; font: 700 15px var(--body); padding: 10px 14px; border: 2px solid var(--line); border-radius: 12px; background: #fff; }
+.promo-row input:focus { outline: none; border-color: var(--lime); }
+.promo-msg { margin-top: 10px; font-size: 13.5px; font-weight: 700; }
+.promo-msg .ok { color: var(--leaf); }
+.promo-msg .err { color: var(--red); }
+.sum-grp.disc .line span:last-child, .sum-grp.disc .sg-sub b { color: var(--leaf); }
+
+/* ---------- Google review ---------- */
+.rv-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+.rv-score { display: grid; grid-template-columns: auto auto; column-gap: 10px; align-items: center; background: #fff; border-radius: 16px; padding: 10px 16px; box-shadow: var(--shadow); }
+.rv-score b { grid-row: span 2; font: 700 34px var(--head); color: var(--jungle); }
+.rv-score .stars { color: #f6b100; letter-spacing: 2px; }
+.rv-score small { color: var(--ink-2); font-weight: 700; }
+.rv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.rv-card { margin: 0; background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; display: flex; flex-direction: column; gap: 8px; }
+.rv-top { display: flex; align-items: center; gap: 10px; }
+.rv-top img, .rv-top .av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: none; }
+.rv-top .av { background: var(--lime-soft); color: var(--jungle); display: grid; place-items: center; font: 700 18px var(--head); }
+.rv-top div { flex: 1; min-width: 0; }
+.rv-top b { display: block; font-size: 14.5px; }
+.rv-top small { color: var(--muted); font-size: 12px; }
+.rv-top .g { font: 800 16px Arial, sans-serif; color: #4285f4; }
+.rv-stars { color: #f6b100; letter-spacing: 2px; }
+.rv-stars i { color: #dfe3d8; font-style: normal; }
+.rv-card blockquote { margin: 0; color: var(--ink-2); font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden; }
+.rv-card a { margin-top: auto; font-weight: 800; font-size: 13px; color: var(--leaf); text-decoration: none; }
+.rv-empty { background: #fff; border-radius: var(--radius); padding: 22px; text-align: center; font-weight: 700; color: var(--ink-2); box-shadow: var(--shadow); grid-column: 1 / -1; }
+.rv-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+#reviews .btn.ghost { background: #fff; }
+
+/* ---------- Link website Mookiland ---------- */
+.links { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.lnk { display: flex; align-items: center; gap: 12px; background: #fff; border-radius: 16px; padding: 14px 16px; box-shadow: var(--shadow); text-decoration: none; color: var(--ink); transition: transform .15s; }
+.lnk:hover { transform: translateY(-2px); }
+.lnk .ic { width: 44px; height: 44px; flex: none; border-radius: 12px; background: var(--lime-soft); display: grid; place-items: center; font-size: 22px; }
+.lnk b { display: block; color: var(--jungle); font-size: 15px; }
+.lnk small { color: var(--ink-2); font-size: 12.5px; line-height: 1.35; display: block; }
+.lnk .go { margin-left: auto; color: var(--orange); font-weight: 800; }
+
+/* ---------- Cek booking ---------- */
+.ck-form { display: grid; grid-template-columns: 1.3fr 1fr auto; gap: 14px; align-items: end; max-width: 820px; }
+.ck-form .f { margin: 0; }
+@media (max-width: 700px) { .ck-form { grid-template-columns: 1fr; } }
+#ckResult { margin-top: 22px; display: grid; gap: 18px; scroll-margin-top: 90px; }
+.ck-none { font-weight: 700; color: var(--ink-2); }
+.ck-count { margin: 0; }
+.ck-card { background: #fff; border-radius: 22px; box-shadow: var(--shadow); padding: 22px; border-top: 6px solid var(--lime); }
+.ck-card.st-menunggu { border-top-color: var(--orange); }
+.ck-card.st-batal { border-top-color: var(--red); opacity: .85; }
+.ck-card header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.ck-card header small { display: block; color: var(--muted); font-size: 12px; }
+.ck-id { font: 700 22px var(--head); color: var(--jungle); margin-right: 10px; }
+.ck-kid { font-weight: 800; color: var(--ink-2); }
+.ck-st { background: var(--lime-soft); color: var(--jungle); font-weight: 800; font-size: 13px; padding: 6px 14px; border-radius: 999px; }
+.st-menunggu .ck-st { background: var(--orange-soft); color: var(--orange-2); }
+.st-batal .ck-st { background: #fde8e6; color: var(--red); }
+.ck-prog { list-style: none; margin: 18px 0 8px; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); position: relative; }
+.ck-prog::before { content: ''; position: absolute; left: 12%; right: 12%; top: 15px; height: 4px; background: var(--line); border-radius: 4px; }
+.ck-prog li { position: relative; text-align: center; font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.ck-prog li span { width: 32px; height: 32px; margin: 0 auto 6px; border-radius: 50%; background: #fff; border: 3px solid var(--line); display: grid; place-items: center; font: 700 14px var(--head); position: relative; }
+.ck-prog li.done { color: var(--leaf); }
+.ck-prog li.done span { background: var(--leaf); border-color: var(--leaf); color: #fff; }
+.ck-prog li.now { color: var(--jungle); }
+.ck-prog li.now span { border-color: var(--orange); color: var(--orange); box-shadow: 0 0 0 4px var(--orange-soft); }
+.ck-next { background: var(--cream); border-radius: 12px; padding: 10px 14px; font-weight: 700; margin: 10px 0 14px; }
+.ck-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.ck-info > div { display: grid; grid-template-columns: auto 1fr; column-gap: 8px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+.ck-info .ic { grid-row: span 2; font-size: 20px; }
+.ck-info small { color: var(--muted); font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.ck-info b { font-size: 14px; }
+.ck-cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; }
+@media (max-width: 760px) { .ck-cols { grid-template-columns: 1fr; } }
+.ck-cols h4 { font-size: 16px; color: var(--jungle); margin-bottom: 8px; }
+.ck-l { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+.ck-l span:last-child, .ck-l b { white-space: nowrap; }
+.ck-l.tot { border-bottom: 0; font-size: 16px; padding-top: 10px; }
+.ck-l.tot b, .ck-l.bal b { color: var(--jungle); }
+.ck-l.bal { font-weight: 800; border-bottom: 0; }
+.ck-notes { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 12.5px; }
+.ck-docs { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+.ck-docs .btn { justify-content: center; }
+.ck-wait { font-size: 13px; color: var(--muted); font-weight: 700; padding: 6px 2px; }
+.ck-more { margin-top: 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; }
+.ck-more summary { cursor: pointer; font-weight: 800; }
+.ck-more pre { white-space: pre-wrap; font: 14px var(--body); margin: 8px 0 0; }
+.foot-links a { color: #fff; }
+.nav-cek { display: none; color: #fff; font-weight: 800; font-size: 13px; text-decoration: none; white-space: nowrap; }
+@media (max-width: 860px) { .nav-cek { display: inline-flex; gap: 4px; align-items: center; } }
 
 </style>
 </head>
@@ -969,12 +1067,14 @@ body.is-admin .admin-only.hidden { display: none !important; }
       <a href="#extras" data-info data-i18n="nav_addons">Add-ons</a>
       <a href="#faq" data-info data-i18n="nav_faq">FAQ</a>
       <a href="#rules" data-info data-i18n="nav_rules">Rules</a>
+      <a href="#cek" data-page-cek data-i18n="nav_cek">My booking</a>
     </nav>
     <div class="nav-right">
       <div class="lang-switch" role="group" aria-label="Language / Bahasa">
         <button type="button" data-lang="en">EN</button>
         <button type="button" data-lang="id">ID</button>
       </div>
+      <a class="nav-cek" href="#cek" data-page-cek>🔎 <span data-i18n="nav_cek">My booking</span></a>
       <a class="btn sm" href="#book" data-go="1" data-i18n="book_now">Book now</a>
     </div>
   </div>
@@ -1016,7 +1116,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
 
 <!-- ============ SEKILAS ============ -->
 <section class="glance-band">
-  <div class="wrap"><div class="glance" id="glance"></div></div>
+  <div class="wrap"><div class="glance" id="glance"></div><div class="promo-banner hidden" id="promoBannerInfo"></div></div>
 </section>
 
 <!-- ============ JALANNYA PESTA ============ -->
@@ -1071,8 +1171,23 @@ body.is-admin .admin-only.hidden { display: none !important; }
   </div>
 </section>
 
+<!-- ============ GOOGLE REVIEW ============ -->
+<section class="block alt" id="reviews">
+  <div class="wrap">
+    <div class="sec-head rv-head">
+      <span class="sign orange" data-i18n="rv_sign">What parents say</span>
+      <div class="rv-score hidden" id="rvScore"></div>
+    </div>
+    <div class="rv-grid" id="rvGrid"></div>
+    <div class="rv-btns">
+      <a class="btn" id="rvWrite" href="#" target="_blank" rel="noopener" data-i18n="rv_write">★ Write a Google review</a>
+      <a class="btn ghost" id="rvAll" href="#" target="_blank" rel="noopener" data-i18n="rv_all">See all reviews on Google</a>
+    </div>
+  </div>
+</section>
+
 <!-- ============ FAQ ============ -->
-<section class="block alt" id="faq">
+<section class="block" id="faq">
   <div class="wrap">
     <div class="sec-head"><span class="sign orange" data-i18n="faq_sign">Questions parents ask</span></div>
     <div class="faq" id="faqList"></div>
@@ -1080,6 +1195,14 @@ body.is-admin .admin-only.hidden { display: none !important; }
 </section>
 
 <!-- ============ RULES ============ -->
+<!-- ============ LINK WEBSITE MOOKILAND ============ -->
+<section class="block alt" id="links">
+  <div class="wrap">
+    <div class="sec-head"><span class="sign" data-i18n="lnk_sign">Good to know</span><p data-i18n="lnk_p"></p></div>
+    <div class="links" id="linkGrid"></div>
+  </div>
+</section>
+
 <section class="block" id="rules">
   <div class="wrap">
     <div class="sec-head"><span class="sign" data-i18n="rules_sign">Important reminders</span><p data-i18n="rules_p"></p></div>
@@ -1117,6 +1240,8 @@ body.is-admin .admin-only.hidden { display: none !important; }
       <span class="sign orange" data-i18n="book_sign">Plan &amp; book your party</span>
       <p data-i18n="book_p"></p>
     </div>
+
+    <div class="promo-banner hidden" id="promoBannerBook"></div>
 
     <!-- Bilah langkah mengambang -->
     <div class="stepbar" id="stepbar">
@@ -1276,6 +1401,11 @@ body.is-admin .admin-only.hidden { display: none !important; }
             <div class="step-title"><span class="n">6</span><h3 data-i18n="st6_t">Review &amp; confirm</h3></div>
             <div id="reviewBox"></div>
           </div>
+          <div class="card promo-card">
+            <div class="step-title"><span class="n">🏷️</span><h3 data-i18n="pr_title">Promo code</h3><span class="counter" data-i18n="opt_tag">Optional</span></div>
+            <div class="promo-row"><input id="promoInput" maxlength="30" autocomplete="off" data-i18n-ph="pr_ph"><button type="button" class="btn sm green" id="promoApply" data-i18n="pr_apply">Apply</button></div>
+            <div class="promo-msg" id="promoMsg"></div>
+          </div>
           <div class="card">
             <div class="step-title"><span class="n">🕒</span><h3 data-i18n="rd_title">Party run-down</h3><span class="counter" data-i18n="opt_tag">Optional</span></div>
             <p class="small muted" style="margin:-6px 0 10px" data-i18n="rd_sub">When should the food, cake, piñata and entertainment happen? Use our suggestion or make your own.</p>
@@ -1351,6 +1481,25 @@ body.is-admin .admin-only.hidden { display: none !important; }
 
 </div><!-- /pageBook -->
 
+<!-- ================= HALAMAN 3: CEK BOOKING ================= -->
+<div class="page hidden" id="pageCek">
+<section class="block" id="cek">
+  <div class="wrap">
+    <button type="button" class="back-info" data-page-info>← <span data-i18n="back_info">Back to party info</span></button>
+    <div class="sec-head">
+      <span class="sign orange" data-i18n="ck_sign">Check your booking</span>
+      <p data-i18n="ck_p"></p>
+    </div>
+    <form class="card ck-form" id="ckForm" autocomplete="off">
+      <label class="f"><span data-i18n="ck_name">Birthday child's name</span><input id="ckName" required maxlength="100" data-i18n-ph="ck_name_ph"></label>
+      <label class="f"><span data-i18n="ck_dob">Child's date of birth</span><input id="ckDob" type="date" required></label>
+      <button class="btn" id="ckBtn" type="submit" data-i18n="ck_btn">Find my booking</button>
+    </form>
+    <div id="ckResult"></div>
+  </div>
+</section>
+</div><!-- /pageCek -->
+
 <footer class="footer">
   <div class="wrap">
     <div>
@@ -1359,7 +1508,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
     </div>
     <div>
       <a class="btn wa" id="footWa" href="#" target="_blank" rel="noopener" data-i18n="foot_wa">WhatsApp Bu Dwi</a>
-      <div class="small" style="margin-top:12px"><a href="admin.html" style="color:#8fae86" data-i18n="admin_login">Admin login</a></div>
+      <div class="small foot-links" style="margin-top:12px"><a href="#cek" data-page-cek data-i18n="nav_cek">My booking</a> · <a href="#" id="footReview" target="_blank" rel="noopener" data-i18n="rv_write_s">Google review</a> · <a href="admin.html" style="color:#8fae86" data-i18n="admin_login">Admin login</a></div>
     </div>
   </div>
 </footer>
@@ -1387,6 +1536,7 @@ body.is-admin .admin-only.hidden { display: none !important; }
     <p style="text-align:center" class="muted" data-i18n="m_keep">Please keep your booking number:</p>
     <div class="big-id" id="sBookingId">-</div>
     <div id="sDetail"></div>
+    <p class="small muted" style="text-align:center;margin:10px 0 0" data-i18n-html="m_cek"></p>
     <div class="invite-prev hidden" id="sInvite"><img id="sInviteImg" alt="E-invitation"><a class="btn sm green" id="sInviteDl" download="Mookiland-invitation.jpg" data-i18n="inv_dl">⬇ Download e-invitation</a></div>
     <div style="display:grid;gap:10px;margin-top:16px">
       <a class="btn wa block" id="sWa" target="_blank" rel="noopener" data-i18n="m_wa">Send my booking no. to Bu Dwi</a>
@@ -1445,7 +1595,8 @@ async function api(action, payload, token) {
 }
 
 function rupiah(n) {
-  return 'Rp ' + Math.round(Number(n) || 0).toLocaleString('id-ID');
+  const v = Math.round(Number(n) || 0);
+  return (v < 0 ? '-Rp ' : 'Rp ') + Math.abs(v).toLocaleString('id-ID');
 }
 
 function escapeHtml(s) {
@@ -1580,7 +1731,7 @@ window.I18N = {
     sum_note: 'Your date is secured once the deposit is received. Final prices for items marked "starting price" are confirmed by our team.',
     nav_how: 'Party day', nav_faq: 'FAQ', cta_how: 'How it works', back_info: 'Back to party info',
     gl_hours: '{n} hours', gl_hours_s: 'private party area, reserved just for you',
-    gl_kids: '{n}+ kids', gl_kids_s: 'minimum group size for the package',
+    gl_kids: 'Min. {n} kids', gl_kids_s: 'smaller groups are welcome – the package is charged for {n} kids',
     gl_day: 'All day', gl_day_s: 'playtime in the park – before and after the party',
     gl_menu: '{n} dishes', gl_menu_s: 'of your choice on the kids\' buffet + free-flow water',
     how_sign: 'How the party day goes', how_p: 'Every party is planned around your child. This is what a typical 3-hour celebration at Mookiland looks like.',
@@ -1611,13 +1762,44 @@ window.I18N = {
     af5: 'On the day, just bring the birthday child – we take care of the rest!',
     faq_sign: 'Questions parents ask',
     faq_q1: 'What is included in the package?',
-    faq_q2: 'Is there a minimum number of children?', faq_a2: 'Yes – the package is charged for at least {n} children. Registered children who do not attend are charged 50%.',
+    faq_q2: 'Is there a minimum number of children?', faq_a2: 'Smaller groups are welcome, but the package is always charged for at least {n} children.',
     faq_q3: 'Do adults need a ticket?', faq_a3: 'Up to {n} adults per child are included in the package. Additional adults pay the regular entrance at the park.', faq_a3p: 'Up to {n} adults per child are included in the package. Additional adults are {p} each.',
     faq_q4: 'Can we bring our own cake, food or decorations?', faq_a4: 'Food, drinks and decorations from outside are not allowed – our team takes care of all of it. You may bring your own cake ({cake} outside cake charge), your own gift bags (free) and wine ({wine} corkage per bottle).',
     faq_q5: 'What about food and drinks for the adults?', faq_a5: 'Adults can order from our restaurant. You can pre-order while booking – it is paid separately at the restaurant and needs no deposit. Order 24 bottles or more of beer and soft drinks and you get a private fridge at your party area.',
-    faq_q6: 'How do I secure my date?', faq_a6: 'Send your booking online, then pay the {dp}% deposit by bank transfer – the bank details are in your confirmation email. The deposit is non-refundable for cancellations less than 14 days before the party.',
+    faq_q6: 'How do I secure my date?', faq_a6: 'Send your booking online, then pay the {dp}% deposit by bank transfer – the bank details are in your confirmation email.',
     faq_q7: 'How far in advance should I book?', faq_a7: 'Online bookings can be made at least {d} days ahead – weekends fill up first, so book early. Entertainment add-ons must be booked at least 3 days before the party and need a separate confirmation from our team; a 50% cancellation fee applies to them.',
     faq_q8: 'Can I change my booking later?', faq_a8: 'Of course – just message us on WhatsApp and our team will update your booking. Add-ons are subject to availability.',
+    faq_q9: 'What if it rains?', faq_a9: 'No worries – we move your party to our restaurant. Your decoration (if booked) stays set up at your party area.',
+    faq_q10: 'What if I need to cancel?', faq_a10: 'Cancelled bookings are non-refundable – this includes the deposit and any other payments made.',
+    faq_q11: 'What if some children don\'t come?', faq_a11: 'Registered children who don\'t come are charged 50% only, because the food is prepared for the number of children booked.',
+    faq_q12: 'Can the party be held outside the available times?', faq_a12: 'Unfortunately not. Each party needs the full event time plus time to clean and prepare the area for the next party, so only the start times shown can be booked.',
+    n_cake_custom: 'Custom cake: the price shown is a starting price. Our cake maker confirms the final price, and we update your invoice only after you approve it.',
+    nav_cek: 'My booking',
+    rv_sign: 'What parents say', rv_write: '★ Write a Google review', rv_write_s: 'Google review', rv_all: 'See all reviews on Google', rv_score: '{n} Google reviews', rv_more: 'Read on Google',
+    rv_empty: 'Celebrated your birthday at Mookiland? We would love to hear about it on Google!',
+    lnk_sign: 'Good to know', lnk_p: 'More about visiting Mookiland – straight from our main website.',
+    lnk1: 'Ticket prices & membership', lnk1_d: 'Entrance fees for extra guests and memberships.', lnk1_url: 'https://balimookilandpark.com/pricing-membership/',
+    lnk2: 'Restaurant menu', lnk2_d: 'Food & drinks for the grown-ups.', lnk2_url: 'https://balimookilandpark.com/snack-restaurant/',
+    lnk3: 'Park rules & info', lnk3_d: 'What to bring and our house rules.', lnk3_url: 'https://balimookilandpark.com/rules-and-useful-information/',
+    lnk4: 'Location & opening hours', lnk4_d: 'Jl. Raya Kedampang, Kerobokan – open daily 9:00–21:30.', lnk4_url: 'https://maps.app.goo.gl/o5jtfwgwHnSbKd5y7',
+    lnk5: 'Birthdays at Mookiland', lnk5_d: 'Photos and more on our main website.', lnk5_url: 'https://balimookilandpark.com/birthday/',
+    lnk6: 'Mookiland website', lnk6_d: 'Everything about the park.', lnk6_url: 'https://balimookilandpark.com/',
+    pr_title: 'Promo code', pr_ph: 'Enter your code', pr_apply: 'Apply', pr_remove: 'Remove', pr_checking: 'Checking…',
+    pr_ok: '✓ {x} applied – you save {p}.', pr_line: 'Discount: {x} ({k})', grp_disc: 'Discount',
+    pr_banner: '🎉 <b>{x}</b> – use code <b class="code">{k}</b>', pr_use: 'Use this code', pr_c_wd: 'weekday parties', pr_c_we: 'weekend parties', pr_c_kids: 'min. {n} kids', pr_c_until: 'parties until {d}', pr_c_from: 'parties from {d}',
+    pr_e_date: 'This promo code is not valid for the chosen party date.', pr_e_wd: 'This promo code is valid for weekday parties only.', pr_e_we: 'This promo code is valid for weekend parties only.', pr_e_kids: 'This promo code needs at least {n} children.',
+    m_cek: 'You can check your booking, payment progress and documents any time under <b>My booking</b> – just enter the child\'s name and date of birth.',
+    ck_sign: 'Check your booking', ck_p: 'Enter the birthday child\'s name and date of birth to see your booking, payment progress and documents.',
+    ck_name: 'Birthday child\'s name', ck_name_ph: 'e.g. Ares', ck_dob: 'Child\'s date of birth', ck_btn: 'Find my booking', ck_searching: 'Searching…',
+    ck_none: 'No booking found. Please check the spelling and the date of birth, or message us on WhatsApp.', ck_found: '{n} booking(s) found',
+    pg1: 'Booking sent', pg2: 'Deposit paid', pg3: 'Paid in full', pg4: 'Party day',
+    st_menunggu: 'Waiting for deposit', st_dp: 'Deposit received', st_lunas: 'Paid in full', st_selesai: 'Party done', st_batal: 'Cancelled',
+    nx_menunggu: 'Next step: pay the {p} deposit to secure your date. The bank details are in your confirmation email and proforma invoice.',
+    nx_dp: 'Next step: pay the remaining {p} before the party.', nx_lunas: 'All paid – see you at the party! 🎉', nx_selesai: 'Thank you for celebrating with us!', nx_batal: 'This booking has been cancelled.',
+    ck_date: 'Party date', ck_area: 'Party area', ck_guests: 'Guests', ck_theme: 'Theme', ck_menu: 'Kids\' buffet', ck_booked: 'Booked on {d}',
+    ck_items: 'Your party', ck_total: 'Total', ck_paid: 'Paid', ck_balance: 'Balance', ck_deposit: 'Deposit', ck_rd: 'Run-down', ck_resto: 'Restaurant pre-order (separate bill)',
+    ck_docs: 'Your documents', ck_dl_inv: '⬇ E-invitation', ck_dl_pro: '⬇ Proforma invoice (PDF)', ck_dl_fin: '⬇ Final invoice (PDF)', ck_dl_fin_wait: 'Final invoice – available once paid in full', ck_dl_wait: 'Preparing…',
+    ck_review: '★ How was the party? Leave us a Google review', ck_wa: 'Questions? WhatsApp us',
     cta2_h: 'Ready to plan the party?', cta2_p: 'It takes about 5 minutes. You see the full price before you send, and nothing is paid until you transfer the deposit.', cta2_btn: 'Start booking →',
     rules_sign: 'Important reminders', rules_p: 'For all visitors – thank you for helping us keep Mookiland fun and safe!',
     foot_info: 'More info &amp; pre-booking with <b>{k}</b> · {t}', foot_wa: 'WhatsApp Bu Dwi', admin_login: 'Admin login', wa_float: 'Chat with Bu Dwi',
@@ -1758,7 +1940,7 @@ window.I18N = {
     sum_note: 'Tanggal Anda terkunci setelah DP diterima. Harga final untuk item bertanda "harga mulai" dikonfirmasi oleh tim kami.',
     nav_how: 'Jalannya pesta', nav_faq: 'FAQ', cta_how: 'Cara kerjanya', back_info: 'Kembali ke info pesta',
     gl_hours: '{n} jam', gl_hours_s: 'area pesta privat, khusus untuk Anda',
-    gl_kids: '{n}+ anak', gl_kids_s: 'jumlah minimum untuk paket',
+    gl_kids: 'Min. {n} anak', gl_kids_s: 'kurang dari {n} anak boleh – paket tetap dihitung {n} anak',
     gl_day: 'Seharian', gl_day_s: 'bermain di taman – sebelum dan sesudah pesta',
     gl_menu: '{n} menu', gl_menu_s: 'pilihan Anda di buffet anak + air mineral sepuasnya',
     how_sign: 'Jalannya hari pesta', how_p: 'Setiap pesta dirancang untuk si kecil. Beginilah gambaran perayaan 3 jam di Mookiland.',
@@ -1789,13 +1971,44 @@ window.I18N = {
     af5: 'Di hari H, cukup bawa si kecil yang berulang tahun – sisanya kami urus!',
     faq_sign: 'Pertanyaan orang tua',
     faq_q1: 'Apa saja yang termasuk dalam paket?',
-    faq_q2: 'Apakah ada minimal jumlah anak?', faq_a2: 'Ya – paket dihitung minimal {n} anak. Anak terdaftar yang tidak hadir dikenakan biaya 50%.',
+    faq_q2: 'Apakah ada minimal jumlah anak?', faq_a2: 'Boleh kurang dari {n} anak, tetapi paket tetap dihitung minimal {n} anak.',
     faq_q3: 'Apakah orang dewasa perlu tiket?', faq_a3: 'Maksimal {n} dewasa per anak sudah termasuk paket. Dewasa tambahan membayar tiket masuk reguler di taman.', faq_a3p: 'Maksimal {n} dewasa per anak sudah termasuk paket. Dewasa tambahan {p} per orang.',
     faq_q4: 'Boleh bawa kue, makanan atau dekorasi sendiri?', faq_a4: 'Makanan, minuman dan dekorasi dari luar tidak diperbolehkan – semuanya kami siapkan. Anda boleh membawa kue sendiri (biaya kue dari luar {cake}), gift bag sendiri (gratis) dan wine (corkage {wine} per botol).',
     faq_q5: 'Bagaimana dengan makan & minum untuk orang dewasa?', faq_a5: 'Orang dewasa bisa memesan dari restoran kami. Anda bisa pre-order saat booking – dibayar terpisah di restoran dan tanpa DP. Pesan minimal 24 botol bir dan soft drink, Anda mendapat private fridge di area pesta.',
-    faq_q6: 'Bagaimana cara mengamankan tanggal?', faq_a6: 'Kirim booking online, lalu bayar DP {dp}% lewat transfer bank – detail rekening ada di email konfirmasi. DP tidak dapat dikembalikan untuk pembatalan kurang dari 14 hari sebelum pesta.',
+    faq_q6: 'Bagaimana cara mengamankan tanggal?', faq_a6: 'Kirim booking online, lalu bayar DP {dp}% lewat transfer bank – detail rekening ada di email konfirmasi.',
     faq_q7: 'Berapa lama sebelumnya harus booking?', faq_a7: 'Booking online paling lambat {d} hari sebelumnya – akhir pekan cepat penuh, jadi booking lebih awal. Add-on hiburan harus dipesan minimal 3 hari sebelum pesta dan perlu konfirmasi terpisah dari tim kami; biaya pembatalan 50% berlaku.',
     faq_q8: 'Apakah booking bisa diubah?', faq_a8: 'Tentu – kirim pesan WhatsApp dan tim kami akan memperbarui booking Anda. Add-on tergantung ketersediaan.',
+    faq_q9: 'Bagaimana kalau hujan?', faq_a9: 'Tenang – pesta dipindahkan ke restoran kami. Dekorasi (jika ada) tetap terpasang di area pesta.',
+    faq_q10: 'Bagaimana kalau booking dibatalkan?', faq_a10: 'Booking yang dibatalkan tidak dapat di-refund – termasuk DP dan pembayaran lain yang sudah dilakukan.',
+    faq_q11: 'Bagaimana kalau ada anak yang tidak datang?', faq_a11: 'Anak terdaftar yang tidak datang hanya dikenakan 50%, karena makanan disiapkan sesuai jumlah anak yang dibooking.',
+    faq_q12: 'Apakah pesta bisa di luar jadwal yang tersedia?', faq_a12: 'Mohon maaf, tidak bisa. Setiap pesta membutuhkan durasi acara penuh plus waktu untuk membersihkan dan menyiapkan area bagi pesta berikutnya, jadi hanya jam mulai yang tersedia yang bisa dibooking.',
+    n_cake_custom: 'Kue custom: harga yang tertera adalah harga mulai. Harga final dikonfirmasi oleh cake maker kami, dan invoice baru diperbarui setelah Anda menyetujuinya.',
+    nav_cek: 'Booking saya',
+    rv_sign: 'Kata para orang tua', rv_write: '★ Tulis review di Google', rv_write_s: 'Review Google', rv_all: 'Lihat semua review di Google', rv_score: '{n} review Google', rv_more: 'Baca di Google',
+    rv_empty: 'Sudah merayakan ulang tahun di Mookiland? Ceritakan pengalaman Anda di Google!',
+    lnk_sign: 'Info penting', lnk_p: 'Info lengkap tentang berkunjung ke Mookiland – langsung dari website utama kami.',
+    lnk1: 'Harga tiket & keanggotaan', lnk1_d: 'Tiket masuk untuk tamu tambahan dan membership.', lnk1_url: 'https://balimookilandpark.com/id/tiket-keanggotaan/',
+    lnk2: 'Menu restoran', lnk2_d: 'Makanan & minuman untuk orang dewasa.', lnk2_url: 'https://balimookilandpark.com/id/restoran/',
+    lnk3: 'Peraturan & info taman', lnk3_d: 'Apa yang perlu dibawa dan aturan taman.', lnk3_url: 'https://balimookilandpark.com/id/peraturan-info/',
+    lnk4: 'Lokasi & jam buka', lnk4_d: 'Jl. Raya Kedampang, Kerobokan – buka setiap hari 09.00–21.30.', lnk4_url: 'https://maps.app.goo.gl/o5jtfwgwHnSbKd5y7',
+    lnk5: 'Ulang tahun di Mookiland', lnk5_d: 'Foto dan info lainnya di website utama kami.', lnk5_url: 'https://balimookilandpark.com/id/ulang-tahun/',
+    lnk6: 'Website Mookiland', lnk6_d: 'Semua tentang taman bermain kami.', lnk6_url: 'https://balimookilandpark.com/id/beranda/',
+    pr_title: 'Kode promo', pr_ph: 'Masukkan kode Anda', pr_apply: 'Pakai', pr_remove: 'Hapus', pr_checking: 'Memeriksa…',
+    pr_ok: '✓ {x} dipakai – Anda hemat {p}.', pr_line: 'Diskon: {x} ({k})', grp_disc: 'Diskon',
+    pr_banner: '🎉 <b>{x}</b> – pakai kode <b class="code">{k}</b>', pr_use: 'Pakai kode ini', pr_c_wd: 'pesta hari kerja', pr_c_we: 'pesta akhir pekan', pr_c_kids: 'min. {n} anak', pr_c_until: 'pesta sampai {d}', pr_c_from: 'pesta mulai {d}',
+    pr_e_date: 'Kode promo tidak berlaku untuk tanggal pesta yang dipilih.', pr_e_wd: 'Kode promo hanya untuk pesta di hari kerja.', pr_e_we: 'Kode promo hanya untuk pesta di akhir pekan.', pr_e_kids: 'Kode promo berlaku minimal {n} anak.',
+    m_cek: 'Anda bisa mengecek booking, progres pembayaran dan dokumen kapan saja di menu <b>Booking saya</b> – cukup isi nama dan tanggal lahir anak.',
+    ck_sign: 'Cek booking Anda', ck_p: 'Isi nama dan tanggal lahir anak yang berulang tahun untuk melihat booking, progres pembayaran dan dokumen Anda.',
+    ck_name: 'Nama anak yang berulang tahun', ck_name_ph: 'mis. Ares', ck_dob: 'Tanggal lahir anak', ck_btn: 'Cari booking saya', ck_searching: 'Mencari…',
+    ck_none: 'Booking tidak ditemukan. Mohon cek ejaan nama dan tanggal lahir, atau hubungi kami via WhatsApp.', ck_found: '{n} booking ditemukan',
+    pg1: 'Booking terkirim', pg2: 'DP dibayar', pg3: 'Lunas', pg4: 'Hari pesta',
+    st_menunggu: 'Menunggu DP', st_dp: 'DP diterima', st_lunas: 'Lunas', st_selesai: 'Pesta selesai', st_batal: 'Dibatalkan',
+    nx_menunggu: 'Langkah berikutnya: bayar DP {p} untuk mengamankan tanggal. Detail rekening ada di email konfirmasi dan proforma invoice.',
+    nx_dp: 'Langkah berikutnya: lunasi sisa {p} sebelum pesta.', nx_lunas: 'Sudah lunas – sampai jumpa di hari pesta! 🎉', nx_selesai: 'Terima kasih sudah merayakan bersama kami!', nx_batal: 'Booking ini sudah dibatalkan.',
+    ck_date: 'Tanggal pesta', ck_area: 'Area pesta', ck_guests: 'Tamu', ck_theme: 'Tema', ck_menu: 'Buffet anak', ck_booked: 'Dibooking {d}',
+    ck_items: 'Rincian pesta', ck_total: 'Total', ck_paid: 'Sudah dibayar', ck_balance: 'Sisa', ck_deposit: 'DP', ck_rd: 'Run-down', ck_resto: 'Pre-order restoran (bill terpisah)',
+    ck_docs: 'Dokumen Anda', ck_dl_inv: '⬇ E-invitation', ck_dl_pro: '⬇ Proforma invoice (PDF)', ck_dl_fin: '⬇ Invoice final (PDF)', ck_dl_fin_wait: 'Invoice final – tersedia setelah lunas', ck_dl_wait: 'Menyiapkan…',
+    ck_review: '★ Bagaimana pestanya? Tulis review di Google', ck_wa: 'Ada pertanyaan? WhatsApp kami',
     cta2_h: 'Siap merancang pestanya?', cta2_p: 'Hanya sekitar 5 menit. Total harga terlihat sebelum Anda mengirim, dan tidak ada pembayaran sampai Anda mentransfer DP.', cta2_btn: 'Mulai booking →',
     rules_sign: 'Hal penting', rules_p: 'Untuk semua pengunjung – terima kasih telah membantu menjaga Mookiland tetap seru dan aman!',
     foot_info: 'Info &amp; pre-booking dengan <b>{k}</b> · {t}', foot_wa: 'WhatsApp Bu Dwi', admin_login: 'Login admin', wa_float: 'Chat dengan Bu Dwi',
@@ -2112,6 +2325,7 @@ window.I18N = {
     if (ADMIN) setupAdminMode();
     renderAll();
     goStep(1, false);
+    loadReviews();
   }
 
   function setWaLinks() {
@@ -2133,6 +2347,10 @@ window.I18N = {
     renderCake();
     renderHero();
     renderInfo();
+    renderLinks();
+    renderPromoBanner();
+    renderReviews();
+    renderCek();
     renderSpots();
     renderTabs();
     renderAddons();
@@ -2200,11 +2418,11 @@ window.I18N = {
 
     const priceOf = (id, def) => { const a = S.data.addon.find(x => x.id === id); return rupiah(a && a.harga ? a.harga : def); };
     const fas = isId() && p.fasilitasId && p.fasilitasId.length ? p.fasilitasId : p.fasilitas;
-    // FAQ dari sheet TeksWebsite: faq_q1..faq_q12 (baris kosong tidak ditampilkan)
+    // FAQ dari sheet TeksWebsite: faq_q1..faq_q16 (baris kosong tidak ditampilkan)
     const pkgList = '<ul>' + fas.map(f => `<li>${escapeHtml(f)}</li>`).join('') + '</ul>';
     const vars = { n: p.minAnak, dp: info.persenDP, d: info.minHariBooking || 1, cake: priceOf('C05', 165000), wine: priceOf('B01', 150000) };
     const faq = [];
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 1; i <= 16; i++) {
       const q = tx('faq_q' + i);
       if (!q) continue;
       let a;
@@ -2216,17 +2434,18 @@ window.I18N = {
     $('#faqList').innerHTML = faq.map((f, i) => `<details ${i === 0 ? 'open' : ''}><summary>${escapeHtml(f[0])}</summary><div class="faq-a">${f[1]}</div></details>`).join('');
   }
 
-  // ---------------- Dua halaman: info acara <-> booking ----------------
-  const onBook = () => !$('#pageBook').classList.contains('hidden');
+  // ---------------- Tiga halaman: info acara / booking / cek booking ----------------
+  const PAGES = { info: '#pageInfo', book: '#pageBook', cek: '#pageCek' };
+  const curPage = () => Object.keys(PAGES).find(k => !$(PAGES[k]).classList.contains('hidden')) || 'info';
+  const onBook = () => curPage() === 'book';
+  const pageFromHash = () => (/^#book/.test(location.hash) ? 'book' : /^#cek/.test(location.hash) ? 'cek' : 'info');
   function showPage(pg, push) {
-    const book = pg === 'book';
-    $('#pageInfo').classList.toggle('hidden', book);
-    $('#pageBook').classList.toggle('hidden', !book);
-    document.body.classList.toggle('on-book', book);
+    Object.keys(PAGES).forEach(k => $(PAGES[k]).classList.toggle('hidden', k !== pg));
+    document.body.classList.toggle('on-book', pg === 'book');
     if (push !== false) {
-      try { history.pushState({ page: pg }, '', book ? '#book' : location.pathname + location.search); } catch (e) { /* abaikan */ }
+      try { history.pushState({ page: pg }, '', pg === 'info' ? location.pathname + location.search : '#' + pg); } catch (e) { /* abaikan */ }
     }
-    if (book && S.data && S.step === 2) renderMapPins();
+    if (pg === 'book' && S.data && S.step === 2) renderMapPins();
   }
   // pindah dari halaman info ke booking: mulai dari atas halaman booking (tombol kembali & judul terlihat)
   function openBooking(n) {
@@ -2236,22 +2455,209 @@ window.I18N = {
     while (S.data && k < n && !stepError(k)) k++;   // berhenti di langkah pertama yang belum lengkap, tanpa pesan error
     goStep(k, false);
   }
-  if (ADMIN || /^#book/.test(location.hash)) showPage('book', false);
+  showPage(ADMIN ? 'book' : pageFromHash(), false);
   window.addEventListener('popstate', () => {
-    showPage(/^#book/.test(location.hash) ? 'book' : 'info', false);
+    showPage(pageFromHash(), false);
     window.scrollTo(0, 0);
   });
   // tautan ke bagian halaman info (menu atas, logo)
   document.addEventListener('click', (e) => {
+    const c = e.target.closest('[data-page-cek]');
+    if (c) {
+      e.preventDefault();
+      if (curPage() !== 'cek') showPage('cek');
+      window.scrollTo(0, 0);
+      setTimeout(() => { try { $('#ckName').focus({ preventScroll: true }); } catch (err) { /* abaikan */ } }, 50);
+      return;
+    }
     const a = e.target.closest('a[data-info], [data-page-info]');
     if (!a) return;
     e.preventDefault();
     const id = (a.getAttribute('href') || '').replace('#', '');
-    if (onBook()) showPage('info');
+    if (curPage() !== 'info') showPage('info');
     const el = id && id !== 'top' ? document.getElementById(id) : null;
     if (!el) return window.scrollTo({ top: 0, behavior: 'smooth' });
     setTimeout(() => window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - document.querySelector('.nav').offsetHeight - 8, behavior: 'smooth' }), 20);
   });
+
+  // ---------------- Link ke website Mookiland ----------------
+  function renderLinks() {
+    const IC = ['🎟️', '🍽️', '📋', '📍', '🎈', '🌴', '🔗', '🔗'];
+    const items = [];
+    for (let i = 1; i <= 8; i++) {
+      const label = tx('lnk' + i), url = tx('lnk' + i + '_url');
+      if (label && /^https?:\/\//.test(url)) items.push(`<a class="lnk" href="${escapeHtml(url)}" target="_blank" rel="noopener"><span class="ic">${IC[i - 1]}</span><span><b>${escapeHtml(label)}</b><small>${escapeHtml(tx('lnk' + i + '_d'))}</small></span><span class="go">↗</span></a>`);
+    }
+    $('#linkGrid').innerHTML = items.join('');
+    $('#links').classList.toggle('hidden', !items.length);
+  }
+
+  // ---------------- Google review ----------------
+  function loadReviews() {
+    api('getReviews').then(r => { S.reviews = r; renderReviews(); }).catch(() => { S.reviews = null; renderReviews(); });
+  }
+  function renderReviews() {
+    const r = S.reviews;
+    const sec = $('#reviews');
+    if (!r || (!r.tulisUrl && !r.reviews.length)) { sec.classList.add('hidden'); $('#footReview').classList.add('hidden'); return; }
+    sec.classList.remove('hidden');
+    $('#rvScore').classList.toggle('hidden', !r.rating);
+    if (r.rating) $('#rvScore').innerHTML = `<b>${escapeHtml(String(r.rating).replace('.', isId() ? ',' : '.'))}</b><span class="stars">★★★★★</span><small>${escapeHtml(t('rv_score', { r: r.rating, n: Number(r.jumlah || 0).toLocaleString(isId() ? 'id-ID' : 'en-US') }))}</small>`;
+    const stars = (n) => '★★★★★'.slice(0, Math.round(n)) + '<i>' + '★★★★★'.slice(0, 5 - Math.round(n)) + '</i>';
+    $('#rvGrid').innerHTML = r.reviews.length ? r.reviews.map(x => `
+      <figure class="rv-card">
+        <div class="rv-top">${x.foto ? `<img src="${escapeHtml(x.foto)}" alt="" referrerpolicy="no-referrer" loading="lazy">` : `<span class="av">${escapeHtml((x.nama || '?').trim().charAt(0).toUpperCase())}</span>`}
+          <div><b>${escapeHtml(x.nama)}</b><small>${escapeHtml(x.tanggal ? dateShort(x.tanggal) : '')}</small></div><span class="g">G</span></div>
+        <div class="rv-stars">${stars(x.rating)}</div>
+        <blockquote>${escapeHtml(x.teks)}</blockquote>
+        ${x.link ? `<a href="${escapeHtml(x.link)}" target="_blank" rel="noopener">${escapeHtml(t('rv_more'))} ↗</a>` : ''}
+      </figure>`).join('') : `<div class="rv-empty">${escapeHtml(t('rv_empty'))}</div>`;
+    $('#rvWrite').href = r.tulisUrl || r.url || '#';
+    $('#rvAll').href = r.url || r.tulisUrl || '#';
+    $('#rvAll').classList.toggle('hidden', !r.url);
+    $('#footReview').href = r.tulisUrl || '#';
+    $('#footReview').classList.toggle('hidden', !r.tulisUrl);
+  }
+  const dateShort = (s) => { const d = parseYmd(s); if (!d) return s; return isId() ? d.getDate() + ' ' + BULAN_ID[d.getMonth()] + ' ' + d.getFullYear() : MONTHS_EN[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear(); };
+
+  // ---------------- Kode promo / diskon ----------------
+  const promoName = (pr) => pick(pr.nama, pr.namaId) || pr.kode;
+  function promoErr(pr, tgl, anak) {
+    if (tgl && ((pr.mulai && tgl < pr.mulai) || (pr.sampai && tgl > pr.sampai))) return t('pr_e_date');
+    if (tgl && pr.hari !== 'semua' && (pr.hari === 'weekend') !== (dayType(tgl).tipe === 'weekend')) return t(pr.hari === 'weekend' ? 'pr_e_we' : 'pr_e_wd');
+    if (pr.minAnak && anak < pr.minAnak) return t('pr_e_kids', { n: pr.minAnak });
+    return '';
+  }
+  function promoLine(pr, lines) {
+    const base = pr.berlaku === 'semua' ? lines.reduce((a, l) => a + Math.max(0, l.total), 0) : (lines[0] ? lines[0].total : 0);
+    const amt = Math.min(base, pr.jenis === 'persen' ? Math.round(base * pr.nilai / 100) : pr.nilai);
+    return amt > 0 ? { desc: t('pr_line', { x: promoName(pr), k: pr.kode }), total: -amt, g: 'disc' } : null;
+  }
+  function promoCond(pr) {
+    const c = [];
+    if (pr.hari === 'weekday') c.push(t('pr_c_wd')); else if (pr.hari === 'weekend') c.push(t('pr_c_we'));
+    if (pr.mulai) c.push(t('pr_c_from', { d: dateShort(pr.mulai) }));
+    if (pr.sampai) c.push(t('pr_c_until', { d: dateShort(pr.sampai) }));
+    if (pr.minAnak) c.push(t('pr_c_kids', { n: pr.minAnak }));
+    return c.join(' · ');
+  }
+  function renderPromoBanner() {
+    const list = (S.data && S.data.promo) || [];
+    ['#promoBannerInfo', '#promoBannerBook'].forEach(sel => {
+      const el = $(sel);
+      el.classList.toggle('hidden', !list.length);
+      el.innerHTML = list.map(pr => `<div class="pb">${t('pr_banner', { x: escapeHtml(promoName(pr)), k: escapeHtml(pr.kode) })}${promoCond(pr) ? ` <small>(${escapeHtml(promoCond(pr))})</small>` : ''}
+        ${sel === '#promoBannerBook' ? `<button type="button" class="btn sm light" data-promo-use="${escapeHtml(pr.kode)}">${escapeHtml(t('pr_use'))}</button>` : ''}</div>`).join('');
+    });
+  }
+  function renderPromoMsg(e) {
+    const el = $('#promoMsg');
+    if (!S.promo) { el.innerHTML = S.promoMsg ? `<span class="err">${escapeHtml(S.promoMsg)}</span>` : ''; return; }
+    const err = promoErr(S.promo, $('#tglAcara').value, Math.floor(+$('#jumlahAnak').value || 0));
+    const dl = e && e.lines.find(l => l.g === 'disc');
+    el.innerHTML = (err ? `<span class="err">⚠️ ${escapeHtml(err)}</span>` : `<span class="ok">${escapeHtml(t('pr_ok', { x: promoName(S.promo), p: rupiah(dl ? -dl.total : 0) }))}</span>`) +
+      ` <button type="button" class="linkbtn" id="promoRemove">${escapeHtml(t('pr_remove'))}</button>`;
+  }
+  async function applyPromo(kode) {
+    kode = String(kode || '').trim().toUpperCase();
+    if (!kode) return;
+    $('#promoInput').value = kode;
+    const btn = $('#promoApply');
+    setLoading(btn, true, t('pr_checking'));
+    try {
+      S.promo = await api('checkPromo', { kode, tglAcara: $('#tglAcara').value, jumlahAnak: Math.floor(+$('#jumlahAnak').value || 0), lang: window.LANG });
+      S.promoMsg = '';
+    } catch (err) {
+      S.promo = null; S.promoMsg = err.message;
+    } finally { setLoading(btn, false); }
+    recalc();
+    renderPromoMsg(hitung());
+  }
+  $('#promoApply').addEventListener('click', () => applyPromo($('#promoInput').value));
+  $('#promoInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); applyPromo($('#promoInput').value); } });
+  document.addEventListener('click', (e) => {
+    const u = e.target.closest('[data-promo-use]');
+    if (u) { applyPromo(u.dataset.promoUse); return; }
+    if (e.target.closest('#promoRemove')) { S.promo = null; S.promoMsg = ''; $('#promoInput').value = ''; recalc(); renderPromoMsg(null); }
+  });
+
+  // ---------------- Cek booking (nama anak + tanggal lahir) ----------------
+  $('#ckForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('#ckBtn');
+    setLoading(btn, true, t('ck_searching'));
+    try {
+      S.ck = await api('lookupBooking', { namaAnak: $('#ckName').value.trim(), tglLahir: $('#ckDob').value, lang: window.LANG });
+    } catch (err) {
+      S.ck = null; $('#ckResult').innerHTML = `<div class="card ck-none">${escapeHtml(err.message)}</div>`;
+      return;
+    } finally { setLoading(btn, false); }
+    renderCek();
+    $('#ckResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  function renderCek() {
+    const list = S.ck;
+    if (!list) return;
+    if (!list.length) { $('#ckResult').innerHTML = `<div class="card ck-none">🔍 ${escapeHtml(t('ck_none'))}</div>`; return; }
+    const lvl = { menunggu: 1, dp: 2, lunas: 3, selesai: 4 };
+    const today = ymd(new Date());
+    $('#ckResult').innerHTML = `<p class="small muted ck-count">${escapeHtml(t('ck_found', { n: list.length }))}</p>` + list.map(b => {
+      const k = b.statusKey, n = lvl[k] || 0;
+      const prog = k === 'batal' ? '' : `<ol class="ck-prog">${['pg1', 'pg2', 'pg3', 'pg4'].map((x, i) => `<li class="${i < n ? 'done' : (i === n ? 'now' : '')}"><span>${i < n ? '✓' : i + 1}</span>${escapeHtml(t(x))}</li>`).join('')}</ol>`;
+      const nx = k === 'menunggu' ? t('nx_menunggu', { p: rupiah(Math.max(0, b.dp - b.dibayar)) }) : k === 'dp' ? t('nx_dp', { p: rupiah(b.sisa) }) : t('nx_' + k);
+      const info = [['📅', t('ck_date'), dateL(b.tglAcara) + ' · ' + b.jam + '–' + b.jamSelesai], ['📍', t('ck_area'), b.lokasi], ['🧒', t('ck_guests'), t('meta_guests', { a: b.jumlahAnak, d: b.jumlahDewasa })],
+        ['🎨', t('ck_theme'), b.tema], ['🍽️', t('ck_menu'), b.menu]].filter(r => r[2]);
+      const money = (lab, v, cls) => `<div class="ck-l ${cls || ''}"><span>${escapeHtml(lab)}</span><b>${rupiah(v)}</b></div>`;
+      const docBtn = (j, lab) => `<button type="button" class="btn sm green" data-doc="${j}" data-id="${escapeHtml(b.id)}" data-k="${escapeHtml(b.kunci)}">${escapeHtml(lab)}</button>`;
+      const past = b.tglAcara && b.tglAcara < today;
+      const rvUrl = S.reviews && S.reviews.tulisUrl;
+      return `<article class="ck-card st-${k}">
+        <header><div><small>${escapeHtml(t('ck_booked', { d: b.tglBooking || '' }))}</small><b class="ck-id">${escapeHtml(b.id)}</b><span class="ck-kid">🎂 ${escapeHtml(b.namaAnak)}</span></div>
+          <span class="ck-st">${escapeHtml(t('st_' + k))}</span></header>
+        ${prog}
+        <p class="ck-next">${escapeHtml(nx)}</p>
+        <div class="ck-info">${info.map(r => `<div><span class="ic">${r[0]}</span><small>${escapeHtml(r[1])}</small><b>${escapeHtml(r[2])}</b></div>`).join('')}</div>
+        <div class="ck-cols">
+          <div class="ck-lines"><h4>${escapeHtml(t('ck_items'))}</h4>
+            ${b.lines.map(l => `<div class="ck-l"><span>${escapeHtml(l.desc)}${l.qty > 1 ? ' ×' + l.qty : ''}</span><span>${l.total ? rupiah(l.total) : escapeHtml(t('price_free'))}</span></div>`).join('')}
+            ${b.pajak ? money(t('line_tax', { n: S.data ? S.data.info.pajakPersen : '' }), b.pajak) : ''}
+            ${money(t('ck_total'), b.total, 'tot')}
+            ${k === 'menunggu' ? money(t('ck_deposit'), b.dp) : ''}
+            ${money(t('ck_paid'), b.dibayar)}
+            ${k !== 'batal' ? money(t('ck_balance'), b.sisa, 'bal') : ''}
+            ${b.notes.length ? `<ul class="ck-notes">${b.notes.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>` : ''}
+          </div>
+          <div class="ck-docs"><h4>${escapeHtml(t('ck_docs'))}</h4>
+            ${b.adaUndangan ? docBtn('undangan', t('ck_dl_inv')) : ''}
+            ${k !== 'batal' ? docBtn('proforma', t('ck_dl_pro')) : ''}
+            ${b.adaInvoice ? docBtn('invoice', t('ck_dl_fin')) : (k !== 'batal' ? `<span class="ck-wait">🔒 ${escapeHtml(t('ck_dl_fin_wait'))}</span>` : '')}
+            ${(k === 'selesai' || past) && rvUrl ? `<a class="btn sm" href="${escapeHtml(rvUrl)}" target="_blank" rel="noopener">${escapeHtml(t('ck_review'))}</a>` : ''}
+            ${WA ? `<a class="btn sm wa" href="${escapeHtml(waUrl(t('wa_booked', { id: b.id, d: dateL(b.tglAcara), t: b.jam })))}" target="_blank" rel="noopener">${escapeHtml(t('ck_wa'))}</a>` : ''}
+          </div>
+        </div>
+        ${b.resto.lines.length ? `<details class="ck-more"><summary>🍹 ${escapeHtml(t('ck_resto'))} · ${rupiah(b.resto.total)}</summary>${b.resto.lines.map(l => `<div class="ck-l"><span>${escapeHtml(l.desc)} ×${l.qty}</span><span>${rupiah(l.total)}</span></div>`).join('')}</details>` : ''}
+        ${b.runDown ? `<details class="ck-more"><summary>🕒 ${escapeHtml(t('ck_rd'))}</summary><pre>${escapeHtml(b.runDown)}</pre></details>` : ''}
+      </article>`;
+    }).join('');
+  }
+  document.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-doc]');
+    if (!b) return;
+    const label = b.textContent;
+    b.disabled = true; b.textContent = t('ck_dl_wait');
+    try {
+      const f = await api('clientDoc', { id: b.dataset.id, kunci: b.dataset.k, jenis: b.dataset.doc });
+      const bin = atob(f.data), arr = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+      const url = URL.createObjectURL(new Blob([arr], { type: f.mime }));
+      const a = document.createElement('a');
+      a.href = url; a.download = f.name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally { b.disabled = false; b.textContent = label; }
+  });
+
   // kartu add-on di halaman info -> buka booking, folder kategori itu nanti sudah terbuka
   $('#extrasGrid').addEventListener('click', (e) => {
     const x = e.target.closest('[data-extra]');
@@ -2313,7 +2719,7 @@ window.I18N = {
     fillSelect($('#cakeNonLayered'), toOpts(info.cakeNonLayered), $('#cakeNonLayered').value, true);
     fillSelect($('#cakeFilling'), toOpts(info.cakeFilling), $('#cakeFilling').value, true);
     fillSelect($('#cakeFinishing'), toOpts(info.cakeFinishing), $('#cakeFinishing').value, true);
-    $('#cakeCusInfo').innerHTML = cus ? t('cus_info', { p: rupiah(cus.harga) }) : '';
+    $('#cakeCusInfo').innerHTML = cus ? t('cus_info', { p: rupiah(cus.harga) }) + `<span class="cake-note">ⓘ ${escapeHtml(t('n_cake_custom'))}</span>` : '';
     const flavPh = CAKE_PHOTO[S.cake.flavour] || 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQDAwMEBAQFBgoGBgUFBgwICQcKDgwPDg4MDQ0PERYTDxAVEQ0NExoTFRcYGRkZDxIbHRsYHRYYGRj/2wBDAQQEBAYFBgsGBgsYEA0QGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBj/wAARCABEAKgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD79X7oqtqH/IMuR/0yb+VWV+7VbUP+Qbcf9cm/lTW4n1OGlGJGPuf50i5MnAwF7jnGfrTpvvn/AHj/ADrP1a1u7zS54LK7NtMV+V1xxnvz9K6ZfCYU0pSUWeTR3NxrMuuyT+aVXVbq3tzM2QYV8sKRjkcl/risldV1DRNVfULGQl4gGWJ+VYDjGD64rkPCmoa74b+Kuq6Dd2lxc2d7KLn7QEYrb7VGFJP1z+NdTqZia4MCSJKVIVivOGHUVwpNu6PofZ8kVFmq/izw74z09rTxL4XgtmkY5nhH3RnkfoK5nxh8FPB1tpEmv2ev2sOnQxbneQjCKR8xA6naBnHUkms3V5PsdwYSSsUjbgqjpn3rn9bS6ms/swcvb5EnkscqSDnOD05pT5Z6NCp05Rd4vQ4K5+G/jO8gXWZtJePTbidrq0LxfPIMkKSnVRgcA8YxWW3g3UZbwRvFOsig7wy4Plj5mz7AV2ep+LfEUd3Hq8mp3crQkIkbOQo7duoHvVhviprTXbm40/TZ2SBkLbcM4PUEjjmuaph6a6nXGc+x4rDpCasNV1HzzCqM7WkDRH9+eFLceuKkg0u5gQpLAfdVwMflWvqniW9urlHS0itlGQY4uFA9KyrrXZ5AxSJMA564571ytNbDUI2bYTWPn+SlxFI8cIOxW4xk57e5ot20+21DzZtPdkCspCHaenb16isiTWru43MG2lOuDVSXVJ3txuG84I9fy9OlR7OTMZVUg+zvalWeRg4bflSQQ2MdvYniiKOxj0a+tHs4ZpbhQYpixDRHdk9DznrzVCe+muAeCCSSapv5u0kN39a1hCSMJzjJGtGbS10m+aS5/wBIUAwxMCwkycfhVH+0GKqqxqXU5OeQSKiS2Z4g5cgDqoJzU+yCJQUjzntXQo6HOpWdkR3s11qN6ZxAluOBgdOgFWIbWGFsvh2kHO3kd/8AGmkNJHufhT/D0qSxVTeIRlcdqmSLPQ/hfd22ja9YapqcxFraS+bKWGdiq3B/SiuZk1KKDSJLP+K6/cBc88sMk/gWoqS0mfsmv3arah/yDbj/AK5N/KrI6VW1D/kG3H/XJv5V6a3PJfU4eb75/wB4/wA6r3dulxbSR42s0ZUuSQFHrkd6sTffP+8f51VuIpJJo3jkwU52k8Z9x0NdTjdWOaD97m7HgDzeKrHWNW0mC4E0LOskN3LFu35ZzKPU4UR7ffis3wh4WvrXTL651G+S3mub+e78u7cKyqzMVGO2BjivaNd8HNNqw13SNovFiMb2rtiOfPPB/hb9K811+71qxsNRXVtAhlvArbPNQJGMqWO58c8A5PUkVySjynuUsQqlkc94g0rVlhjEltuR8YlA3AjH3gRWBeW7IyIjZYoQCTgN6jmuj8LeI9Zj8RatDrWq20ul6dYi1hSG3AMVztiKqVY5ZTuc7un3awdS11PE2s26asLGw0i2Cia/gBCfa3ICRBgfuLggn1zUq0kzqi2jj7+KBYpYJhjcpADHoa4S6Wa1g8pclUPY19Gad8PbPVNOkfVLGMXO8p5kFwXSRQMiRcdiMVw/iXwNoVknkQm5WVjkksOn0rlrQ2NoNvRHilzJGzsWUAH+EVntJagOojxnpkV22r+GLW2VpPMuFUHmXaMD6Vg3Gj2sgRFuJG9SFFYtIJwkcu8dnDOY5FOJBk4qGK2tizABtvatm+0tY5ABcJ0ON5x05/HiqX2dyw8td6Fcgr0Nap6HLUpMpGxjXO3p71Wa0AlO3GKu3KyREbxIoPt1qGJs54/D1pnN7KXYi8pEOQQCfakWOGJs8lveo7i4SJcyfIB3JoguJ76REiiaNZOI3dMBsehPWjmFyyXQSdi/AUADvVSa8MC5UhmHAI7VJMtwLhra4cRnB6jFUxAYkdQCzAbz0IK+1ZykXGLW5as5BGjXE7mSaQHbk8LiitLwV4Q1Hxp4lj0633QblMrzMmUVFAwD70Vlc0P2mFVdRz/ZVzzj903P4VZqveCNrKZJ2xGVIY9MDFestzyWrrQ4WY/Oec8nn8aQn6Vbl0+QQiS3PnxNyHBqpgq5Rzgj1rqjJPRHK4tCY3ZB247gjOa5Txzod7q/hm8ewhnvbjy9sdjEyoJuMEMTycAk/pXVH3wfpUbncf5e1E0noVSqypO6PAodC8e6bpVjqX/CKyXNzp8bpFFG6sboH5QkvoAvIPc15X4qOuDULrRvDehTafo85F88V9GgaOSNkDKXPUfeNfaGBxwOOnHSqt1p+n3kmbyzim3LsLFATgep7/1rCWHvszvpZlyv30fKkWu6tokQ0izvzBJ9ngWyvG3TRzEI25dytgE4UDdxx9akv/FWqJ4YuV8Q29pcXEcYZ7mS32SReZ0GFxu25x+Fex+Kvgh4T160njhubyxlnmSeZoZMLIE6R4/hH0x+Vc1rPwY1W40S70y3+w30M4GxpJikkXOVww5OD2PFYzw81tqehRx1Nank+k6TZ63pENlqV1c3V2rOVezh3CRFySCOgbPXsBXlOq6npWi6skVsLi5jDP5/IAj+bjHPOBmvoZvhh4t8CWRj8NabNNdRYklufMDLKzff3DoFyT8o61xV98KPC/8Awk0t/PplxbXepWpZIo4zNDBM4Jb5T90ZJGO1csqUux0fWFUd0zn/AADa6NrumanLpWkf2vrSy+XBDdKVjgU/KXdj8oXvXBHRL5PE+paK09p51jO1uzpIDGxB5ZTnlfSu/wDBdvqWk2beH9StdSi0hTNLfJb25jkuJACIxkYJjJ7ZxzXC6Z4I1zXLXz7bwhdhjIyO0auWHJHrzjp+FQqc3okDrLe5LZ6RYWfjLTLPxJcwtYT3CJK0EmSiZG4n0zn1rO8YWNjpd0lgYhAqSnypgTmSM/MD164NbNt8IPHmsyXEGlaHqDpHhWLREqpz93k8ZxnNeieHP2cfG2p3t3Z+JDHYvHakWszoHjjLHJxjvzj2rVYStLYyljIHhGlr4dj1JbzVLeSeJBmKKViFlftnHIqlrPiO61nUop2jVILd9ttbQx7VQ+gwPXNfVWl/sl6RFbiHVNevLtowAxjiCc98d67zRP2ffB2gWK28NnPcAHduuMNz1reOAqnLLHwPiDTvDuv+K9eFnHabbliDIZsgIuOuQK9O0L9nfUrjUIDqWoCSNWDukCnBXsN30r7ItPCWlWZBg0m3iYDbuVMZFakWmpF8qoFHoBxWiy3+ZnPPGKWx4/4Y+F9v4esja6ZZG1R23kk5YnHc+ntRXtKWnPA4oqlgKaI+tHtgAqlq4/4kd3tAz5TdfpV1TxUN2A1jOrdCjD9KgzTtqeP+FdTubaWZpb3aEXiIncOenBrrU1WzvlCX1q0LdPMUYBNYMtpCrSC2tEL7QzvjBOOQBVhbhtQsI3PmwNk7kkAyOa2iRNqWxrPp8cwU2Vyjg8Fc8j3qrLaSwthkOB39a5TUGfSorjVlvp1lOE3Ku7A6Yx0rqbXV5n0u3effI7IDjaMdPWtIswloQBgGIJ/OlIyMH9KtrPb3AIe1MeO4oENvLny/O467Ru/OrW5Dae5U2nqGI/GkbcFPOSKmaHj/AFi/98kGoijZKhwQfcVomu4cyI5zHcKEmQSAcgNyAfX6+9Qm2tzdG5NvEJT1fYMn6+tWDEw4XGfamEMDtcNn1xTui1NrZkEtnaTZ8y2ibI252Dp6UkFlaW0IitoEgQdBENvv2qfHfn8qTr6j8KSiugXl3GGGM5GFAPUYHNBhBGC2V9CPxqT92OWlA+opks9siZNzGMeho91BafQBGApAOQeTmjyx7flVGXWNOhG5rlcVnXPjHSLfG0tKfrgU3XgtLmkaLerN9gMYbBpuEC5Krj1LYrz7VPiXa24ZYmijIOcZ3tjHpXiPjP8AaUngiu49L0m5uHtiPMaZRGuPoOf1rmrY2MV3No4VSZ9PXuuaPp/zTTg4HKJziivhW4+K/i3xDcLdTXaR2jHIjtgBgehOM/rRXlzzfWyPUp5QpRvc/U9CdgPqKjn5t5R6qf5UUV1Pc8iWxxkwEKgIo+pFc/qskinPmMec0UVstjKJh3sbXtxZRyTSojvh0jOA3PevRpbO3itoVRMBVAH5UUUxPcieGNm2leKv6bbxQBvKBXPXmiituhzSepcKJIuJFVh7iqc9jaMSvkIB7UUVkRdmXc6ZabyoRl91Yis250+FJPLV5gP+uhoorpp7G0djHuoDEWCXE+B6vWFeT3COQs8uP940UVrJG8TBu9SvFLATPx/tH/GsWbULx7ghp2wevNFFYTR1UzKv5Zyrf6RKPYNVCFT5QdpHckH7x96KK4aq1NYbjJrWJvnIOcf0rw/XtOtD4n1S3Mf7uaE7x3PGetFFcFc6Iqxx3hMAo8ZAK7ynTsDiiiivDqL3mezRb5Ef/9k=';
     $('#cpStd').style.backgroundImage = "url('" + flavPh + "')";
     $('#cpCus').style.backgroundImage = "url('" + CUSTOM_CAKES[0] + "')";
@@ -3043,7 +3449,9 @@ window.I18N = {
       lines.push(l);
     });
     if (mulai) notes.push(t('n_start'));
+    if (S.cake.jenis === 'custom') notes.push(t('n_cake_custom'));
     if (adaEnt) notes.push(t('n_ent', { n: d.info.minHariEnt || 3 }));
+    if (S.promo && !promoErr(S.promo, tgl, anak)) { const dl = promoLine(S.promo, lines); if (dl) lines.push(dl); }
 
     const subtotal = lines.reduce((s, l) => s + l.total, 0);
     const pajak = Math.round(subtotal * (d.info.pajakPersen || 0) / 100);
@@ -3057,6 +3465,7 @@ window.I18N = {
     renderAvailability();
     renderMapPins();
     const e = hitung();
+    renderPromoMsg(e);
     const tglV = $('#tglAcara').value;
     $('#sbDate').textContent = tglV ? dateL(tglV) : t('sb_date');
     const tot = e && e.tgl && e.lok ? e.total : 0;
@@ -3079,8 +3488,9 @@ window.I18N = {
     }
     $('#summaryBody').innerHTML =
       `<div class="meta">${meta.map(escapeHtml).join('<br>')}</div>` +
-      sumGroup(t('grp_pkg'), e.lines.filter(l => l.g !== 'add'), 'pkg') +
+      sumGroup(t('grp_pkg'), e.lines.filter(l => l.g !== 'add' && l.g !== 'disc'), 'pkg') +
       sumGroup(t('grp_add'), e.lines.filter(l => l.g === 'add'), 'add') +
+      sumGroup(t('grp_disc'), e.lines.filter(l => l.g === 'disc'), 'disc') +
       (e.pajak ? `<div class="line"><span>${escapeHtml(t('line_tax', { n: S.data.info.pajakPersen }))}</span><span>${rupiah(e.pajak)}</span></div>` : '') +
       `<div class="total"><span>${escapeHtml(t('total'))}</span><span>${rupiah(e.total)}</span></div>` +
       (e.dp ? `<div class="dp"><span>${escapeHtml(t('deposit'))}</span><span>${rupiah(e.dp)}</span></div>` : '') +
@@ -3276,7 +3686,7 @@ window.I18N = {
     const sub = ls.reduce((x, l) => x + l.total, 0);
     return `<div class="sum-grp ${cls}"><div class="sg-h"><span>${escapeHtml(title)}</span></div>` +
       ls.map(l => `<div class="line"><span>${escapeHtml(l.desc)}</span><span>${l.req ? escapeHtml(t('on_request')) : (l.total ? rupiah(l.total) : escapeHtml(t('price_free')))}</span></div>`).join('') +
-      `<div class="sg-sub"><span>${escapeHtml(t('subtotal'))}</span><b>${rupiah(sub)}</b></div></div>`;
+      (cls === 'disc' ? '' : `<div class="sg-sub"><span>${escapeHtml(t('subtotal'))}</span><b>${rupiah(sub)}</b></div>`) + '</div>';
   }
 
   function restoBox(r) {
@@ -3574,6 +3984,7 @@ window.I18N = {
       layered: $('#cakeLayered').value, nonlayered: $('#cakeNonLayered').value, filling: $('#cakeFilling').value, finishing: $('#cakeFinishing').value,
     };
     if (S.cake.jenis === 'custom' && S.design) payload.desainKue = S.design;
+    payload.kodeDiskon = S.promo && !promoErr(S.promo, payload.tglAcara, payload.jumlahAnak) ? S.promo.kode : '';
     if (ADMIN) { payload.kirimWa = $('#aKirimWa').checked; payload.kirimEmail = $('#aKirimEmail').checked; payload.lepasBlokir = $('#aLepasBlokir').checked; delete payload.website; }
 
     const btn = $('#submitBtn');
@@ -3607,7 +4018,7 @@ window.I18N = {
       if (invite) { $('#sInviteImg').src = invite; $('#sInviteDl').href = invite; $('#sInviteDl').download = 'Mookiland-invitation-' + r.bookingId + '.jpg'; }
       $('#successModal').showModal();
       form.reset();
-      S.addons.clear(); S.menu.clear(); S.resto.clear(); S.spotInfo = null; S.avail = null; S.rundown = []; S.cake.extra = []; S.langSel = {}; S.mcChar = ''; S.theme = ''; $('#tema').value = ''; $('#themeOther').value = '';
+      S.addons.clear(); S.menu.clear(); S.resto.clear(); S.spotInfo = null; S.avail = null; S.rundown = []; S.cake.extra = []; S.langSel = {}; S.mcChar = ''; S.theme = ''; S.promo = null; S.promoMsg = ''; $('#promoInput').value = ''; $('#tema').value = ''; $('#themeOther').value = '';
       $('#kidsMore').innerHTML = ''; syncKidBtn(); S.design = null; S.months = {}; loadMonth(S.month);
       S.cake = { jenis: 'none', size: S.cake.size, flavour: S.cake.flavour, qty: 1, extra: [] };
       $('#cakeDesignPrev').classList.add('hidden');
