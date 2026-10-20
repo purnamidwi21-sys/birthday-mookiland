@@ -1585,6 +1585,7 @@ window.I18N = {
     gl_menu: '{n} dishes', gl_menu_s: 'of your choice on the kids\' buffet + free-flow water',
     how_sign: 'How the party day goes', how_p: 'Every party is planned around your child. This is what a typical 3-hour celebration at Mookiland looks like.',
     how_note: 'Example for a 10:00 start. When you book, we suggest a run-down based on your start time and add-ons – you can change it any time.',
+    tl1_time: '10:00', tl2_time: '10:30', tl3_time: '11:00', tl4_time: '11:45', tl5_time: '12:15', tl6_time: '13:00',
     tl1_t: 'Welcome & play', tl1_d: 'Guests arrive at your reserved party area. The kids head straight into the park while the grown-ups settle in.',
     tl2_t: 'Show time', tl2_d: 'A magic or science show, an MC character or a creative workshop – if you add one.',
     tl3_t: 'Kids\' buffet', tl3_d: 'The children\'s buffet with the dishes you picked, plus free-flow mineral water.',
@@ -1762,6 +1763,7 @@ window.I18N = {
     gl_menu: '{n} menu', gl_menu_s: 'pilihan Anda di buffet anak + air mineral sepuasnya',
     how_sign: 'Jalannya hari pesta', how_p: 'Setiap pesta dirancang untuk si kecil. Beginilah gambaran perayaan 3 jam di Mookiland.',
     how_note: 'Contoh untuk mulai pukul 10.00. Saat booking, kami sarankan run-down sesuai jam mulai dan add-on Anda – bisa diubah kapan saja.',
+    tl1_time: '10:00', tl2_time: '10:30', tl3_time: '11:00', tl4_time: '11:45', tl5_time: '12:15', tl6_time: '13:00',
     tl1_t: 'Sambutan & bermain', tl1_d: 'Tamu datang ke area pesta Anda. Anak-anak langsung bermain di taman, orang tua bersantai.',
     tl2_t: 'Waktu pertunjukan', tl2_d: 'Magic show, science show, MC karakter atau workshop kreatif – jika Anda menambahkannya.',
     tl3_t: 'Buffet anak', tl3_d: 'Buffet anak dengan menu pilihan Anda, plus air mineral sepuasnya.',
@@ -2007,6 +2009,8 @@ window.I18N = {
   const fromMin = (m) => String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
 
   // ---- Konten dari Sheet sesuai bahasa (fallback ke English) ----
+  // teks opsional: kosong bila tidak ada di kamus / sheet TeksWebsite
+  const tx = (k, v) => { const r = t(k, v); return r === k ? '' : String(r || '').trim(); };
   const pick = (en, idv) => (isId() && idv && String(idv).trim()) ? idv : en;
   const aName = (a) => pick(a.nama, a.namaId);
   const aDesc = (a) => pick(a.deskripsi, a.deskripsiId);
@@ -2076,6 +2080,14 @@ window.I18N = {
       const msg = '<div class="card">' + escapeHtml(t('load_err', { e: e.message })) + '</div>';
       $('#spotList').innerHTML = msg; $('#addonGrid').innerHTML = msg;
       return;
+    }
+    // teks website dari sheet TeksWebsite (mengganti teks bawaan di i18n.js)
+    if (S.data.teks) {
+      Object.keys(S.data.teks).forEach(k => {
+        const x = S.data.teks[k] || {};
+        ['en', 'id'].forEach(l => { if (x[l] !== undefined && x[l] !== '') window.I18N[l][k] = x[l] === '-' ? '' : x[l]; });
+      });
+      applyI18n();
     }
     S.data.addon.forEach(a => {
       if (!a.induk && PARENT_DEFAULT[a.id]) a.induk = PARENT_DEFAULT[a.id];
@@ -2159,8 +2171,9 @@ window.I18N = {
       ['🍽️', t('gl_menu', { n: info.maxMenu }), t('gl_menu_s')],
     ].map(g => `<div class="gl"><span class="ic">${g[0]}</span><b>${escapeHtml(g[1])}</b><small>${escapeHtml(g[2])}</small></div>`).join('');
 
-    const TL = [['10:00', '🎈'], ['10:30', '🎩'], ['11:00', '🍽️'], ['11:45', '🪅'], ['12:15', '🎂'], ['13:00', '🌴']];
-    $('#timeline').innerHTML = TL.map((x, i) => `<li><span class="tl-ic">${x[1]}</span><span class="tl-time">${escapeHtml(slotLabel(x[0]))}</span><b>${escapeHtml(t('tl' + (i + 1) + '_t'))}</b><p>${escapeHtml(t('tl' + (i + 1) + '_d'))}</p></li>`).join('');
+    const TL = ['🎈', '🎩', '🍽️', '🪅', '🎂', '🌴'];
+    const tlTime = (i) => { const v = tx('tl' + i + '_time'); return /^\d{1,2}[:.]\d{2}$/.test(v) ? slotLabel(v.replace('.', ':').padStart(5, '0')) : v; };
+    $('#timeline').innerHTML = TL.map((ic, i) => `<li><span class="tl-ic">${ic}</span><span class="tl-time">${escapeHtml(tlTime(i + 1))}</span><b>${escapeHtml(t('tl' + (i + 1) + '_t'))}</b><p>${escapeHtml(t('tl' + (i + 1) + '_d'))}</p></li>`).join('');
 
     // kategori add-on dengan harga "mulai dari"
     const minPrice = (list) => { const v = list.map(a => a.harga).filter(h => h > 0); return v.length ? Math.min.apply(null, v) : 0; };
@@ -2183,20 +2196,23 @@ window.I18N = {
 
     $('#bkSteps').innerHTML = ['📅', '📍', '🎂', '🎈', '🍹', '✅'].map((ic, i) =>
       `<li><span class="n">${i + 1}</span><span class="ic">${ic}</span><b>${escapeHtml(t('bk' + (i + 1) + '_t'))}</b><small>${escapeHtml(t('bk' + (i + 1) + '_d', { n: S.data.lokasi.length }))}</small></li>`).join('');
-    $('#afterList').innerHTML = [1, 2, 3, 4, 5].map(i => `<li>${escapeHtml(t('af' + i, { dp: info.persenDP }))}</li>`).join('');
+    $('#afterList').innerHTML = [1, 2, 3, 4, 5, 6, 7, 8].map(i => tx('af' + i, { dp: info.persenDP })).filter(Boolean).map(x => `<li>${escapeHtml(x)}</li>`).join('');
 
     const priceOf = (id, def) => { const a = S.data.addon.find(x => x.id === id); return rupiah(a && a.harga ? a.harga : def); };
     const fas = isId() && p.fasilitasId && p.fasilitasId.length ? p.fasilitasId : p.fasilitas;
-    const faq = [
-      [t('faq_q1'), '<ul>' + fas.map(f => `<li>${escapeHtml(f)}</li>`).join('') + '</ul>'],
-      [t('faq_q2'), escapeHtml(t('faq_a2', { n: p.minAnak }))],
-      [t('faq_q3'), escapeHtml(info.hargaDewasaTambahan ? t('faq_a3p', { n: p.dewasaPerAnak, p: rupiah(info.hargaDewasaTambahan) }) : t('faq_a3', { n: p.dewasaPerAnak }))],
-      [t('faq_q4'), escapeHtml(t('faq_a4', { cake: priceOf('C05', 165000), wine: priceOf('B01', 150000) }))],
-      [t('faq_q5'), escapeHtml(t('faq_a5'))],
-      [t('faq_q6'), escapeHtml(t('faq_a6', { dp: info.persenDP }))],
-      [t('faq_q7'), escapeHtml(t('faq_a7', { d: info.minHariBooking || 1 }))],
-      [t('faq_q8'), escapeHtml(t('faq_a8'))],
-    ];
+    // FAQ dari sheet TeksWebsite: faq_q1..faq_q12 (baris kosong tidak ditampilkan)
+    const pkgList = '<ul>' + fas.map(f => `<li>${escapeHtml(f)}</li>`).join('') + '</ul>';
+    const vars = { n: p.minAnak, dp: info.persenDP, d: info.minHariBooking || 1, cake: priceOf('C05', 165000), wine: priceOf('B01', 150000) };
+    const faq = [];
+    for (let i = 1; i <= 12; i++) {
+      const q = tx('faq_q' + i);
+      if (!q) continue;
+      let a;
+      if (i === 1) a = tx('faq_a1') ? escapeHtml(tx('faq_a1')) : pkgList;
+      else if (i === 3) a = escapeHtml(info.hargaDewasaTambahan ? tx('faq_a3p', { n: p.dewasaPerAnak, p: rupiah(info.hargaDewasaTambahan) }) : tx('faq_a3', { n: p.dewasaPerAnak }));
+      else a = escapeHtml(tx('faq_a' + i, vars));
+      faq.push([q, a]);
+    }
     $('#faqList').innerHTML = faq.map((f, i) => `<details ${i === 0 ? 'open' : ''}><summary>${escapeHtml(f[0])}</summary><div class="faq-a">${f[1]}</div></details>`).join('');
   }
 
@@ -2543,7 +2559,10 @@ window.I18N = {
   function ageChip(a) {
     const f = folderOf(a);
     if (!a.usia || ['show', 'workshop', 'fun'].indexOf(f) < 0) return '';
-    const v = String(a.usia).trim();
+    let v = String(a.usia).trim();
+    // cadangan: usia yang terbaca sebagai tanggal ("Thu Jan 08 2026 ..." / "2026-01-08T..") -> "1-8"
+    if (/GMT|\d{4}-\d{2}-\d{2}T/.test(v)) { const d = new Date(v); v = isNaN(d) ? '' : (d.getMonth() + 1) + '-' + d.getDate(); }
+    if (!v || v === '-') return '';
     const txt = /^(all|semua)/i.test(v) ? t('age_all') : t('age_x', { x: v.replace(/\s*-\s*/, '–') });
     return `<span class="chip age">👶 ${escapeHtml(txt)}</span>`;
   }
